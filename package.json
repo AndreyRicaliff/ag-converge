@@ -1,0 +1,15 @@
+{
+  "name": "ag-converge-leads",
+  "version": "1.0.0",
+  "description": "Extrator de leads AG Converge → planilha Excel",
+  "scripts": {
+    "extrair": "node extrair-leads.js",
+    "build": "pkg extrair-leads.js --targets node18-linux-x64 --output dist/extrair-leads"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
+}

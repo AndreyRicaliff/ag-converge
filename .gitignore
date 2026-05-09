@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+.vercel
+supabase/.temp/
+
+# Arquivos binários pesados — hospedar no Supabase Storage
+assets/videos/
+assets/logos/*.pdf
+assets/docs/
+assets/images/rh.png

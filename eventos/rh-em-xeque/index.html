@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RH em Xeque — AG Consultoria</title>
+<meta name="description" content="NR-1 já é lei. A escala 5x2 está chegando. Sua empresa está preparada? 14 de maio, 18h às 21h30 — Auditório Slavieiro, Heron Marinho · Campina Grande.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
+<style>
+/* ══════════════════════════════
+   TOKENS
+══════════════════════════════ */
+:root {
+  --bg:        #09090F;
+  --bg-card:   #111019;
+  --bg-raise:  #18162A;
+  --purple:    #7B2FE0;
+  --purple-hi: #A55EFF;
+  --purple-lo: #C49FFF;
+  --purple-dim:#2A1252;
+  --blue:      #3662FF;
+  --white:     #F8F6FF;
+  --muted:     #7A708F;
+  --border:    #241B3A;
+  --green:     #08C16A;
+  --red:       #FF5C5C;
+  --radius:    12px;
+  --sh:        0 4px 32px rgba(123,47,224,.18);
+  --sh-lg:     0 12px 56px rgba(123,47,224,.28);
+}
+
+/* ══════════════════════════════
+   RESET
+══════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);line-height:1.6;min-height:100vh}
+a{text-decoration:none}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;height:64px;
+  background:rgba(9,9,15,.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{display:flex;align-items:center;gap:0}
+.nav-ag-co{
+  display:flex;align-items:center;gap:8px;padding-right:14px;
+  text-decoration:none;
+}
+.nav-ag-logo{
+  width:26px;height:26px;border-radius:6px;flex-shrink:0;
+  background:linear-gradient(135deg,#7B2FE0,#A55EFF);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.62rem;color:#fff;letter-spacing:.02em;
+}
+.nav-ag-name{font-size:.72rem;font-weight:700;color:rgba(248,246,255,.7);letter-spacing:.01em}
+.nav-breadcrumb-sep{
+  color:rgba(248,246,255,.2);font-size:.65rem;margin:0 10px;
+}
+.nav-converge-label{
+  font-size:.68rem;font-weight:600;color:rgba(165,94,255,.7);
+  letter-spacing:.06em;padding-right:14px;
+}
+.nav-sep{width:1px;height:18px;background:var(--border);margin-right:14px}
+.nav-event{font-size:.78rem;font-weight:800;letter-spacing:.04em;color:var(--purple-hi)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:rgba(248,246,255,.5);font-size:.82rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{
+  background:var(--purple);color:#fff;
+  padding:9px 22px;border-radius:8px;font-weight:700;font-size:.82rem;
+  border:none;cursor:pointer;transition:all .2s;
+}
+.nav-cta:hover{background:var(--purple-hi);transform:translateY(-1px);box-shadow:0 4px 20px rgba(123,47,224,.4)}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:100px 5% 80px;
+  text-align:center;
+  position:relative;overflow:clip;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(123,47,224,.22) 0%, transparent 70%),
+             var(--bg);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(123,47,224,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(123,47,224,.04) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(123,47,224,.15);
+  border:1px solid rgba(165,94,255,.3);
+  color:var(--purple-lo);
+  padding:5px 16px;border-radius:100px;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:36px;
+}
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--purple-hi);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* RH em XEQUE typographic logo */
+.hero-logo-wrap{margin-bottom:32px;position:relative;display:inline-block}
+.hero-logo-wrap img{
+  max-width:min(640px,90vw);
+  filter:drop-shadow(0 0 60px rgba(123,47,224,.35));
+}
+
+.hero-tagline{
+  font-size:clamp(1rem,2.2vw,1.25rem);
+  color:rgba(248,246,255,.7);
+  max-width:560px;margin:0 auto 40px;
+  font-weight:400;line-height:1.65;
+}
+.hero-tagline strong{color:var(--purple-hi)}
+
+.hero-meta{
+  display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;
+}
+.hero-meta-item{
+  display:flex;align-items:center;gap:10px;
+}
+.hero-meta-item svg{color:var(--purple-hi);flex-shrink:0}
+.hero-meta-item .lbl{font-size:.7rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:.06em}
+.hero-meta-item .val{font-size:.95rem;font-weight:700;color:var(--white)}
+
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-hero{
+  background:var(--purple);color:#fff;
+  padding:15px 36px;border-radius:10px;
+  font-weight:800;font-size:1rem;border:none;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;gap:8px;
+  font-family:'Inter',sans-serif;
+  box-shadow:0 0 32px rgba(123,47,224,.4);
+}
+.btn-hero:hover{background:var(--purple-hi);transform:translateY(-2px);box-shadow:0 8px 40px rgba(123,47,224,.55)}
+.btn-ghost{
+  background:transparent;color:var(--white);
+  padding:15px 28px;border-radius:10px;
+  font-weight:600;font-size:1rem;
+  border:1.5px solid rgba(248,246,255,.2);
+  transition:all .2s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-ghost:hover{border-color:var(--purple-hi);color:var(--purple-hi)}
+
+.hero-capa{
+  margin-top:64px;
+  width:100%;max-width:360px;
+  border-radius:20px;overflow:hidden;
+  box-shadow:var(--sh-lg);
+  border:1px solid var(--border);
+}
+.hero-capa img{width:100%;display:block}
+
+/* ══════════════════════════════
+   SECTIONS GENERIC
+══════════════════════════════ */
+.section{padding:80px 5%}
+.container{max-width:1100px;margin:0 auto}
+.sec-label{
+  display:inline-block;color:var(--purple-hi);
+  font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.sec-title{
+  font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;line-height:1.2;
+  color:var(--white);margin-bottom:16px;
+}
+.sec-desc{color:var(--muted);font-size:.95rem;max-width:520px;line-height:1.75}
+
+/* ══════════════════════════════
+   SOBRE
+══════════════════════════════ */
+.sobre{background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sobre-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:56px;align-items:start;max-width:1020px;margin:0 auto;
+}
+.sobre-img{
+  border-radius:16px;overflow:hidden;
+  box-shadow:var(--sh-lg);border:1px solid var(--border);
+}
+.sobre-img img{width:100%;display:block}
+.sobre-badges{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.sobre-badge{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--bg-raise);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;
+}
+.badge-icon{
+  width:38px;height:38px;flex-shrink:0;border-radius:9px;
+  background:linear-gradient(135deg,var(--purple),var(--purple-hi));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.badge-text strong{display:block;font-size:.88rem;color:var(--white);margin-bottom:2px}
+.badge-text span{font-size:.78rem;color:var(--muted)}
+
+/* ══════════════════════════════
+   NUMBERS STRIP
+══════════════════════════════ */
+.strip{
+  background:linear-gradient(90deg,var(--purple-dim),#1A0D36);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:40px 5%;
+}
+.strip-inner{
+  max-width:800px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center;
+}
+.strip-num{font-size:2.6rem;font-weight:900;color:var(--purple-hi);line-height:1;margin-bottom:4px}
+.strip-lbl{color:rgba(248,246,255,.5);font-size:.82rem}
+
+/* ══════════════════════════════
+   MÍDIA — GALERIA + VÍDEO
+══════════════════════════════ */
+.midia { background:var(--bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border) }
+.midia-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:16px;
+  max-width:1000px; margin:40px auto 0;
+}
+.midia-video {
+  grid-column:1 / -1;
+  border-radius:var(--radius); overflow:hidden;
+  background:#000; position:relative;
+  border:1px solid var(--border);
+  box-shadow:var(--sh-lg);
+}
+.midia-video video {
+  width:100%; display:block;
+  max-height:520px; object-fit:contain; background:#000;
+}
+.midia-video-label {
+  position:absolute; bottom:14px; left:14px;
+  background:rgba(0,0,0,.65); backdrop-filter:blur(8px);
+  color:var(--white); font-size:.72rem; font-weight:700;
+  padding:4px 12px; border-radius:100px;
+  letter-spacing:.06em; text-transform:uppercase;
+}
+.midia-foto {
+  border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--bg-card);
+  cursor:pointer; transition:all .25s;
+}
+.midia-foto:hover { border-color:var(--purple-hi); transform:scale(1.01); box-shadow:var(--sh-lg) }
+.midia-foto img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+
+/* lightbox */
+.lightbox {
+  position:fixed; inset:0; z-index:999;
+  background:rgba(0,0,0,.92); backdrop-filter:blur(10px);
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+}
+.lightbox.open { display:flex }
+.lightbox img { max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 0 80px rgba(0,0,0,.8) }
+.lightbox-close {
+  position:fixed; top:20px; right:20px;
+  background:rgba(255,255,255,.1); border:none; cursor:pointer;
+  color:#fff; width:40px; height:40px; border-radius:10px; font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center; transition:background .2s;
+}
+.lightbox-close:hover { background:rgba(255,255,255,.2) }
+
+/* ══════════════════════════════
+   PARCEIROS / CARIDADE
+══════════════════════════════ */
+.caridade{
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.charity-card{
+  max-width:680px;margin:40px auto 0;
+  background:var(--bg-card);border:1px solid rgba(165,94,255,.25);
+  border-radius:16px;padding:32px 36px;text-align:center;
+  box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+}
+.charity-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--blue),var(--purple-hi));
+}
+.charity-card h3{font-size:1.15rem;font-weight:700;margin:16px 0 8px}
+.charity-card p{color:var(--muted);font-size:.88rem;line-height:1.7;max-width:500px;margin:0 auto}
+.charity-logo{
+  width:90px;height:90px;border-radius:50%;
+  background:#fff;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;box-shadow:0 0 0 4px rgba(165,94,255,.2);
+}
+.charity-logo img{width:80px;object-fit:contain}
+.parceiros-grid{
+  display:flex;gap:20px;justify-content:center;flex-wrap:wrap;
+}
+.parceiro-slot{
+  background:var(--bg-raise);border:1px solid var(--border);
+  border-radius:12px;padding:20px 24px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;min-width:148px;flex:1;max-width:186px;
+  transition:border-color .2s;
+}
+.parceiro-slot:hover{border-color:var(--purple-hi)}
+.parceiro-logo-area{height:56px;display:flex;align-items:center;justify-content:center;width:100%}
+.parceiro-logo-blend{mix-blend-mode:screen;max-height:56px;width:auto;max-width:100%;object-fit:contain}
+.parceiro-logo-tile{
+  background:rgba(255,255,255,.95);border-radius:7px;
+  padding:7px 12px;height:52px;
+  display:flex;align-items:center;justify-content:center;width:116px;
+}
+.parceiro-logo-tile img{max-height:36px;max-width:92px;width:auto;object-fit:contain}
+.parceiro-name{font-size:.7rem;font-weight:700;color:var(--muted);text-align:center}
+
+/* ══════════════════════════════
+   REGISTRO SECTION
+══════════════════════════════ */
+/* ══════════════════════════════
+   REGISTRO (SYMPLA-LIKE)
+══════════════════════════════ */
+.registro{
+  background:var(--bg-card);
+  border-top:1px solid var(--border);
+}
+.registro-grid{
+  display:grid;grid-template-columns:1fr 1.15fr;
+  gap:64px;align-items:start;max-width:1020px;margin:0 auto;
+}
+.reg-info .sec-desc{max-width:100%}
+.reg-perks{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.reg-perk{
+  display:flex;align-items:center;gap:12px;
+  font-size:.84rem;color:rgba(248,246,255,.72);
+}
+.reg-perk-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--purple-hi);flex-shrink:0;
+}
+.reg-beneficente{
+  display:flex;align-items:flex-start;gap:14px;
+  margin-top:28px;
+  background:rgba(8,193,106,.06);border:1px solid rgba(8,193,106,.18);
+  border-radius:12px;padding:16px;
+}
+.rb-icon{font-size:1.4rem;line-height:1;flex-shrink:0}
+.rb-title{font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:3px}
+.rb-desc{font-size:.74rem;color:var(--muted);line-height:1.6}
+
+/* FORM CARD */
+.form-card{
+  background:var(--bg-raise);
+  border:1px solid var(--border);
+  border-radius:16px;padding:32px 28px;
+  box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+}
+.form-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+}
+
+/* STEP NAV */
+.step-nav{
+  display:flex;align-items:center;margin-bottom:28px;
+}
+.step-item{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.step-num{
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:800;color:var(--muted);
+  transition:all .25s;flex-shrink:0;
+}
+.step-label{font-size:.68rem;font-weight:600;color:var(--muted);transition:color .25s;white-space:nowrap}
+.step-item.active .step-num{background:var(--purple);border-color:var(--purple);color:#fff;box-shadow:0 0 14px rgba(123,47,224,.5)}
+.step-item.active .step-label{color:var(--white)}
+.step-item.done .step-num{background:var(--green);border-color:var(--green);color:#fff}
+.step-item.done .step-label{color:rgba(248,246,255,.6)}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 10px}
+
+/* STEP CONTENT */
+.step-body{display:none}
+.step-body.active{display:block}
+
+.form-head{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:4px}
+.form-sub{font-size:.77rem;color:var(--muted);margin-bottom:24px}
+
+/* FORM FIELDS */
+.fgrp{margin-bottom:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:.72rem;font-weight:600;color:var(--purple-lo);margin-bottom:5px;letter-spacing:.02em}
+input,select,textarea{
+  width:100%;padding:10px 13px;
+  background:rgba(255,255,255,.04);
+  border:1.5px solid var(--border);
+  border-radius:8px;font-size:.85rem;
+  font-family:'Inter',sans-serif;color:var(--white);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+select option{background:var(--bg-raise);color:var(--white)}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(123,47,224,.15);
+}
+input.err,select.err{border-color:var(--red)}
+.ferr{color:var(--red);font-size:.7rem;margin-top:3px;min-height:16px}
+textarea{resize:vertical;min-height:72px}
+
+.check-row{
+  display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;
+}
+.check-row input[type=checkbox]{
+  width:16px;height:16px;flex-shrink:0;margin-top:2px;
+  accent-color:var(--purple);
+}
+.check-row label{margin:0;font-weight:400;color:var(--muted);font-size:.76rem}
+.check-row a{color:var(--purple-hi)}
+
+.btn-submit{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
+  color:#fff;font-weight:800;font-size:.93rem;
+  border:none;border-radius:10px;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+  box-shadow:0 0 22px rgba(123,47,224,.28);
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(123,47,224,.45)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+/* STEP 2: CONTRIBUIÇÃO */
+.dona-head{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:4px}
+.dona-sub{font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:20px}
+.dona-sub strong{color:var(--purple-lo)}
+.dona-charity-box{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(8,193,106,.06);border:1px solid rgba(8,193,106,.2);
+  border-radius:10px;padding:14px 16px;margin-bottom:20px;
+}
+.dcb-icon{font-size:1.5rem;flex-shrink:0}
+.dcb-name{font-size:.84rem;font-weight:700;color:var(--green)}
+.dcb-cause{font-size:.72rem;color:var(--muted);margin-top:2px}
+.dona-suggestions{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.dona-chip{
+  padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;
+  border:1.5px solid var(--border);background:transparent;color:var(--muted);
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;
+}
+.dona-chip.selected{border-color:var(--purple-hi);color:var(--purple-hi);background:rgba(123,47,224,.1)}
+.dona-chip:hover:not(.selected){border-color:rgba(123,47,224,.4);color:var(--white)}
+.dona-custom-wrap{position:relative;margin-bottom:20px}
+.dona-prefix{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-weight:600;font-size:.84rem;
+}
+.dona-custom-wrap input{padding-left:34px}
+.btn-skip-dona{
+  width:100%;padding:10px;margin-top:8px;
+  background:transparent;border:none;color:var(--muted);
+  font-size:.78rem;font-family:'Inter',sans-serif;cursor:pointer;
+  transition:color .2s;
+}
+.btn-skip-dona:hover{color:var(--white)}
+
+/* STEP 3: INGRESSO DIGITAL */
+.ingresso-wrap{text-align:center}
+.ingresso-ok-ico{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(8,193,106,.12);border:2px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin:0 auto 14px;
+}
+.ingresso-title{font-size:1.15rem;font-weight:800;color:var(--white);margin-bottom:4px}
+.ingresso-sub{font-size:.77rem;color:var(--muted);margin-bottom:22px}
+
+/* TICKET CARD (digital ticket visual) */
+.ticket-card{
+  background:#fff;border-radius:14px;overflow:hidden;
+  max-width:320px;margin:0 auto 18px;
+  box-shadow:0 12px 56px rgba(0,0,0,.55),0 0 48px rgba(123,47,224,.25);
+}
+.ticket-top{
+  background:linear-gradient(135deg,#7B2FE0,#3662FF);
+  padding:20px 20px 18px;text-align:left;
+}
+.ticket-platform-label{
+  font-size:.55rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);margin-bottom:5px;
+}
+.ticket-event-name{font-size:1.45rem;font-weight:900;color:#fff;letter-spacing:-.02em}
+.ticket-event-type{
+  display:inline-block;margin-top:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  padding:2px 10px;border-radius:100px;
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;
+}
+.ticket-body{padding:18px 20px;background:#fff}
+.ticket-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f0eeff;
+}
+.ticket-row:last-of-type{border-bottom:none;margin-bottom:16px}
+.ticket-lbl{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9B91C0;flex-shrink:0;width:80px}
+.ticket-val{font-size:.76rem;font-weight:700;color:#1A0F3C;text-align:right;line-height:1.35}
+.ticket-val.green{color:#08A15A}
+.ticket-qr-wrap{display:flex;justify-content:center;padding:4px 0 12px}
+.ticket-qr-wrap canvas,.ticket-qr-wrap img{border-radius:8px;border:2px solid #f0eeff}
+.ticket-id-label{
+  text-align:center;font-size:.58rem;color:#9B91C0;letter-spacing:.08em;
+  font-weight:600;margin-bottom:4px;text-transform:uppercase;
+}
+.ticket-id-val{
+  text-align:center;font-size:.7rem;font-weight:800;color:#3D3160;
+  font-variant-numeric:tabular-nums;letter-spacing:.06em;
+}
+.ticket-footer-strip{
+  background:#f8f7ff;border-top:1px solid #e8e0ff;
+  padding:10px 20px;display:flex;align-items:center;justify-content:space-between;
+}
+.ticket-footer-strip .ag-mark{
+  width:22px;height:22px;border-radius:5px;
+  background:linear-gradient(135deg,#3662FF,#6A90FF);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.55rem;color:#fff;
+}
+.ticket-footer-strip span{font-size:.62rem;color:#9B91C0;font-weight:600}
+
+.ingresso-actions{display:flex;gap:10px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.btn-print{
+  padding:9px 20px;border-radius:8px;font-size:.8rem;font-weight:700;
+  background:rgba(123,47,224,.12);border:1px solid rgba(123,47,224,.3);
+  color:var(--purple-hi);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;
+}
+.btn-print:hover{background:rgba(123,47,224,.2)}
+.btn-hub{
+  padding:9px 20px;border-radius:8px;font-size:.8rem;font-weight:700;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--muted);transition:all .2s;
+}
+.btn-hub:hover{color:var(--white)}
+.email-note{font-size:.72rem;color:var(--muted);margin-top:6px}
+.email-note span{color:var(--purple-lo);font-weight:600}
+
+
+/* ══════════════════════════════
+   FAQ
+══════════════════════════════ */
+.faq{background:var(--bg);border-top:1px solid var(--border)}
+.faq-list{max-width:680px;margin:40px auto 0;display:flex;flex-direction:column;gap:10px}
+.faq-item{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:17px 22px;cursor:pointer;
+  font-weight:600;font-size:.9rem;color:var(--white);
+  transition:background .2s;user-select:none;
+}
+.faq-q:hover{background:var(--bg-raise)}
+.faq-q .arr{transition:transform .25s;color:var(--muted);font-size:.8rem}
+.faq-item.open .faq-q .arr{transform:rotate(180deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s ease,padding .3s;
+  font-size:.85rem;color:var(--muted);line-height:1.75;
+  padding:0 22px;
+}
+.faq-item.open .faq-a{max-height:160px;padding:0 22px 18px}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer{
+  background:var(--bg-card);
+  border-top:1px solid var(--border);
+  padding:48px 5% 28px;
+}
+.footer-grid{
+  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr;
+  gap:40px;padding-bottom:36px;
+  border-bottom:1px solid var(--border);
+}
+.footer-brand .nav-event{font-size:.75rem;margin-top:6px;display:block}
+.footer-brand p{color:var(--muted);font-size:.8rem;line-height:1.7;margin-top:10px;max-width:260px}
+.footer-col h4{color:var(--white);font-size:.82rem;font-weight:700;margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul li a{color:var(--muted);font-size:.8rem;transition:color .2s}
+.footer-col ul li a:hover{color:var(--purple-hi)}
+.footer-bottom{
+  max-width:1000px;margin:22px auto 0;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+}
+.footer-bottom span{color:rgba(248,246,255,.25);font-size:.75rem}
+.footer-bottom a{color:var(--purple-lo);font-size:.75rem}
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+/* ── GRUPO DE INSCRIÇÃO ── */
+.grupo-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;min-height:4px}
+.grupo-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(8,193,106,.06);border:1px solid rgba(8,193,106,.2);
+  border-radius:9px;padding:10px 14px;
+}
+.gi-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:rgba(123,47,224,.2);border:1.5px solid var(--purple);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:800;color:var(--purple-hi);
+}
+.gi-info{flex:1;min-width:0}
+.gi-nome{font-size:.8rem;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gi-id{font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.gi-role{font-size:.6rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
+.gi-remove{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:.9rem;padding:2px 6px;border-radius:4px;transition:color .2s;
+  flex-shrink:0;
+}
+.gi-remove:hover{color:var(--red)}
+
+.btn-add-guest{
+  width:100%;padding:10px;
+  background:rgba(123,47,224,.06);border:1.5px dashed rgba(123,47,224,.3);
+  border-radius:9px;color:var(--purple-lo);
+  font-size:.8rem;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:all .2s;margin-bottom:16px;
+}
+.btn-add-guest:hover{border-color:var(--purple-hi);color:var(--purple-hi);background:rgba(123,47,224,.1)}
+
+/* guest mini-form */
+.guest-form-wrap{
+  background:rgba(123,47,224,.05);border:1px solid rgba(123,47,224,.2);
+  border-radius:10px;padding:14px;margin-bottom:16px;
+}
+.guest-form-title{
+  font-size:.7rem;font-weight:700;color:var(--purple-lo);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;
+}
+
+/* ── INGRESSO MULTI ── */
+.ingressos-stack{display:flex;flex-direction:column;gap:14px;margin-bottom:16px}
+
+/* ── CONSULTA / HISTÓRICO MODAL ── */
+.lookup-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:none;align-items:center;justify-content:center;z-index:600;padding:16px;
+}
+.lookup-overlay.open{display:flex}
+.lookup-box{
+  background:var(--bg-raise);border:1px solid var(--border);
+  border-radius:16px;padding:30px 28px;max-width:440px;width:100%;
+  max-height:90vh;overflow-y:auto;
+}
+.lookup-title{font-size:1rem;font-weight:800;margin-bottom:4px}
+.lookup-sub{font-size:.77rem;color:var(--muted);margin-bottom:20px}
+.lookup-result{margin-top:18px}
+.lr-event{font-size:.62rem;font-weight:700;color:var(--purple-lo);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.lr-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;margin-bottom:10px;
+}
+.lr-nome{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:2px}
+.lr-id{font-size:.66rem;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.lr-baixado{display:inline-block;font-size:.6rem;font-weight:700;padding:1px 8px;border-radius:100px;margin-left:8px}
+.lr-baixado.sim{background:rgba(8,193,106,.12);color:var(--green)}
+.lr-baixado.nao{background:rgba(255,200,0,.12);color:#F5A623}
+.lr-group-member{
+  font-size:.76rem;color:var(--muted);margin-top:6px;padding-top:6px;
+  border-top:1px solid var(--border);
+}
+
+/* ── JÁ INSCRITO MODAL ── */
+.duplicate-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:none;align-items:center;justify-content:center;z-index:700;padding:16px;
+}
+.duplicate-overlay.open{display:flex}
+.duplicate-box{
+  background:var(--bg-raise);border:1px solid var(--border);
+  border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center;
+}
+.dup-icon{font-size:2.2rem;margin-bottom:10px}
+.dup-title{font-size:1rem;font-weight:800;margin-bottom:6px;color:var(--purple-hi)}
+.dup-sub{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:18px}
+.dup-ticket{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:10px;padding:14px;margin-bottom:16px;text-align:left;
+}
+.dup-nome{font-weight:700;font-size:.9rem;margin-bottom:4px}
+.dup-id{font-size:.66rem;color:var(--muted);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+
+/* ── PDF PRINT ── */
+@media print {
+  body>*:not(#print-pdf-area){display:none!important}
+  #print-pdf-area{
+    display:block!important;position:fixed!important;inset:0!important;
+    background:#fff!important;padding:40px!important;
+  }
+  .pdf-ticket{
+    font-family:'Inter',sans-serif;max-width:420px;margin:0 auto;
+    border:2px solid #e0d8ff;border-radius:12px;overflow:hidden;
+  }
+  .pdf-top{background:linear-gradient(135deg,#7B2FE0,#3662FF);padding:20px 24px;color:#fff}
+  .pdf-platform{font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:4px}
+  .pdf-event{font-size:22px;font-weight:900;letter-spacing:-.02em}
+  .pdf-body{padding:20px 24px;background:#fff}
+  .pdf-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0eeff}
+  .pdf-row:last-child{border-bottom:none;font-size:15px;font-weight:800}
+  .pdf-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9B91C0;padding-top:2px}
+  .pdf-val{font-size:12px;font-weight:700;color:#1A0F3C;text-align:right}
+  .pdf-footer{background:#f8f7ff;padding:10px 24px;font-size:9px;color:#9B91C0;text-align:center}
+}
+
+@media(max-width:1024px){
+  .sobre-grid{grid-template-columns:1fr;gap:32px}
+  .registro-grid{grid-template-columns:1fr;gap:36px}
+}
+@media(max-width:900px){
+  .strip-inner{grid-template-columns:repeat(3,1fr)}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+}
+@media(max-width:640px){
+  nav{padding:0 4%}
+  .nav-converge-label,.nav-breadcrumb-sep{display:none}
+  .nav-links{display:none}
+  .frow{grid-template-columns:1fr}
+  .form-card{padding:22px 16px}
+  .donation-opts{grid-template-columns:repeat(3,1fr)}
+  .strip-inner{grid-template-columns:repeat(3,1fr);gap:12px}
+  .strip-num{font-size:2rem}
+  .section{padding:60px 4%}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-brand">
+    <a href="../../index.html" class="nav-ag-co">
+      <div class="nav-ag-logo">AG</div>
+      <span class="nav-ag-name">AG Consultoria</span>
+    </a>
+    <span class="nav-breadcrumb-sep">›</span>
+    <span class="nav-converge-label">AG Converge</span>
+    <span class="nav-breadcrumb-sep">›</span>
+    <div class="nav-sep"></div>
+    <span class="nav-event">RH em Xeque</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#caridade">Caridade</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">
+    Inscrever-se
+  </button>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="inicio">
+  <div class="hero-eyebrow">
+    <span class="eyebrow-dot"></span>
+    Inscrições abertas · Evento beneficente · 14 de maio
+  </div>
+
+  <div class="hero-logo-wrap">
+    <img src="../../assets/logos/rh-em-xeque-logo.png" alt="RH em Xeque">
+  </div>
+
+  <p class="hero-tagline">
+    <strong>NR-1 já é lei. A escala 5x2 está chegando.</strong><br>
+    Sua empresa está preparada? Um evento para líderes que constroem o futuro do trabalho — com propósito.
+  </p>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <div><span class="lbl">Data</span><span class="val">14 de maio de 2026</span></div>
+    </div>
+    <div class="hero-meta-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div><span class="lbl">Horário</span><span class="val">18h às 21h30</span></div>
+    </div>
+    <div class="hero-meta-item">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div><span class="lbl">Local</span><span class="val">Auditório Slavieiro · Heron Marinho · Campina Grande</span></div>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <button class="btn-hero" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Garantir minha vaga
+    </button>
+    <a href="#sobre" class="btn-ghost">Saiba mais</a>
+  </div>
+
+  <div class="hero-capa">
+    <img src="../../assets/images/capa.png" alt="RH em Xeque — pôster do evento">
+  </div>
+</section>
+
+<!-- ══ SOBRE ══ -->
+<section class="section sobre" id="sobre">
+  <div class="sobre-grid">
+    <div>
+      <span class="sec-label">Sobre o evento</span>
+      <h2 class="sec-title">Três frentes mudaram o jogo ao mesmo tempo</h2>
+      <p class="sec-desc">
+        A NR-1 já é lei — risco psicossocial virou obrigação legal. A PEC da 5×2 está no Congresso. O apagão de talentos da Geração Z criou uma nova matemática de retenção. <strong style="color:var(--purple-hi)">Quem esperar vai pagar caro. Quem antecipar vira referência.</strong>
+      </p>
+      <p class="sec-desc" style="margin-top:14px">
+        O RH em Xeque reúne líderes, gestores e profissionais de RH em Campina Grande para uma noite de conteúdo denso, conexões reais e tomada de decisão — no Auditório Slavieiro do Heron Marinho, dia 14 de maio, das 18h às 21h30.
+      </p>
+      <div class="sobre-badges">
+        <div class="sobre-badge">
+          <div class="badge-icon">⚖️</div>
+          <div class="badge-text">
+            <strong>NR-1 Atualizada</strong>
+            <span>Risco psicossocial virou obrigação legal a partir de maio/2025</span>
+          </div>
+        </div>
+        <div class="sobre-badge">
+          <div class="badge-icon">🕐</div>
+          <div class="badge-text">
+            <strong>PEC da 5×2</strong>
+            <span>Jornada e escala 6×1 em revisão — o que muda na sua operação</span>
+          </div>
+        </div>
+        <div class="sobre-badge">
+          <div class="badge-icon">🧠</div>
+          <div class="badge-text">
+            <strong>Apagão + Geração Z</strong>
+            <span>Nova matemática de retenção e produtividade que você precisa dominar</span>
+          </div>
+        </div>
+        <div class="sobre-badge">
+          <div class="badge-icon">❤️</div>
+          <div class="badge-text">
+            <strong>Evento beneficente</strong>
+            <span>Entrada gratuita — doação voluntária para a ACCP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sobre-img">
+      <img src="../../assets/images/rh-web.jpg" alt="RH em Xeque — palestrante">
+    </div>
+  </div>
+</section>
+
+<!-- ══ STRIP ══ -->
+<div class="strip">
+  <div class="strip-inner">
+    <div><div class="strip-num">1 noite</div><div class="strip-lbl">Conteúdo intenso</div></div>
+    <div><div class="strip-num">100%</div><div class="strip-lbl">Gratuito</div></div>
+    <div><div class="strip-num">+RH</div><div class="strip-lbl">Líderes esperados</div></div>
+  </div>
+</div>
+
+<!-- ══ MÍDIA ══ -->
+<section class="section midia" id="midia">
+  <div class="container" style="text-align:center">
+    <span class="sec-label">Veja mais</span>
+    <h2 class="sec-title">O evento em imagens</h2>
+  </div>
+
+  <div class="midia-grid">
+    <!-- Vídeo de divulgação -->
+    <div class="midia-video">
+      <video controls preload="metadata" poster="../../assets/images/capa-web.jpg">
+        <source src="../../assets/videos/rh-em-xeque-promo.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo. <a href="../../assets/videos/rh-em-xeque-promo.mp4" style="color:var(--purple-hi)">Baixar vídeo</a>
+      </video>
+      <span class="midia-video-label">▶ Vídeo de divulgação</span>
+    </div>
+
+    <!-- Foto 1 — pôster com palestrante -->
+    <div class="midia-foto" style="aspect-ratio:9/16;max-height:420px" onclick="openLightbox('../../assets/images/rh-web.jpg')">
+      <img src="../../assets/images/rh-web.jpg" alt="RH em Xeque — palestrante">
+    </div>
+
+    <!-- Foto 2 — capa do evento -->
+    <div class="midia-foto" style="aspect-ratio:9/16;max-height:420px" onclick="openLightbox('../../assets/images/capa-web.jpg')">
+      <img src="../../assets/images/capa-web.jpg" alt="RH em Xeque — capa">
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<!-- ══ CARIDADE ══ -->
+<section class="section caridade" id="caridade">
+  <div class="container" style="text-align:center">
+    <span class="sec-label">Beneficente</span>
+    <h2 class="sec-title">Quem recebe sua doação</h2>
+    <p class="sec-desc" style="margin:0 auto">O evento é gratuito. Qualquer valor doado na inscrição vai integralmente para a ACCP.</p>
+
+    <div class="charity-card">
+      <div class="charity-logo">
+        <img src="../../assets/images/foto-evento.jpeg" alt="ACCP">
+      </div>
+      <h3>ACCP — Associação Centro de Cidadania Plena</h3>
+      <p>
+        A ACCP — Associação Centro de Cidadania Plena — atua na promoção da cidadania e inclusão social.
+        Cada doação feita no ato da inscrição ajuda a manter os projetos que transformam vidas.
+        A participação no evento é 100% gratuita — a doação é totalmente voluntária.
+      </p>
+    </div>
+
+    <!-- Realização -->
+    <span class="sec-label" style="display:block;text-align:center;margin-top:56px;margin-bottom:20px">Realização</span>
+    <div style="display:flex;justify-content:center;margin-bottom:40px">
+      <div class="parceiro-slot" style="min-width:160px">
+        <div class="parceiro-logo-area">
+          <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#7B2FE0,#A55EFF);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;letter-spacing:.02em">AG</div>
+        </div>
+        <span class="parceiro-name" style="font-size:.78rem;color:rgba(248,246,255,.8)">AG Consultoria</span>
+      </div>
+    </div>
+
+    <!-- Parceiros -->
+    <span class="sec-label" style="display:block;text-align:center;margin-bottom:20px">Parceiros do evento</span>
+    <div class="parceiros-grid">
+      <div class="parceiro-slot">
+        <div class="parceiro-logo-area">
+          <img class="parceiro-logo-blend" src="../../assets/logos/protagon-logo.png" alt="Protagon Engenharia">
+        </div>
+        <span class="parceiro-name">Protagon Engenharia</span>
+      </div>
+      <div class="parceiro-slot">
+        <div class="parceiro-logo-area">
+          <div class="parceiro-logo-tile">
+            <img src="../../assets/logos/prosangue-stack.png" alt="Pro Sangue Diagnósticos">
+          </div>
+        </div>
+        <span class="parceiro-name">Pro Sangue Diagnósticos</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REGISTRO ══ -->
+<section class="section registro" id="registro">
+  <div class="registro-grid">
+
+    <!-- Coluna info -->
+    <div class="reg-info">
+      <span class="sec-label">Inscrição gratuita</span>
+      <h2 class="sec-title">Reserve sua vaga</h2>
+      <p class="sec-desc">Vagas limitadas ao auditório. Seu ingresso digital aparece aqui mesmo após confirmar.</p>
+      <div class="reg-perks">
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Ingresso digital com QR Code</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Confirmação por e-mail</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Entrada 100% gratuita</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Coffee e networking inclusos</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Certificado digital ao final</div>
+      </div>
+      <div class="reg-beneficente">
+        <div class="rb-icon">❤️</div>
+        <div>
+          <div class="rb-title">Evento beneficente</div>
+          <div class="rb-desc">Após se inscrever, você pode contribuir voluntariamente com a ACCP — organização que apoia <strong style="color:var(--green)">vítimas de enchentes</strong> em Campina Grande. Qualquer valor, sem mínimo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna form card (4 passos) -->
+    <div class="form-card" id="form-card-top">
+
+      <!-- Indicador de passos -->
+      <div class="step-nav" id="stepNav">
+        <div class="step-item active" id="sn1"><div class="step-num">1</div><div class="step-label">Seus dados</div></div>
+        <div class="step-line"></div>
+        <div class="step-item" id="sn2"><div class="step-num">2</div><div class="step-label">Grupo</div></div>
+        <div class="step-line"></div>
+        <div class="step-item" id="sn3"><div class="step-num">3</div><div class="step-label">Contribuição</div></div>
+        <div class="step-line"></div>
+        <div class="step-item" id="sn4"><div class="step-num">4</div><div class="step-label">Ingressos</div></div>
+      </div>
+
+      <!-- PASSO 1: Dados do titular -->
+      <div class="step-body active" id="step1">
+        <div class="form-head">Dados de inscrição</div>
+        <div class="form-sub">Preencha para garantir sua vaga</div>
+        <form id="regForm" novalidate>
+          <div class="frow">
+            <div class="fgrp">
+              <label for="nome">Nome completo</label>
+              <input type="text" id="nome" placeholder="Seu nome completo">
+              <div class="ferr" id="nome-e"></div>
+            </div>
+            <div class="fgrp">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" placeholder="seu@email.com">
+              <div class="ferr" id="email-e"></div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fgrp">
+              <label for="tel">WhatsApp</label>
+              <input type="tel" id="tel" placeholder="(83) 99999-9999">
+              <div class="ferr" id="tel-e"></div>
+            </div>
+            <div class="fgrp">
+              <label for="empresa">Empresa</label>
+              <input type="text" id="empresa" placeholder="Nome da empresa">
+              <div class="ferr" id="empresa-e"></div>
+            </div>
+          </div>
+          <div class="fgrp">
+            <label for="cargo">Cargo / Função</label>
+            <input type="text" id="cargo" placeholder="Ex: Gerente de RH">
+            <div class="ferr" id="cargo-e"></div>
+          </div>
+          <div class="fgrp">
+            <label for="origem">Como ficou sabendo?</label>
+            <select id="origem">
+              <option value="">Selecione...</option>
+              <option value="instagram">Instagram / Redes sociais</option>
+              <option value="indicacao">Indicação</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="email">E-mail</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="termos">
+            <label for="termos">Concordo com os <a href="#">termos de participação</a> e autorizo o uso dos dados conforme a <a href="#">política de privacidade</a> da AG Consultoria.</label>
+          </div>
+          <div class="ferr" id="termos-e" style="margin-bottom:12px"></div>
+          <button type="submit" class="btn-submit" id="submitBtn">Próximo →</button>
+        </form>
+        <div style="text-align:center;margin-top:14px">
+          <button type="button" onclick="openLookup()" style="background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Já garantiu seu ingresso? Consultar →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 2: Grupo de inscrição -->
+      <div class="step-body" id="step2">
+        <div class="form-head">Grupo de inscrição</div>
+        <div class="form-sub" id="grupoSub">Você está inscrito. Leve alguém?</div>
+        <div class="grupo-list" id="grupoList"></div>
+        <button type="button" class="btn-add-guest" id="btnAddGuest" onclick="showGuestForm()">+ Adicionar convidado</button>
+        <div class="guest-form-wrap" id="guestFormWrap" style="display:none">
+          <div class="guest-form-title">Dados do convidado</div>
+          <div class="frow">
+            <div class="fgrp">
+              <label for="g-nome">Nome completo</label>
+              <input type="text" id="g-nome" placeholder="Nome do convidado">
+              <div class="ferr" id="g-nome-e"></div>
+            </div>
+            <div class="fgrp">
+              <label for="g-email">E-mail</label>
+              <input type="email" id="g-email" placeholder="email@exemplo.com">
+              <div class="ferr" id="g-email-e"></div>
+            </div>
+          </div>
+          <div class="fgrp">
+            <label for="g-tel">WhatsApp (opcional)</label>
+            <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
+          </div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="btn-submit" style="font-size:.8rem;padding:10px" onclick="addGuest()">Adicionar →</button>
+            <button type="button" class="btn-skip-dona" style="margin:0;width:auto;padding:10px 16px;font-size:.8rem" onclick="cancelGuestForm()">Cancelar</button>
+          </div>
+        </div>
+        <button type="button" class="btn-submit" id="btnGrupoNext" onclick="goToStep(3)">Continuar →</button>
+        <button type="button" class="btn-skip-dona" onclick="goToStep(3)">Só eu mesmo, continuar</button>
+      </div>
+
+      <!-- PASSO 3: Contribuição voluntária (beneficente) -->
+      <div class="step-body" id="step3">
+        <div class="dona-head">Contribuição voluntária</div>
+        <div class="dona-sub">Sua participação é <strong>gratuita</strong> — o valor é 100% de sua escolha. Sugerimos <strong style="color:var(--purple-lo)">R$ 60</strong> por participante, mas qualquer valor ajuda a ACCP a apoiar <strong>vítimas de enchentes</strong> em Campina Grande.</div>
+        <div class="dona-charity-box">
+          <div class="dcb-icon">❤️</div>
+          <div>
+            <div class="dcb-name">ACCP · Associação Centro de Cidadania Plena</div>
+            <div class="dcb-cause">Apoio a vítimas de enchentes · Campina Grande, PB</div>
+          </div>
+        </div>
+        <div class="dona-suggestions" id="donaChips">
+          <button type="button" class="dona-chip" onclick="selectChip(this,'20')">R$ 20</button>
+          <button type="button" class="dona-chip selected" onclick="selectChip(this,'60')">R$ 60</button>
+          <button type="button" class="dona-chip" onclick="selectChip(this,'100')">R$ 100</button>
+          <button type="button" class="dona-chip" onclick="selectChip(this,'outro')">Outro valor</button>
+        </div>
+        <div class="fgrp dona-custom-wrap" id="customWrap" style="display:none">
+          <label for="customVal">Valor personalizado</label>
+          <div style="position:relative">
+            <span class="dona-prefix">R$</span>
+            <input type="number" id="customVal" placeholder="0,00" min="0" step="0.01" oninput="updateDoaBtn()">
+          </div>
+        </div>
+        <!-- Pix QR -->
+        <div id="pixSection" style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;text-align:center">
+          <div style="font-size:.68rem;font-weight:700;color:var(--purple-lo);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Pagamento via Pix</div>
+          <div id="pixQrWrap" style="display:flex;justify-content:center;margin-bottom:10px"></div>
+          <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Valor: <strong id="pixValorLabel" style="color:var(--purple-lo)">R$ 60,00</strong></div>
+          <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;word-break:break-all;padding:0 8px;opacity:.7">AGBR TECNOLOGIA LTDA · Cora</div>
+          <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s">Copiar chave Pix</button>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou copie a chave no seu banco.<br>Após pagar, clique em confirmar abaixo.</div>
+        </div>
+        <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()">Confirmar + contribuir →</button>
+        <button type="button" class="btn-skip-dona" onclick="confirmarSemDoa()">Participar sem contribuir</button>
+      </div>
+
+      <!-- PASSO 4: Ingressos do grupo -->
+      <div class="step-body" id="step4">
+        <div class="ingresso-wrap">
+          <div class="ingresso-ok-ico">✓</div>
+          <div class="ingresso-title" id="ingressoTitle">Inscrição confirmada!</div>
+          <div class="ingresso-sub" id="ingressoSub">Baixe o PDF com o(s) seu(s) ingresso(s)</div>
+          <div class="ingressos-stack" id="ingressosStack"></div>
+          <div class="ingresso-actions">
+            <button type="button" class="btn-print" onclick="baixarPDF()">⬇ Baixar ingressos (PDF)</button>
+            <a href="../../index.html" class="btn-hub">← Todos os eventos</a>
+          </div>
+          <div style="text-align:center;margin-top:10px">
+            <button type="button" onclick="openHistorico()" style="background:none;border:none;color:var(--muted);font-size:.73rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Analisar histórico de inscrições →</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /form-card -->
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="section faq" id="faq">
+  <div class="container" style="text-align:center">
+    <span class="sec-label">Dúvidas</span>
+    <h2 class="sec-title">Perguntas frequentes</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">O evento é realmente gratuito? <span class="arr">▼</span></div>
+      <div class="faq-a">Sim, 100% gratuito. A doação para a ACCP é totalmente voluntária e aparece apenas como sugestão no momento da inscrição. Você pode pular sem nenhum problema.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Para onde vai minha doação? <span class="arr">▼</span></div>
+      <div class="faq-a">Toda doação é destinada à ACCP — Associação Centro de Cidadania Plena, uma organização que promove inclusão social em Campina Grande. A AG Consultoria não retém nenhum valor.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Como recebo o ingresso? <span class="arr">▼</span></div>
+      <div class="faq-a">Você receberá um e-mail de confirmação com QR Code em até 1h após a inscrição. Apresente o QR no credenciamento no dia 14 de maio.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Posso levar colegas? <span class="arr">▼</span></div>
+      <div class="faq-a">Sim! Cada pessoa deve fazer a própria inscrição. As vagas são limitadas ao auditório, então incentive quem você conhece a se inscrever logo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">O evento vai ser transmitido online? <span class="arr">▼</span></div>
+      <div class="faq-a">O RH em Xeque é 100% presencial. Não haverá transmissão ao vivo, mas trechos poderão ser compartilhados nas redes sociais da AG Consultoria.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODAL: JÁ INSCRITO ══ -->
+<div class="duplicate-overlay" id="dupOverlay">
+  <div class="duplicate-box">
+    <div class="dup-icon">🎫</div>
+    <div class="dup-title">Você já está ingressado!</div>
+    <div class="dup-sub" id="dupSub">Encontramos um registro com este e-mail neste evento.</div>
+    <div id="dupTickets"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-print" onclick="baixarPDFDup()">⬇ Baixar ingresso</button>
+      <button onclick="closeDup()" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.8rem">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: CONSULTA ══ -->
+<div class="lookup-overlay" id="lookupOverlay">
+  <div class="lookup-box">
+    <div class="lookup-title">Consultar ingresso</div>
+    <div class="lookup-sub">Digite seu e-mail para recuperar seu(s) ingresso(s) neste evento.</div>
+    <div class="fgrp">
+      <label for="lookupEmail">E-mail cadastrado</label>
+      <input type="email" id="lookupEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLookup()">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-submit" style="font-size:.82rem;padding:11px" onclick="doLookup()">Buscar</button>
+      <button onclick="closeLookup()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem">Cancelar</button>
+    </div>
+    <div class="lookup-result" id="lookupResult" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: HISTÓRICO ══ -->
+<div class="lookup-overlay" id="historicoOverlay">
+  <div class="lookup-box">
+    <div class="lookup-title">Histórico de inscrições</div>
+    <div class="lookup-sub">Digite seu e-mail para ver todos os eventos em que você se inscreveu pela AG Converge.</div>
+    <div class="fgrp">
+      <label for="histEmail">E-mail cadastrado</label>
+      <input type="email" id="histEmail" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doHistorico()">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-submit" style="font-size:.82rem;padding:11px" onclick="doHistorico()">Ver histórico</button>
+      <button onclick="closeHistorico()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem">Cancelar</button>
+    </div>
+    <div class="lookup-result" id="historicoResult" style="display:none"></div>
+  </div>
+</div>
+
+<!-- PDF print area (hidden, populated before print) -->
+<div id="print-pdf-area" style="display:none"></div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <!-- AG Consultoria (empresa) -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,#7B2FE0,#A55EFF);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.58rem;color:#fff;flex-shrink:0">AG</div>
+        <span style="font-weight:700;font-size:.88rem">AG Consultoria</span>
+      </div>
+      <p style="color:var(--muted);font-size:.77rem;line-height:1.6;max-width:250px;margin-bottom:14px">
+        Especialistas em gestão de pessoas, NR-1 e cultura organizacional.
+      </p>
+      <!-- AG Converge (plataforma) -->
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(123,47,224,.08);border:1px solid rgba(123,47,224,.2);border-radius:8px;width:fit-content">
+        <div style="width:5px;height:5px;border-radius:50%;background:var(--purple-hi)"></div>
+        <span style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple-lo)">AG Converge · Plataforma de Eventos</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>RH em Xeque</h4>
+      <ul>
+        <li><a href="#sobre">Sobre o evento</a></li>
+        <li><a href="#caridade">Caridade · ACCP</a></li>
+        <li><a href="#registro">Inscrição</a></li>
+        <li><a href="#faq">Perguntas frequentes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>AG Consultoria</h4>
+      <ul>
+        <li><a href="https://agconsultorialtda.com" target="_blank">agconsultorialtda.com</a></li>
+        <li><a href="mailto:suporte@agconsultorialtda.com">suporte@agconsultorialtda.com</a></li>
+        <li><a href="#" target="_blank">Instagram</a></li>
+        <li><a href="#" target="_blank">LinkedIn</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 AG Consultoria Ltda. · AG Converge Platform</span>
+    <a href="../../index.html" style="color:var(--muted)">← Todos os eventos</a>
+  </div>
+</footer>
+
+
+<script>
+/* ════════════════════════════════════════════════════════
+   AG CONVERGE — CONFIGURAÇÃO DE EVENTO
+════════════════════════════════════════════════════════ */
+const EVENT_CFG = {
+  slug:         'rh-em-xeque',
+  label:        'RH em Xeque',
+  tipo:         'Beneficente · Gratuito',
+  data:         '14 mai 2026 · 18h–21h30',
+  local:        'Aud. Slavieiro · Campina Grande',
+  ticketPrefix: 'RHX',
+  type:         'beneficent',
+  storage:      'ag_leads_rh-em-xeque',
+  charity: {
+    name:      'ACCP · Associação Centro de Cidadania Plena',
+    cause:     'Apoio a vítimas de enchentes · Campina Grande',
+    suggested:  60,
+  },
+  partners: ['Protagon', 'Pro Sangue'],
+  pix: {
+    chave:       '5db69cba-ecfd-4c6b-b718-eaca7113aeb5',
+    beneficiario:'AGBR TECNOLOGIA LTDA',
+    cidade:      'CAMPINA GRANDE',
+  },
+};
+
+// Lista de todos os eventos da plataforma (para histórico cross-event)
+const ALL_EVENTS = [
+  { storage:'ag_leads_rh-em-xeque', label:'RH em Xeque', data:'14 mai 2026' },
+  { storage:'ag_leads_a-cupula',     label:'A Cúpula',    data:'25 set 2025' },
+];
+
+// ════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ════════════════════════════════════════════════════════
+let grupo      = [];   // array de leads do grupo atual (titular + convidados)
+let grupoId    = '';   // ID compartilhado do grupo
+let selectedDoa = 60;
+
+// ════════════════════════════════════════════════════════
+// UTILITÁRIOS
+// ════════════════════════════════════════════════════════
+function gerarId(prefix) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 8; i++) {
+    if (i === 4) s += '-';
+    s += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `${prefix}-${s}`;
+}
+
+function normEmail(e) { return (e||'').trim().toLowerCase(); }
+function normNome(n)  { return (n||'').trim().toLowerCase().replace(/\s+/g,' '); }
+function iniciais(n)  { return n.trim().split(' ').filter(Boolean).map(p=>p[0]).slice(0,2).join('').toUpperCase(); }
+
+function getLeads() {
+  return JSON.parse(localStorage.getItem(EVENT_CFG.storage) || '[]');
+}
+
+// ════════════════════════════════════════════════════════
+// DETECÇÃO DE DUPLICATA
+// Retorna leads existentes para o mesmo email neste evento
+// ════════════════════════════════════════════════════════
+function checkDuplicate(email) {
+  const ne = normEmail(email);
+  return getLeads().filter(l => normEmail(l.email) === ne);
+}
+
+// ════════════════════════════════════════════════════════
+// STEP NAV (agora 4 passos)
+// ════════════════════════════════════════════════════════
+function goToStep(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById(`step${i}`).classList.toggle('active', i===n);
+    const sn = document.getElementById(`sn${i}`);
+    sn.classList.remove('active','done');
+    if (i < n)  sn.classList.add('done');
+    if (i === n) sn.classList.add('active');
+  });
+  document.getElementById('form-card-top')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ════════════════════════════════════════════════════════
+// VALIDAÇÃO PASSO 1
+// ════════════════════════════════════════════════════════
+const FIELDS = [
+  {id:'nome',    err:'nome-e',    msg:'Informe seu nome',    ok:v=>v.trim().length>2},
+  {id:'email',   err:'email-e',   msg:'E-mail inválido',     ok:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+  {id:'tel',     err:'tel-e',     msg:'Informe seu WhatsApp',ok:v=>v.replace(/\D/g,'').length>=10},
+  {id:'empresa', err:'empresa-e', msg:'Informe a empresa',   ok:v=>v.trim().length>1},
+  {id:'cargo',   err:'cargo-e',   msg:'Informe seu cargo',   ok:v=>v.trim().length>1},
+];
+
+document.getElementById('tel').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,11);
+  if (v.length>6) v=`(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if (v.length>2) v=`(${v.slice(0,2)}) ${v.slice(2)}`;
+  else if (v.length) v=`(${v}`;
+  this.value = v;
+});
+
+FIELDS.forEach(f => {
+  document.getElementById(f.id).addEventListener('input', () => {
+    document.getElementById(f.id).classList.remove('err');
+    document.getElementById(f.err).textContent = '';
+  });
+});
+
+function validateStep1() {
+  let ok = true;
+  FIELDS.forEach(f => {
+    const el = document.getElementById(f.id);
+    const er = document.getElementById(f.err);
+    if (!f.ok(el.value)) { el.classList.add('err'); er.textContent = f.msg; ok = false; }
+    else { el.classList.remove('err'); er.textContent = ''; }
+  });
+  const t  = document.getElementById('termos');
+  const te = document.getElementById('termos-e');
+  if (!t.checked) { te.textContent = 'Aceite os termos para continuar'; ok = false; }
+  else te.textContent = '';
+  return ok;
+}
+
+document.getElementById('regForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validateStep1()) return;
+
+  const email = document.getElementById('email').value.trim();
+  const dups  = checkDuplicate(email);
+
+  if (dups.length) {
+    showDupModal(dups);
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Verificando...';
+
+  grupoId = gerarId('GRP');
+  grupo   = [];
+
+  const titular = {
+    ingresso_id:       gerarId(EVENT_CFG.ticketPrefix),
+    grupo_id:          grupoId,
+    evento_id:         EVENT_CFG.slug,
+    nome:              document.getElementById('nome').value.trim(),
+    email,
+    tel:               document.getElementById('tel').value.trim(),
+    empresa:           document.getElementById('empresa').value.trim(),
+    cargo:             document.getElementById('cargo').value.trim(),
+    origem:            document.getElementById('origem').value,
+    inscricao_at:      new Date().toISOString(),
+    doacao:            0,
+    doacao_confirmada: false,
+    titular:           true,
+    titular_nome:      null,
+    ingresso_baixado:  false,
+  };
+  grupo.push(titular);
+
+  await new Promise(r => setTimeout(r, 300));
+  btn.disabled = false; btn.textContent = 'Próximo →';
+
+  renderGrupoList();
+  document.getElementById('grupoSub').textContent = `Você está inscrito, ${titular.nome.split(' ')[0]}. Vai levar alguém?`;
+  goToStep(2);
+});
+
+// ════════════════════════════════════════════════════════
+// PASSO 2: GRUPO
+// ════════════════════════════════════════════════════════
+function renderGrupoList() {
+  const list = document.getElementById('grupoList');
+  list.innerHTML = grupo.map((p, i) => `
+    <div class="grupo-item">
+      <div class="gi-avatar">${iniciais(p.nome)}</div>
+      <div class="gi-info">
+        <div class="gi-nome">${esc(p.nome)}</div>
+        <div class="gi-id">${p.ingresso_id}</div>
+      </div>
+      <div class="gi-role">${p.titular ? 'Titular' : 'Convidado'}</div>
+      ${!p.titular ? `<button class="gi-remove" onclick="removeGuest(${i})" title="Remover">✕</button>` : ''}
+    </div>
+  `).join('');
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showGuestForm() {
+  document.getElementById('guestFormWrap').style.display = 'block';
+  document.getElementById('btnAddGuest').style.display   = 'none';
+  document.getElementById('g-nome').focus();
+}
+
+function cancelGuestForm() {
+  document.getElementById('guestFormWrap').style.display = 'none';
+  document.getElementById('btnAddGuest').style.display   = 'block';
+  ['g-nome','g-email','g-tel'].forEach(id => { const el=document.getElementById(id); el.value=''; el.classList.remove('err'); });
+  ['g-nome-e','g-email-e'].forEach(id => document.getElementById(id).textContent='');
+}
+
+function addGuest() {
+  const nome  = document.getElementById('g-nome');
+  const email = document.getElementById('g-email');
+  let ok = true;
+
+  if (nome.value.trim().length < 2) {
+    nome.classList.add('err'); document.getElementById('g-nome-e').textContent='Informe o nome'; ok=false;
+  } else { nome.classList.remove('err'); document.getElementById('g-nome-e').textContent=''; }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    email.classList.add('err'); document.getElementById('g-email-e').textContent='E-mail inválido'; ok=false;
+  } else { email.classList.remove('err'); document.getElementById('g-email-e').textContent=''; }
+
+  if (!ok) return;
+
+  // Verifica duplicata no evento
+  const dups = checkDuplicate(email.value.trim());
+  if (dups.length) {
+    document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
+    email.classList.add('err');
+    return;
+  }
+
+  // Verifica duplicata dentro do grupo atual
+  if (grupo.some(p => normEmail(p.email) === normEmail(email.value))) {
+    document.getElementById('g-email-e').textContent = 'Este e-mail já está no grupo';
+    email.classList.add('err');
+    return;
+  }
+
+  grupo.push({
+    ingresso_id:       gerarId(EVENT_CFG.ticketPrefix),
+    grupo_id:          grupoId,
+    evento_id:         EVENT_CFG.slug,
+    nome:              nome.value.trim(),
+    email:             email.value.trim(),
+    tel:               document.getElementById('g-tel').value.trim(),
+    empresa:           grupo[0].empresa,
+    cargo:             '',
+    origem:            'convidado',
+    inscricao_at:      new Date().toISOString(),
+    doacao:            0,
+    doacao_confirmada: false,
+    titular:           false,
+    titular_nome:      grupo[0].nome,
+    ingresso_baixado:  false,
+  });
+
+  cancelGuestForm();
+  renderGrupoList();
+}
+
+function removeGuest(idx) {
+  if (idx === 0) return; // titular não pode ser removido
+  grupo.splice(idx, 1);
+  renderGrupoList();
+}
+
+// ════════════════════════════════════════════════════════
+// PASSO 3: CONTRIBUIÇÃO
+// ════════════════════════════════════════════════════════
+function selectChip(el, val) {
+  document.querySelectorAll('.dona-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const customWrap = document.getElementById('customWrap');
+  if (val === 'outro') {
+    customWrap.style.display = 'block'; selectedDoa = null;
+    document.getElementById('customVal').focus();
+  } else {
+    customWrap.style.display = 'none'; selectedDoa = parseFloat(val);
+    updateDoaBtn();
+  }
+}
+
+function updateDoaBtn() {
+  const v = selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
+  const btn = document.getElementById('btnConfirmar');
+  if (btn) btn.textContent = v > 0 ? `Confirmar + contribuir R$ ${v.toFixed(2).replace('.',',')} →` : 'Confirmar inscrição →';
+  renderPixQR(v);
+}
+
+function getDonationValue() {
+  return selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
+}
+
+function confirmarInscricao() {
+  const v = getDonationValue();
+  grupo[0].doacao = v;
+  grupo[0].doacao_confirmada = v > 0;
+  salvarGrupo();
+  mostrarIngressos();
+}
+
+function confirmarSemDoa() {
+  grupo[0].doacao = 0; grupo[0].doacao_confirmada = false;
+  salvarGrupo(); mostrarIngressos();
+}
+
+// ════════════════════════════════════════════════════════
+// SALVAR GRUPO NO localStorage
+// ════════════════════════════════════════════════════════
+function salvarGrupo() {
+  const leads = getLeads();
+  grupo.forEach(p => leads.push(p));
+  localStorage.setItem(EVENT_CFG.storage, JSON.stringify(leads));
+}
+
+// ════════════════════════════════════════════════════════
+// PASSO 4: MOSTRAR INGRESSOS
+// ════════════════════════════════════════════════════════
+function mostrarIngressos() {
+  const stack = document.getElementById('ingressosStack');
+  stack.innerHTML = grupo.map(p => `
+    <div class="ticket-card">
+      <div class="ticket-top">
+        <div class="ticket-platform-label">AG Converge · Plataforma de Eventos</div>
+        <div class="ticket-event-name">${esc(EVENT_CFG.label)}</div>
+        <div class="ticket-event-type">${esc(EVENT_CFG.tipo)}</div>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-row">
+          <div class="ticket-lbl">Participante</div>
+          <div class="ticket-val">${esc(p.nome)}</div>
+        </div>
+        <div class="ticket-row">
+          <div class="ticket-lbl">Data</div>
+          <div class="ticket-val">${esc(EVENT_CFG.data)}</div>
+        </div>
+        <div class="ticket-row">
+          <div class="ticket-lbl">Local</div>
+          <div class="ticket-val">${esc(EVENT_CFG.local)}</div>
+        </div>
+        <div class="ticket-row">
+          <div class="ticket-lbl">Entrada</div>
+          <div class="ticket-val green">Gratuita</div>
+        </div>
+        <div class="ticket-qr-wrap" id="qr-${esc(p.ingresso_id)}"></div>
+        <div class="ticket-id-label">Comanda</div>
+        <div class="ticket-id-val">${esc(p.ingresso_id)}</div>
+      </div>
+      <div class="ticket-footer-strip">
+        <div class="ag-mark">AG</div>
+        <span>AG Consultoria · agconsultorialtda.com</span>
+      </div>
+    </div>
+  `).join('');
+
+  const n = grupo.length;
+  document.getElementById('ingressoTitle').textContent = n > 1 ? `${n} ingressos confirmados!` : 'Ingresso confirmado!';
+  document.getElementById('ingressoSub').textContent   = n > 1 ? `Grupo: ${grupo.map(p=>p.nome.split(' ')[0]).join(', ')}` : 'Baixe o PDF com seu ingresso';
+
+  // Gera QR code em cada ticket
+  grupo.forEach(p => {
+    const wrap = document.getElementById(`qr-${p.ingresso_id}`);
+    if (wrap) {
+      new QRCode(wrap, {
+        text: p.ingresso_id, width: 120, height: 120,
+        colorDark: '#1A0F3C', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+    }
+  });
+
+  goToStep(4);
+  document.getElementById('registro').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ════════════════════════════════════════════════════════
+// PDF — gera área de impressão e chama window.print()
+// ════════════════════════════════════════════════════════
+function buildPDFTickets(pessoas) {
+  return pessoas.map(p => `
+    <div class="pdf-ticket" style="margin-bottom:28px;page-break-inside:avoid">
+      <div class="pdf-top">
+        <div class="pdf-platform">AG Converge · Plataforma de Eventos</div>
+        <div class="pdf-event">${esc(EVENT_CFG.label)}</div>
+      </div>
+      <div class="pdf-body">
+        <div class="pdf-row"><span class="pdf-lbl">Participante</span><span class="pdf-val">${esc(p.nome)}</span></div>
+        <div class="pdf-row"><span class="pdf-lbl">Data</span><span class="pdf-val">${esc(EVENT_CFG.data)}</span></div>
+        <div class="pdf-row"><span class="pdf-lbl">Local</span><span class="pdf-val">${esc(EVENT_CFG.local)}</span></div>
+        <div class="pdf-row" style="border-bottom:none"><span class="pdf-lbl">Comanda</span><span class="pdf-val" style="font-size:15px;font-weight:900;color:#7B2FE0">${esc(p.ingresso_id)}</span></div>
+      </div>
+      <div class="pdf-footer">AG Consultoria Ltda. · agconsultorialtda.com · ${esc(EVENT_CFG.label)}</div>
+    </div>
+  `).join('');
+}
+
+function _doPrint(area, pessoas) {
+  area.innerHTML = buildPDFTickets(pessoas);
+  area.style.display = 'block';
+  markBaixado(pessoas.map(p => p.ingresso_id));
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => { area.style.display = 'none'; }, 500);
+  }, 100);
+}
+
+function baixarPDF() {
+  _doPrint(document.getElementById('print-pdf-area'), grupo);
+}
+
+function baixarPDFDup() {
+  const leads   = getLeads();
+  const email   = normEmail(document.getElementById('dupOverlay').dataset.email || '');
+  const pessoas = leads.filter(l => normEmail(l.email) === email && l.evento_id === EVENT_CFG.slug);
+  if (!pessoas.length) return;
+  _doPrint(document.getElementById('print-pdf-area'), pessoas);
+}
+
+function baixarPDFLookup(email) {
+  const leads   = getLeads();
+  const pessoas = leads.filter(l => normEmail(l.email) === normEmail(email) && l.evento_id === EVENT_CFG.slug);
+  if (!pessoas.length) return;
+  _doPrint(document.getElementById('print-pdf-area'), pessoas);
+}
+
+function markBaixado(ids) {
+  const leads = getLeads();
+  ids.forEach(id => { const l = leads.find(x=>x.ingresso_id===id); if(l) l.ingresso_baixado=true; });
+  localStorage.setItem(EVENT_CFG.storage, JSON.stringify(leads));
+}
+
+// ════════════════════════════════════════════════════════
+// MODAL: JÁ INSCRITO
+// ════════════════════════════════════════════════════════
+function showDupModal(dups) {
+  const overlay = document.getElementById('dupOverlay');
+  overlay.dataset.email = dups[0].email;
+  document.getElementById('dupSub').textContent = `Encontramos ${dups.length} ingresso(s) com este e-mail neste evento.`;
+  document.getElementById('dupTickets').innerHTML = dups.map(d => `
+    <div class="dup-ticket">
+      <div class="dup-nome">${esc(d.nome)}</div>
+      <div class="dup-id">Comanda: ${esc(d.ingresso_id)}</div>
+      ${d.titular_nome ? `<div style="font-size:.72rem;color:var(--muted);margin-top:4px">Convidado de ${esc(d.titular_nome)}</div>` : ''}
+    </div>
+  `).join('');
+  overlay.classList.add('open');
+}
+
+function closeDup() {
+  document.getElementById('dupOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════
+// MODAL: CONSULTAR INGRESSO
+// ════════════════════════════════════════════════════════
+function openLookup() {
+  document.getElementById('lookupOverlay').classList.add('open');
+  document.getElementById('lookupEmail').value = '';
+  document.getElementById('lookupResult').style.display = 'none';
+  setTimeout(() => document.getElementById('lookupEmail').focus(), 100);
+}
+
+function closeLookup() { document.getElementById('lookupOverlay').classList.remove('open'); }
+
+function doLookup() {
+  const email = document.getElementById('lookupEmail').value.trim();
+  if (!email) return;
+  const leads = getLeads().filter(l => normEmail(l.email) === normEmail(email));
+  const res   = document.getElementById('lookupResult');
+  res.style.display = 'block';
+
+  if (!leads.length) {
+    res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Nenhum ingresso encontrado para este e-mail neste evento.</div>`;
+    return;
+  }
+
+  res.innerHTML = `
+    <div class="lr-event">${esc(EVENT_CFG.label)}</div>
+    ${leads.map(l => `
+      <div class="lr-card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="lr-nome">${esc(l.nome)}</div>
+            <div class="lr-id">Comanda: ${esc(l.ingresso_id)}</div>
+            ${l.titular_nome ? `<div class="lr-group-member">Convidado de ${esc(l.titular_nome)}</div>` : ''}
+          </div>
+          <span class="lr-baixado ${l.ingresso_baixado?'sim':'nao'}">${l.ingresso_baixado?'PDF baixado':'Não baixado'}</span>
+        </div>
+      </div>
+    `).join('')}
+    <button class="btn-print" style="width:100%;margin-top:4px" onclick="baixarPDFLookup('${email.replace(/'/g,"\\'")}')">⬇ Baixar ingresso(s) PDF</button>
+  `;
+}
+
+// ════════════════════════════════════════════════════════
+// MODAL: HISTÓRICO CROSS-EVENT
+// ════════════════════════════════════════════════════════
+function openHistorico() {
+  document.getElementById('historicoOverlay').classList.add('open');
+  document.getElementById('histEmail').value = '';
+  document.getElementById('historicoResult').style.display = 'none';
+  setTimeout(() => document.getElementById('histEmail').focus(), 100);
+}
+
+function closeHistorico() { document.getElementById('historicoOverlay').classList.remove('open'); }
+
+function doHistorico() {
+  const email = document.getElementById('histEmail').value.trim();
+  if (!email) return;
+  const ne  = normEmail(email);
+  const res = document.getElementById('historicoResult');
+  res.style.display = 'block';
+
+  let html = '';
+  let total = 0;
+
+  ALL_EVENTS.forEach(ev => {
+    const leads = JSON.parse(localStorage.getItem(ev.storage)||'[]').filter(l => normEmail(l.email)===ne);
+    if (!leads.length) return;
+    total += leads.length;
+    html += `<div class="lr-event">${esc(ev.label)} · ${esc(ev.data)}</div>`;
+    leads.forEach(l => {
+      html += `
+        <div class="lr-card">
+          <div class="lr-nome">${esc(l.nome)}</div>
+          <div class="lr-id">Comanda: ${esc(l.ingresso_id)}</div>
+          ${l.titular_nome ? `<div class="lr-group-member">Convidado de ${esc(l.titular_nome)}</div>` : ''}
+        </div>`;
+    });
+  });
+
+  if (!total) {
+    res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Nenhuma inscrição encontrada para este e-mail.</div>`;
+  } else {
+    res.innerHTML = html;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// LIGHTBOX (fotos da seção Sobre)
+// ════════════════════════════════════════════════════════
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  if (!lb) return;
+  document.getElementById('lightboxImg').src = src;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ════════════════════════════════════════════════════════
+// PIX — gerador de payload EMV (BACEN)
+// ════════════════════════════════════════════════════════
+function crc16Pix(str) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+
+function buildPixPayload(chave, nome, cidade, valor) {
+  function f(id, v) { return id + v.length.toString().padStart(2, '0') + v; }
+  const mai = f('00','BR.GOV.BCB.PIX') + f('01', chave);
+  let p = f('00','01') + f('26', mai) + f('52','0000') + f('53','986');
+  if (valor > 0) p += f('54', valor.toFixed(2));
+  p += f('58','BR') + f('59', nome.substring(0,25)) + f('60', cidade.substring(0,15));
+  p += f('62', f('05','***')) + '6304';
+  p += crc16Pix(p);
+  return p;
+}
+
+let pixQrInstance = null;
+function renderPixQR(valor) {
+  const cfg = EVENT_CFG.pix;
+  if (!cfg) return;
+  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, valor || 0);
+  const wrap = document.getElementById('pixQrWrap');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  pixQrInstance = new QRCode(wrap, {
+    text: payload, width: 160, height: 160,
+    colorDark: '#1A0F3C', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+  const amtEl = document.getElementById('pixValorLabel');
+  if (amtEl) amtEl.textContent = valor > 0 ? `R$ ${valor.toFixed(2).replace('.',',')}` : 'valor livre no banco';
+}
+
+function copyPixKey() {
+  const chave = EVENT_CFG.pix?.chave || '';
+  navigator.clipboard.writeText(chave).then(() => {
+    const btn = document.getElementById('btnCopyPix');
+    if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(()=>btn.textContent='Copiar chave Pix',2500); }
+  }).catch(() => {
+    prompt('Copie a chave Pix:', chave);
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// FAQ ACCORDION
+// ════════════════════════════════════════════════════════
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeLookup(); closeHistorico(); closeDup();
+  }
+});
+
+// Inicializa doação
+updateDoaBtn();
+</script>
+</body>
+</html>

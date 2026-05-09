@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AG Converge — Admin · Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#09090F; --card:#0F0E1A; --raise:#16142A;
+  --purple:#7B2FE0; --purple-hi:#A55EFF; --purple-lo:#C49FFF;
+  --blue:#3662FF; --white:#F8F6FF; --muted:#6B6380;
+  --border:#1E1830; --green:#08C16A; --red:#FF3B3B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
+
+/* ── AUTH GATE ── */
+#authGate{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+}
+.auth-box{
+  background:var(--raise);border:1px solid var(--border);
+  border-radius:16px;padding:40px 36px;max-width:380px;width:92%;text-align:center;
+}
+.auth-mark{
+  width:52px;height:52px;border-radius:12px;margin:0 auto 18px;
+  background:linear-gradient(135deg,var(--purple),var(--purple-hi));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.1rem;color:#fff;
+}
+.auth-title{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.auth-sub{font-size:.78rem;color:var(--muted);margin-bottom:24px}
+.auth-input{
+  width:100%;padding:12px 16px;
+  background:rgba(255,255,255,.04);border:1.5px solid var(--border);
+  border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;
+  color:var(--white);outline:none;text-align:center;letter-spacing:.15em;
+  transition:border-color .2s;margin-bottom:8px;
+}
+.auth-input:focus{border-color:var(--purple)}
+.auth-input.err{border-color:var(--red);animation:shake .3s}
+.auth-err{color:var(--red);font-size:.72rem;margin-bottom:14px;min-height:16px}
+.auth-btn{
+  width:100%;padding:12px;border-radius:8px;
+  background:var(--purple);color:#fff;font-weight:700;
+  font-size:.88rem;font-family:'Inter',sans-serif;border:none;cursor:pointer;
+  transition:background .2s;
+}
+.auth-btn:hover{background:var(--purple-hi)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* Header */
+header {
+  background:rgba(15,14,26,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 5%;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.h-brand{display:flex;align-items:center;gap:10px}
+.h-mark{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--purple),var(--purple-hi));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;color:#fff}
+.h-title{font-size:.82rem;font-weight:700}
+.h-sub{font-size:.65rem;color:var(--muted)}
+.h-actions{display:flex;gap:8px;align-items:center}
+
+/* Event tab selector */
+.event-tabs {
+  display:flex;gap:6px;align-items:center;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:4px;
+}
+.etab {
+  padding:5px 14px;border-radius:6px;font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .2s;color:var(--muted);border:none;
+  background:transparent;font-family:'Inter',sans-serif;
+}
+.etab.active{background:var(--purple);color:#fff}
+.etab:hover:not(.active){color:var(--white);background:rgba(255,255,255,.06)}
+
+.btn{padding:7px 16px;border-radius:7px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+.btn-export{background:var(--purple);color:#fff}
+.btn-export:hover{background:var(--purple-hi)}
+.btn-danger{background:rgba(255,59,59,.1);color:var(--red);border:1px solid rgba(255,59,59,.2)}
+.btn-danger:hover{background:rgba(255,59,59,.2)}
+.btn-sec{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
+.btn-sec:hover{color:var(--white)}
+
+main{max-width:1300px;margin:0 auto;padding:32px 5%}
+
+/* Summary */
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.scard.hi{border-color:rgba(123,47,224,.35);background:rgba(123,47,224,.07)}
+.sval{font-size:1.9rem;font-weight:900;line-height:1;margin-bottom:4px}
+.sval.purple{color:var(--purple-hi)}
+.sval.green{color:var(--green)}
+.slbl{font-size:.72rem;color:var(--muted)}
+
+/* Toolbar */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 14px;
+  color:var(--white);font-size:.8rem;font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .2s;width:240px;
+}
+.search:focus{border-color:var(--purple)}
+.search::placeholder{color:var(--muted)}
+.filter-sel{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:8px;padding:8px 12px;
+  color:var(--white);font-size:.8rem;font-family:'Inter',sans-serif;
+  outline:none;cursor:pointer;
+}
+.filter-sel option{background:var(--raise)}
+.count-lbl{color:var(--muted);font-size:.75rem;margin-left:auto}
+
+/* Table */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--raise)}
+th{
+  padding:11px 16px;text-align:left;
+  font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;
+}
+td{padding:12px 16px;font-size:.8rem;border-bottom:1px solid rgba(30,24,48,.6);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(123,47,224,.04)}
+
+.badge{display:inline-block;padding:2px 9px;border-radius:100px;font-size:.63rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.bg{background:rgba(8,193,106,.12);color:var(--green)}
+.br{background:rgba(255,255,255,.06);color:var(--muted)}
+.bp{background:rgba(123,47,224,.15);color:var(--purple-hi)}
+
+.dona-val{font-weight:700;color:var(--green)}
+.dona-zero{color:var(--muted)}
+
+.empty{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty .big{font-size:2.5rem;margin-bottom:10px}
+.empty h3{color:var(--white);margin-bottom:6px;font-size:1rem}
+.empty p{font-size:.8rem}
+
+/* confirm overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:500}
+.overlay.show{display:flex}
+.cbox{background:var(--raise);border:1px solid var(--border);border-radius:14px;padding:30px;max-width:360px;width:100%;text-align:center}
+.cbox h3{font-size:1rem;margin-bottom:8px}
+.cbox p{color:var(--muted);font-size:.82rem;margin-bottom:22px;line-height:1.6}
+.cbtns{display:flex;gap:10px;justify-content:center}
+
+@media(max-width:900px){.summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.table-wrap{overflow-x:auto}table{min-width:680px}}
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="authGate">
+  <div class="auth-box">
+    <div class="auth-mark">AG</div>
+    <div class="auth-title">Acesso restrito</div>
+    <div class="auth-sub">Digite a senha para acessar o painel de leads</div>
+    <input class="auth-input" id="authInput" type="password" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')checkAuth()">
+    <div class="auth-err" id="authErr"></div>
+    <button class="auth-btn" onclick="checkAuth()">Entrar</button>
+  </div>
+</div>
+
+<header>
+  <div class="h-brand">
+    <div class="h-mark">AG</div>
+    <div><div class="h-title">AG Converge · Admin</div><div class="h-sub">Painel de leads</div></div>
+  </div>
+  <div class="h-actions">
+    <div class="event-tabs" id="eventTabs"></div>
+    <button class="btn btn-export" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn btn-export" onclick="exportJSON()" style="background:var(--blue)">⬇ JSON</button>
+    <button class="btn btn-danger" onclick="showClear()">🗑</button>
+    <button class="btn btn-sec" onclick="location.href='index.html'">← Hub</button>
+  </div>
+</header>
+
+<main>
+  <div class="summary">
+    <div class="scard hi"><div class="sval purple" id="totLeads">0</div><div class="slbl">Total inscritos</div></div>
+    <div class="scard"><div class="sval green" id="totDoa">0</div><div class="slbl">Com doação</div></div>
+    <div class="scard"><div class="sval" id="totVal">R$ 0</div><div class="slbl">Arrecadado (ACCP)</div></div>
+    <div class="scard"><div class="sval" id="totMed">—</div><div class="slbl">Doação média</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search" id="searchInput" type="text" placeholder="Buscar nome, e-mail ou empresa..." oninput="render()">
+    <select class="filter-sel" id="fDoa" onchange="render()">
+      <option value="">Todos</option>
+      <option value="sim">Com doação</option>
+      <option value="nao">Sem doação</option>
+    </select>
+    <span class="count-lbl" id="countLbl">—</span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Nome</th><th>E-mail</th><th>WhatsApp</th>
+          <th>Empresa</th><th>Cargo</th><th>Origem</th>
+          <th>Doação</th><th>Grupo</th><th>PDF</th><th>Evento</th><th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="big">📋</div>
+      <h3>Nenhuma inscrição ainda</h3>
+      <p>Os leads aparecem aqui quando alguém se inscrever.</p>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="clearOverlay">
+  <div class="cbox">
+    <h3>Limpar leads do evento selecionado?</h3>
+    <p>Ação irreversível. Exporte o CSV antes se precisar dos dados.</p>
+    <div class="cbtns">
+      <button class="btn btn-sec" onclick="hideClear()">Cancelar</button>
+      <button class="btn btn-danger" onclick="clearAll()">Limpar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Eventos registrados na plataforma
+const EVENTS = [
+  { id: 'ag_leads_rh-em-xeque', label: 'RH em Xeque' },
+  { id: 'ag_leads_a-cupula',    label: 'A Cúpula' },
+];
+
+let activeEvent = EVENTS[0].id;
+
+// Build tabs
+const tabsEl = document.getElementById('eventTabs');
+EVENTS.forEach(ev => {
+  const b = document.createElement('button');
+  b.className = 'etab' + (ev.id === activeEvent ? ' active' : '');
+  b.textContent = ev.label;
+  b.onclick = () => { activeEvent = ev.id; tabsEl.querySelectorAll('.etab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); render(); };
+  tabsEl.appendChild(b);
+});
+
+function getLeads() {
+  return JSON.parse(localStorage.getItem(activeEvent) || '[]');
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function updateSummary(leads) {
+  document.getElementById('totLeads').textContent = leads.length;
+  const com = leads.filter(l => l.doacao > 0);
+  document.getElementById('totDoa').textContent = com.length;
+  const tot = com.reduce((s,l) => s + (+l.doacao||0), 0);
+  document.getElementById('totVal').textContent = 'R$ ' + tot.toFixed(2).replace('.',',');
+  document.getElementById('totMed').textContent = com.length ? 'R$ '+(tot/com.length).toFixed(2).replace('.',',') : '—';
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() {
+  const leads = getLeads();
+  updateSummary(leads);
+
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const fd = document.getElementById('fDoa').value;
+
+  const filtered = leads.filter(l => {
+    const mq = !q || [l.nome,l.email,l.empresa].some(v=>(v||'').toLowerCase().includes(q));
+    const md = !fd || (fd==='sim' ? l.doacao>0 : !(l.doacao>0));
+    return mq && md;
+  });
+
+  document.getElementById('countLbl').textContent = filtered.length + ' inscrito(s)';
+  const tbody = document.getElementById('tbody');
+  const empty = document.getElementById('emptyState');
+
+  if (!filtered.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  const eventLabel = EVENTS.find(e=>e.id===activeEvent)?.label || '—';
+  tbody.innerHTML = filtered.map((l,i) => `
+    <tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td>
+        <strong>${esc(l.nome)}</strong>
+        ${l.titular===false ? `<br><span style="font-size:.63rem;color:var(--purple-lo)">Convidado${l.titular_nome?` de ${esc(l.titular_nome)}`:''}</span>` : ''}
+      </td>
+      <td><a href="mailto:${esc(l.email)}" style="color:var(--purple-lo)">${esc(l.email)}</a></td>
+      <td>${esc(l.tel||'—')}</td>
+      <td>${esc(l.empresa||'—')}</td>
+      <td style="color:var(--muted)">${esc(l.cargo||'—')}</td>
+      <td><span class="badge br">${esc(l.origem||'—')}</span></td>
+      <td>${l.doacao>0
+        ? `<span class="dona-val">R$ ${(+l.doacao).toFixed(2).replace('.',',')}</span>`
+        : '<span class="dona-zero">—</span>'
+      }</td>
+      <td style="font-size:.66rem;color:var(--muted)">${esc((l.grupo_id||'—').replace('GRP-',''))}</td>
+      <td><span class="badge ${l.ingresso_baixado?'bg':'br'}">${l.ingresso_baixado?'Baixado':'Pendente'}</span></td>
+      <td><span class="badge bp">${esc(eventLabel)}</span></td>
+      <td style="color:var(--muted);font-size:.72rem;white-space:nowrap">${fmtDate(l.inscricao_at)}</td>
+    </tr>
+  `).join('');
+}
+
+function exportCSV() {
+  const leads = getLeads();
+  if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
+  const cols = ['nome','email','tel','empresa','cargo','origem','doacao','doacao_confirmada','grupo_id','titular','ingresso_id','ingresso_baixado','titular_nome','inscricao_at'];
+  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Doacao_Confirmada','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Titular_Nome','Data_Inscricao'];
+  const rows = [hdr.join(';'), ...leads.map(l => cols.map(c => '"'+(l[c]??'').toString().replace(/"/g,'""')+'"').join(';'))];
+  const blob = new Blob(['﻿'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const ev = EVENTS.find(e=>e.id===activeEvent)?.label.replace(/\s+/g,'-').toLowerCase() || 'evento';
+  a.href = url; a.download = `ag-leads-${ev}-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function exportJSON() {
+  const leads = getLeads();
+  if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
+  const blob = new Blob([JSON.stringify(leads, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const ev = EVENTS.find(e=>e.id===activeEvent)?.label.replace(/\s+/g,'-').toLowerCase() || 'evento';
+  a.href = url; a.download = `ag-leads-${ev}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function showClear() { document.getElementById('clearOverlay').classList.add('show') }
+function hideClear() { document.getElementById('clearOverlay').classList.remove('show') }
+function clearAll() { localStorage.removeItem(activeEvent); hideClear(); render() }
+
+render();
+setInterval(render, 8000);
+
+// ── AUTH GATE ──
+const ADMIN_KEY  = 'ag_admin_auth';
+// SHA-256 da senha — nunca exponha a senha em texto aqui
+const ADMIN_PWD_HASH = '61681c268936f5241e321e2bdacd6748849b9dab35cab8397fb77d0ebe2d2414';
+
+async function sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkAuth() {
+  const val = document.getElementById('authInput').value;
+  const h   = await sha256hex(val);
+  const ok  = (h === ADMIN_PWD_HASH);
+  if (ok) {
+    sessionStorage.setItem(ADMIN_KEY, '1');
+    document.getElementById('authGate').style.display = 'none';
+    document.getElementById('authInput').value = '';
+  } else {
+    const inp = document.getElementById('authInput');
+    const err = document.getElementById('authErr');
+    inp.classList.add('err');
+    err.textContent = 'Senha incorreta';
+    setTimeout(() => { inp.classList.remove('err'); err.textContent=''; }, 2000);
+  }
+}
+
+// Verificar na carga se já autenticado nesta sessão
+(function() {
+  if (sessionStorage.getItem(ADMIN_KEY) === '1') {
+    document.getElementById('authGate').style.display = 'none';
+  } else {
+    setTimeout(() => document.getElementById('authInput').focus(), 100);
+  }
+})();
+</script>
+</body>
+</html>
