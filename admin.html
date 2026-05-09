@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AG Converge — Admin · Leads</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 :root {
   --bg:#09090F; --card:#0F0E1A; --raise:#16142A;
@@ -14,7 +13,7 @@
   --border:#1E1830; --green:#08C16A; --red:#FF3B3B;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--white);min-height:100vh}
 
 /* ── AUTH GATE ── */
 #authGate{
@@ -34,7 +33,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
 .auth-input{
   width:100%;padding:12px 16px;
   background:rgba(255,255,255,.04);border:1.5px solid var(--border);
-  border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;
+  border-radius:8px;font-size:.9rem;font-family:'Inter',system-ui,-apple-system,sans-serif;
   color:var(--white);outline:none;text-align:center;letter-spacing:.15em;
   transition:border-color .2s;margin-bottom:8px;
 }
@@ -44,7 +43,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
 .auth-btn{
   width:100%;padding:12px;border-radius:8px;
   background:var(--purple);color:#fff;font-weight:700;
-  font-size:.88rem;font-family:'Inter',sans-serif;border:none;cursor:pointer;
+  font-size:.88rem;font-family:'Inter',system-ui,-apple-system,sans-serif;border:none;cursor:pointer;
   transition:background .2s;
 }
 .auth-btn:hover{background:var(--purple-hi)}
@@ -73,12 +72,12 @@ header {
 .etab {
   padding:5px 14px;border-radius:6px;font-size:.75rem;font-weight:600;
   cursor:pointer;transition:all .2s;color:var(--muted);border:none;
-  background:transparent;font-family:'Inter',sans-serif;
+  background:transparent;font-family:'Inter',system-ui,-apple-system,sans-serif;
 }
 .etab.active{background:var(--purple);color:#fff}
 .etab:hover:not(.active){color:var(--white);background:rgba(255,255,255,.06)}
 
-.btn{padding:7px 16px;border-radius:7px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;border:none}
+.btn{padding:7px 16px;border-radius:7px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s;border:none}
 .btn-export{background:var(--purple);color:#fff}
 .btn-export:hover{background:var(--purple-hi)}
 .btn-danger{background:rgba(255,59,59,.1);color:var(--red);border:1px solid rgba(255,59,59,.2)}
@@ -102,7 +101,7 @@ main{max-width:1300px;margin:0 auto;padding:32px 5%}
 .search{
   background:var(--card);border:1.5px solid var(--border);
   border-radius:8px;padding:8px 14px;
-  color:var(--white);font-size:.8rem;font-family:'Inter',sans-serif;
+  color:var(--white);font-size:.8rem;font-family:'Inter',system-ui,-apple-system,sans-serif;
   outline:none;transition:border-color .2s;width:240px;
 }
 .search:focus{border-color:var(--purple)}
@@ -110,7 +109,7 @@ main{max-width:1300px;margin:0 auto;padding:32px 5%}
 .filter-sel{
   background:var(--card);border:1.5px solid var(--border);
   border-radius:8px;padding:8px 12px;
-  color:var(--white);font-size:.8rem;font-family:'Inter',sans-serif;
+  color:var(--white);font-size:.8rem;font-family:'Inter',system-ui,-apple-system,sans-serif;
   outline:none;cursor:pointer;
 }
 .filter-sel option{background:var(--raise)}
@@ -230,7 +229,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/assets/js/supabase.min.js"></script>
 <script>
 const _SB = supabase.createClient(
   'https://hqcbpqkohgmlultnmbyy.supabase.co',

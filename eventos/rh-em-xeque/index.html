@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RH em Xeque — AG Consultoria</title>
 <meta name="description" content="NR-1 já é lei. A escala 5x2 está chegando. Sua empresa está preparada? 14 de maio, 18h às 21h30 — Auditório Slavieiro, Heron Marinho · Campina Grande.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js"></script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script src="/assets/js/qrcode.min.js"></script>
 <style>
 /* ══════════════════════════════
    TOKENS
@@ -36,7 +35,7 @@
 ══════════════════════════════ */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);line-height:1.6;min-height:100vh}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--white);line-height:1.6;min-height:100vh}
 a{text-decoration:none}
 
 /* ══════════════════════════════
@@ -142,7 +141,7 @@ nav{
   padding:15px 36px;border-radius:10px;
   font-weight:800;font-size:1rem;border:none;cursor:pointer;
   transition:all .2s;display:inline-flex;align-items:center;gap:8px;
-  font-family:'Inter',sans-serif;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
   box-shadow:0 0 32px rgba(123,47,224,.4);
 }
 .btn-hero:hover{background:var(--purple-hi);transform:translateY(-2px);box-shadow:0 8px 40px rgba(123,47,224,.55)}
@@ -409,7 +408,7 @@ input,select,textarea{
   background:rgba(255,255,255,.04);
   border:1.5px solid var(--border);
   border-radius:8px;font-size:.85rem;
-  font-family:'Inter',sans-serif;color:var(--white);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--white);
   outline:none;transition:border-color .2s,box-shadow .2s;
 }
 input::placeholder,textarea::placeholder{color:var(--muted)}
@@ -437,7 +436,7 @@ textarea{resize:vertical;min-height:72px}
   background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
   color:#fff;font-weight:800;font-size:.93rem;
   border:none;border-radius:10px;cursor:pointer;
-  font-family:'Inter',sans-serif;transition:all .2s;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s;
   box-shadow:0 0 22px rgba(123,47,224,.28);
 }
 .btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(123,47,224,.45)}
@@ -459,7 +458,7 @@ textarea{resize:vertical;min-height:72px}
 .dona-chip{
   padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:700;
   border:1.5px solid var(--border);background:transparent;color:var(--muted);
-  cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;
+  cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s;
 }
 .dona-chip.selected{border-color:var(--purple-hi);color:var(--purple-hi);background:rgba(123,47,224,.1)}
 .dona-chip:hover:not(.selected){border-color:rgba(123,47,224,.4);color:var(--white)}
@@ -472,7 +471,7 @@ textarea{resize:vertical;min-height:72px}
 .btn-skip-dona{
   width:100%;padding:10px;margin-top:8px;
   background:transparent;border:none;color:var(--muted);
-  font-size:.78rem;font-family:'Inter',sans-serif;cursor:pointer;
+  font-size:.78rem;font-family:'Inter',system-ui,-apple-system,sans-serif;cursor:pointer;
   transition:color .2s;
 }
 .btn-skip-dona:hover{color:var(--white)}
@@ -541,7 +540,7 @@ textarea{resize:vertical;min-height:72px}
 .btn-print{
   padding:9px 20px;border-radius:8px;font-size:.8rem;font-weight:700;
   background:rgba(123,47,224,.12);border:1px solid rgba(123,47,224,.3);
-  color:var(--purple-hi);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;
+  color:var(--purple-hi);cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s;
 }
 .btn-print:hover{background:rgba(123,47,224,.2)}
 .btn-hub{
@@ -638,7 +637,7 @@ footer{
   width:100%;padding:10px;
   background:rgba(123,47,224,.06);border:1.5px dashed rgba(123,47,224,.3);
   border-radius:9px;color:var(--purple-lo);
-  font-size:.8rem;font-weight:600;font-family:'Inter',sans-serif;
+  font-size:.8rem;font-weight:600;font-family:'Inter',system-ui,-apple-system,sans-serif;
   cursor:pointer;transition:all .2s;margin-bottom:16px;
 }
 .btn-add-guest:hover{border-color:var(--purple-hi);color:var(--purple-hi);background:rgba(123,47,224,.1)}
@@ -713,7 +712,7 @@ footer{
     background:#fff!important;padding:40px!important;
   }
   .pdf-ticket{
-    font-family:'Inter',sans-serif;max-width:420px;margin:0 auto;
+    font-family:'Inter',system-ui,-apple-system,sans-serif;max-width:420px;margin:0 auto;
     border:2px solid #e0d8ff;border-radius:12px;overflow:hidden;
   }
   .pdf-top{background:linear-gradient(135deg,#7B2FE0,#3662FF);padding:20px 24px;color:#fff}
@@ -1053,7 +1052,7 @@ footer{
           <button type="submit" class="btn-submit" id="submitBtn">Próximo →</button>
         </form>
         <div style="text-align:center;margin-top:14px">
-          <button type="button" onclick="openLookup()" style="background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Já garantiu seu ingresso? Consultar →</button>
+          <button type="button" onclick="openLookup()" style="background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Já garantiu seu ingresso? Consultar →</button>
         </div>
       </div>
 
@@ -1120,7 +1119,7 @@ footer{
           <div id="pixQrWrap" style="display:flex;justify-content:center;margin-bottom:10px"></div>
           <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Valor: <strong id="pixValorLabel" style="color:var(--purple-lo)">R$ 60,00</strong></div>
           <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;word-break:break-all;padding:0 8px;opacity:.7">AGBR TECNOLOGIA LTDA · Cora</div>
-          <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s">Copiar chave Pix</button>
+          <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s">Copiar chave Pix</button>
           <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou copie a chave no seu banco.<br>Após pagar, clique em confirmar abaixo.</div>
         </div>
         <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()">Confirmar + contribuir →</button>
@@ -1139,7 +1138,7 @@ footer{
             <a href="../../index.html" class="btn-hub">← Todos os eventos</a>
           </div>
           <div style="text-align:center;margin-top:10px">
-            <button type="button" onclick="openHistorico()" style="background:none;border:none;color:var(--muted);font-size:.73rem;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Analisar histórico de inscrições →</button>
+            <button type="button" onclick="openHistorico()" style="background:none;border:none;color:var(--muted);font-size:.73rem;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Analisar histórico de inscrições →</button>
           </div>
         </div>
       </div>
@@ -1187,7 +1186,7 @@ footer{
     <div id="dupTickets"></div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <button class="btn-print" onclick="baixarPDFDup()">⬇ Baixar ingresso</button>
-      <button onclick="closeDup()" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.8rem">Fechar</button>
+      <button onclick="closeDup()" style="padding:9px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:.8rem">Fechar</button>
     </div>
   </div>
 </div>
@@ -1203,7 +1202,7 @@ footer{
     </div>
     <div style="display:flex;gap:8px;margin-top:12px">
       <button class="btn-submit" style="font-size:.82rem;padding:11px" onclick="doLookup()">Buscar</button>
-      <button onclick="closeLookup()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem">Cancelar</button>
+      <button onclick="closeLookup()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:.82rem">Cancelar</button>
     </div>
     <div class="lookup-result" id="lookupResult" style="display:none"></div>
   </div>
@@ -1220,7 +1219,7 @@ footer{
     </div>
     <div style="display:flex;gap:8px;margin-top:12px">
       <button class="btn-submit" style="font-size:.82rem;padding:11px" onclick="doHistorico()">Ver histórico</button>
-      <button onclick="closeHistorico()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem">Cancelar</button>
+      <button onclick="closeHistorico()" style="padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:.82rem">Cancelar</button>
     </div>
     <div class="lookup-result" id="historicoResult" style="display:none"></div>
   </div>
@@ -1272,7 +1271,7 @@ footer{
 </footer>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/assets/js/supabase.min.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════
    AG CONVERGE — CONFIGURAÇÃO DE EVENTO
