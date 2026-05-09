@@ -706,6 +706,70 @@ footer{
 .dup-nome{font-weight:700;font-size:.9rem;margin-bottom:4px}
 .dup-id{font-size:.66rem;color:var(--muted);letter-spacing:.06em;font-variant-numeric:tabular-nums}
 
+/* ══════════════════════════════
+   CAUSA / ENCHENTES / CESTA
+══════════════════════════════ */
+.causa-grid{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:40px;
+  max-width:980px;margin:0 auto 40px;align-items:start;
+}
+.causa-texto h3{
+  font-size:1.25rem;font-weight:800;color:var(--white);
+  margin-bottom:12px;line-height:1.25;
+}
+.causa-texto p{font-size:.88rem;color:var(--muted);line-height:1.78;margin-bottom:12px}
+.bairros-afetados{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.bairro-tag{
+  font-size:.67rem;font-weight:700;letter-spacing:.04em;
+  background:rgba(255,92,92,.07);border:1px solid rgba(255,92,92,.22);
+  color:rgba(255,160,160,.85);padding:3px 10px;border-radius:100px;
+}
+.causa-fotos{display:grid;grid-template-columns:1fr;gap:10px}
+.causa-fotos img{
+  width:100%;border-radius:12px;object-fit:cover;aspect-ratio:16/10;
+  border:1px solid var(--border);filter:brightness(.88) saturate(.85);
+  display:block;
+}
+.accp-cesta-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  max-width:980px;margin:0 auto 0;
+}
+.accp-cesta-grid .charity-card{
+  margin:0;text-align:left;
+}
+.accp-cesta-grid .charity-logo{margin:0 0 16px}
+.cesta-callout{
+  background:rgba(245,166,35,.07);
+  border:1px solid rgba(245,166,35,.28);
+  border-radius:16px;padding:28px 24px;
+  display:flex;flex-direction:column;gap:10px;
+  position:relative;overflow:hidden;
+}
+.cesta-callout::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#F5A623,#E88800);
+}
+.cesta-icon{font-size:2rem;line-height:1}
+.cesta-badge{
+  display:inline-flex;align-items:center;
+  background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.28);
+  color:#F5A623;font-size:.63rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 10px;border-radius:100px;width:fit-content;
+}
+.cesta-callout h3{font-size:1.08rem;font-weight:800;color:var(--white);line-height:1.25}
+.cesta-callout p{font-size:.84rem;color:rgba(248,246,255,.65);line-height:1.72}
+.cesta-prazo{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.22);
+  border-radius:8px;padding:9px 14px;
+  font-size:.82rem;font-weight:700;color:#F5A623;margin-top:4px;
+}
+.cesta-prazo svg{flex-shrink:0}
+.parceiro-role{
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple-hi);margin-top:-2px;
+}
+
 /* ── PDF PRINT ── */
 @media print {
   body>*:not(#print-pdf-area){display:none!important}
@@ -735,6 +799,8 @@ footer{
 @media(max-width:900px){
   .strip-inner{grid-template-columns:repeat(3,1fr)}
   .footer-grid{grid-template-columns:1fr;gap:28px}
+  .causa-grid{grid-template-columns:1fr;gap:28px}
+  .accp-cesta-grid{grid-template-columns:1fr;gap:20px}
 }
 @media(max-width:640px){
   nav{padding:0 4%;height:56px}
@@ -941,42 +1007,93 @@ footer{
 
 <!-- ══ CARIDADE ══ -->
 <section class="section caridade" id="caridade">
-  <div class="container" style="text-align:center">
-    <span class="sec-label">Beneficente</span>
-    <h2 class="sec-title">Quem recebe sua doação</h2>
-    <p class="sec-desc" style="margin:0 auto">O evento é gratuito. Qualquer valor doado na inscrição vai integralmente para a ACCP.</p>
-
-    <div class="charity-card">
-      <div class="charity-logo">
-        <img src="../../assets/images/foto-evento.jpeg" alt="ACCP">
-      </div>
-      <h3>ACCP — Associação Centro de Cidadania Plena</h3>
-      <p>
-        A ACCP — Associação Centro de Cidadania Plena — atua na promoção da cidadania e inclusão social.
-        Cada doação feita no ato da inscrição ajuda a manter os projetos que transformam vidas.
-        A participação no evento é 100% gratuita — a doação é totalmente voluntária.
-      </p>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <span class="sec-label">Evento beneficente</span>
+      <h2 class="sec-title">Além do debate, uma causa real</h2>
+      <p class="sec-desc" style="margin:0 auto">O evento é gratuito. A sua presença já é suficiente — mas se quiser ir além, cada contribuição voluntária chega inteira à ACCP.</p>
     </div>
 
-    <!-- Realização -->
-    <span class="sec-label" style="display:block;text-align:center;margin-top:56px;margin-bottom:20px">Realização</span>
-    <div style="display:flex;justify-content:center;margin-bottom:40px">
-      <div class="parceiro-slot" style="min-width:160px">
-        <div class="parceiro-logo-area">
-          <img src="../../assets/logos/ag-logo.png" alt="AG Consultoria" style="height:48px;width:auto;object-fit:contain">
+    <!-- Contexto das enchentes + fotos -->
+    <div class="causa-grid">
+      <div class="causa-texto">
+        <h3>Campina Grande enfrenta enchentes todo ano — e as famílias ficam sem nada.</h3>
+        <p>
+          Chuvas intensas transformam ruas em rios em menos de uma hora. Bairros inteiros ficam alagados, casas são destruídas e famílias perdem móveis, eletrodomésticos e documentos. O problema é recorrente, silencioso e devastador.
+        </p>
+        <p>
+          Em 2024, mais de 50 pontos de alagamento foram registrados na cidade. As comunidades mais afetadas são as que têm menos estrutura para se recuperar.
+        </p>
+        <div class="bairros-afetados">
+          <span class="bairro-tag">Bodocongó</span>
+          <span class="bairro-tag">Malvinas</span>
+          <span class="bairro-tag">Três Irmãs</span>
+          <span class="bairro-tag">Presidente Médici</span>
+          <span class="bairro-tag">Jardim Paulistano</span>
+          <span class="bairro-tag">Ramadinha</span>
+          <span class="bairro-tag">Acácio Figueiredo</span>
+          <span class="bairro-tag">Dinamérica</span>
+          <span class="bairro-tag">+ 40 pontos</span>
         </div>
-        <span class="parceiro-name" style="font-size:.78rem;color:rgba(248,246,255,.8)">AG Consultoria</span>
+      </div>
+      <div class="causa-fotos">
+        <img src="https://images.unsplash.com/photo-1657069345471-c54f2432b79c?w=800&q=80&fit=crop" alt="Enchente em área urbana" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1580121441575-41bcb5c6b47c?w=800&q=80&fit=crop" alt="Famílias afetadas por enchente" loading="lazy">
       </div>
     </div>
 
-    <!-- Parceiros -->
-    <span class="sec-label" style="display:block;text-align:center;margin-bottom:20px">Parceiros do evento</span>
-    <div class="parceiros-grid">
+    <!-- ACCP + Cesta -->
+    <div class="accp-cesta-grid">
+      <!-- Card ACCP -->
+      <div class="charity-card accp-cesta-grid__card">
+        <div class="charity-logo" style="margin:0 0 16px">
+          <img src="../../assets/images/foto-evento.jpeg" alt="ACCP">
+        </div>
+        <h3 style="text-align:left">ACCP — Associação Centro de Cidadania Plena</h3>
+        <p style="text-align:left">
+          A ACCP atua diretamente no atendimento a famílias atingidas pelas enchentes em Campina Grande — distribuindo alimentos, itens de higiene e apoio para reconstrução. Toda doação feita na inscrição vai integralmente para eles, sem intermediários.
+        </p>
+        <p style="text-align:left;margin-top:8px">
+          Participação gratuita. Doação totalmente voluntária. Sem valor mínimo.
+        </p>
+      </div>
+
+      <!-- Cesta básica callout -->
+      <div class="cesta-callout">
+        <span class="cesta-badge">Alternativa de doação</span>
+        <div class="cesta-icon">🧺</div>
+        <h3>Pode trazer uma cesta básica</h3>
+        <p>
+          Prefere contribuir em alimentos? Traga uma cesta básica no dia do evento — ela vai direto para as famílias atendidas pela ACCP.
+        </p>
+        <p>
+          Aceitamos cestas completas ou itens avulsos: arroz, feijão, óleo, macarrão, sal, açúcar, leite em pó.
+        </p>
+        <div class="cesta-prazo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Entrega até 20 de maio — dia do evento
+        </div>
+      </div>
+    </div>
+
+    <!-- Parceiros — todos iguais -->
+    <div style="text-align:center;margin-top:64px;margin-bottom:24px">
+      <span class="sec-label">Realização e parceiros</span>
+    </div>
+    <div class="parceiros-grid" style="justify-content:center">
+      <div class="parceiro-slot">
+        <div class="parceiro-logo-area">
+          <img src="../../assets/logos/ag-logo.png" alt="AG Consultoria" style="height:44px;width:auto;object-fit:contain">
+        </div>
+        <span class="parceiro-name">AG Consultoria</span>
+        <span class="parceiro-role">Realização</span>
+      </div>
       <div class="parceiro-slot">
         <div class="parceiro-logo-area">
           <img class="parceiro-logo-blend" src="../../assets/logos/protagon-logo.png" alt="Protagon Engenharia">
         </div>
         <span class="parceiro-name">Protagon Engenharia</span>
+        <span class="parceiro-role">Parceiro</span>
       </div>
       <div class="parceiro-slot">
         <div class="parceiro-logo-area">
@@ -985,6 +1102,7 @@ footer{
           </div>
         </div>
         <span class="parceiro-name">Pro Sangue Diagnósticos</span>
+        <span class="parceiro-role">Parceiro</span>
       </div>
     </div>
   </div>
@@ -1009,8 +1127,8 @@ footer{
       <div class="reg-beneficente">
         <div class="rb-icon">❤️</div>
         <div>
-          <div class="rb-title">Evento beneficente</div>
-          <div class="rb-desc">Após se inscrever, você pode contribuir voluntariamente com a ACCP — organização que apoia <strong style="color:var(--green)">vítimas de enchentes</strong> em Campina Grande. Qualquer valor, sem mínimo.</div>
+          <div class="rb-title">Evento beneficente · ACCP</div>
+          <div class="rb-desc">Doação voluntária para famílias atingidas por enchentes em Campina Grande. Qualquer valor na inscrição — ou traga uma <strong style="color:#F5A623">cesta básica até 20/05</strong>.</div>
         </div>
       </div>
     </div>
