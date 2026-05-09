@@ -1279,6 +1279,7 @@ footer{
 </footer>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════
    AG CONVERGE — CONFIGURAÇÃO DE EVENTO
@@ -1305,17 +1306,19 @@ const EVENT_CFG = {
   },
 };
 
-// Lista de todos os eventos da plataforma (para histórico cross-event)
-const ALL_EVENTS = [
-  { storage:'ag_leads_rh-em-xeque', label:'RH em Xeque', data:'14 mai 2026' },
-  { storage:'ag_leads_a-cupula',     label:'A Cúpula',    data:'25 set 2025' },
-];
+// ════════════════════════════════════════════════════════
+// SUPABASE
+// ════════════════════════════════════════════════════════
+const _SB = supabase.createClient(
+  'https://hqcbpqkohgmlultnmbyy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
+);
 
 // ════════════════════════════════════════════════════════
 // ESTADO GLOBAL
 // ════════════════════════════════════════════════════════
-let grupo      = [];   // array de leads do grupo atual (titular + convidados)
-let grupoId    = '';   // ID compartilhado do grupo
+let grupo      = [];
+let grupoId    = '';
 let selectedDoa = 60;
 
 // ════════════════════════════════════════════════════════
@@ -1332,20 +1335,23 @@ function gerarId(prefix) {
 }
 
 function normEmail(e) { return (e||'').trim().toLowerCase(); }
-function normNome(n)  { return (n||'').trim().toLowerCase().replace(/\s+/g,' '); }
 function iniciais(n)  { return n.trim().split(' ').filter(Boolean).map(p=>p[0]).slice(0,2).join('').toUpperCase(); }
 
-function getLeads() {
-  return JSON.parse(localStorage.getItem(EVENT_CFG.storage) || '[]');
+// ════════════════════════════════════════════════════════
+// DETECÇÃO DE DUPLICATA (Supabase)
+// ════════════════════════════════════════════════════════
+async function checkDuplicate(email) {
+  const { data } = await _SB.rpc('check_duplicate', {
+    p_email: email, p_evento_id: EVENT_CFG.slug
+  });
+  return data === true;
 }
 
-// ════════════════════════════════════════════════════════
-// DETECÇÃO DE DUPLICATA
-// Retorna leads existentes para o mesmo email neste evento
-// ════════════════════════════════════════════════════════
-function checkDuplicate(email) {
-  const ne = normEmail(email);
-  return getLeads().filter(l => normEmail(l.email) === ne);
+async function getDupsForModal(email) {
+  const { data } = await _SB.rpc('lookup_ingresso', {
+    p_email: email, p_evento_id: EVENT_CFG.slug
+  });
+  return data || [];
 }
 
 // ════════════════════════════════════════════════════════
@@ -1407,16 +1413,18 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
   e.preventDefault();
   if (!validateStep1()) return;
 
-  const email = document.getElementById('email').value.trim();
-  const dups  = checkDuplicate(email);
-
-  if (dups.length) {
-    showDupModal(dups);
-    return;
-  }
-
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Verificando...';
+
+  const email = document.getElementById('email').value.trim();
+  const isDup = await checkDuplicate(email);
+
+  if (isDup) {
+    const dups = await getDupsForModal(email);
+    showDupModal(dups);
+    btn.disabled = false; btn.textContent = 'Próximo →';
+    return;
+  }
 
   grupoId = gerarId('GRP');
   grupo   = [];
@@ -1440,9 +1448,7 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
   };
   grupo.push(titular);
 
-  await new Promise(r => setTimeout(r, 300));
   btn.disabled = false; btn.textContent = 'Próximo →';
-
   renderGrupoList();
   document.getElementById('grupoSub').textContent = `Você está inscrito, ${titular.nome.split(' ')[0]}. Vai levar alguém?`;
   goToStep(2);
@@ -1481,9 +1487,10 @@ function cancelGuestForm() {
   ['g-nome-e','g-email-e'].forEach(id => document.getElementById(id).textContent='');
 }
 
-function addGuest() {
+async function addGuest() {
   const nome  = document.getElementById('g-nome');
   const email = document.getElementById('g-email');
+  const addBtn = document.getElementById('btnConfirmGuest');
   let ok = true;
 
   if (nome.value.trim().length < 2) {
@@ -1496,18 +1503,20 @@ function addGuest() {
 
   if (!ok) return;
 
-  // Verifica duplicata no evento
-  const dups = checkDuplicate(email.value.trim());
-  if (dups.length) {
-    document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
+  // Verifica duplicata dentro do grupo atual (local, síncrona)
+  if (grupo.some(p => normEmail(p.email) === normEmail(email.value))) {
+    document.getElementById('g-email-e').textContent = 'Este e-mail já está no grupo';
     email.classList.add('err');
     return;
   }
 
-  // Verifica duplicata dentro do grupo atual
-  if (grupo.some(p => normEmail(p.email) === normEmail(email.value))) {
-    document.getElementById('g-email-e').textContent = 'Este e-mail já está no grupo';
+  if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'Verificando...'; }
+
+  const isDup = await checkDuplicate(email.value.trim());
+  if (isDup) {
+    document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
     email.classList.add('err');
+    if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar'; }
     return;
   }
 
@@ -1529,6 +1538,7 @@ function addGuest() {
     ingresso_baixado:  false,
   });
 
+  if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar'; }
   cancelGuestForm();
   renderGrupoList();
 }
@@ -1566,26 +1576,42 @@ function getDonationValue() {
   return selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
 }
 
-function confirmarInscricao() {
+async function confirmarInscricao() {
   const v = getDonationValue();
   grupo[0].doacao = v;
   grupo[0].doacao_confirmada = v > 0;
-  salvarGrupo();
-  mostrarIngressos();
+  const btn = document.getElementById('btnConfirmar');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+  try {
+    await salvarGrupo();
+    mostrarIngressos();
+  } catch(err) {
+    console.error(err);
+    if (btn) { btn.disabled = false; btn.textContent = 'Tentar novamente'; }
+    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+  }
 }
 
-function confirmarSemDoa() {
+async function confirmarSemDoa() {
   grupo[0].doacao = 0; grupo[0].doacao_confirmada = false;
-  salvarGrupo(); mostrarIngressos();
+  const btn = document.getElementById('btnSemDoa');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+  try {
+    await salvarGrupo();
+    mostrarIngressos();
+  } catch(err) {
+    console.error(err);
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirmar sem contribuição'; }
+    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+  }
 }
 
 // ════════════════════════════════════════════════════════
-// SALVAR GRUPO NO localStorage
+// SALVAR GRUPO NO SUPABASE
 // ════════════════════════════════════════════════════════
-function salvarGrupo() {
-  const leads = getLeads();
-  grupo.forEach(p => leads.push(p));
-  localStorage.setItem(EVENT_CFG.storage, JSON.stringify(leads));
+async function salvarGrupo() {
+  const { error } = await _SB.from('registrations').insert(grupo);
+  if (error) throw error;
 }
 
 // ════════════════════════════════════════════════════════
@@ -1683,25 +1709,23 @@ function baixarPDF() {
   _doPrint(document.getElementById('print-pdf-area'), grupo);
 }
 
-function baixarPDFDup() {
-  const leads   = getLeads();
-  const email   = normEmail(document.getElementById('dupOverlay').dataset.email || '');
-  const pessoas = leads.filter(l => normEmail(l.email) === email && l.evento_id === EVENT_CFG.slug);
+async function baixarPDFDup() {
+  const email   = document.getElementById('dupOverlay').dataset.email || '';
+  const pessoas = await getDupsForModal(email);
   if (!pessoas.length) return;
   _doPrint(document.getElementById('print-pdf-area'), pessoas);
 }
 
-function baixarPDFLookup(email) {
-  const leads   = getLeads();
-  const pessoas = leads.filter(l => normEmail(l.email) === normEmail(email) && l.evento_id === EVENT_CFG.slug);
-  if (!pessoas.length) return;
-  _doPrint(document.getElementById('print-pdf-area'), pessoas);
+async function baixarPDFLookup(email) {
+  const { data } = await _SB.rpc('lookup_ingresso', {
+    p_email: email, p_evento_id: EVENT_CFG.slug
+  });
+  if (!data?.length) return;
+  _doPrint(document.getElementById('print-pdf-area'), data);
 }
 
 function markBaixado(ids) {
-  const leads = getLeads();
-  ids.forEach(id => { const l = leads.find(x=>x.ingresso_id===id); if(l) l.ingresso_baixado=true; });
-  localStorage.setItem(EVENT_CFG.storage, JSON.stringify(leads));
+  ids.forEach(id => _SB.rpc('mark_baixado', { p_ingresso_id: id }));
 }
 
 // ════════════════════════════════════════════════════════
@@ -1737,12 +1761,17 @@ function openLookup() {
 
 function closeLookup() { document.getElementById('lookupOverlay').classList.remove('open'); }
 
-function doLookup() {
+async function doLookup() {
   const email = document.getElementById('lookupEmail').value.trim();
   if (!email) return;
-  const leads = getLeads().filter(l => normEmail(l.email) === normEmail(email));
-  const res   = document.getElementById('lookupResult');
+  const res = document.getElementById('lookupResult');
   res.style.display = 'block';
+  res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Buscando...</div>`;
+
+  const { data, error } = await _SB.rpc('lookup_ingresso', {
+    p_email: email, p_evento_id: EVENT_CFG.slug
+  });
+  const leads = data || [];
 
   if (!leads.length) {
     res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Nenhum ingresso encontrado para este e-mail neste evento.</div>`;
@@ -1779,36 +1808,36 @@ function openHistorico() {
 
 function closeHistorico() { document.getElementById('historicoOverlay').classList.remove('open'); }
 
-function doHistorico() {
+async function doHistorico() {
   const email = document.getElementById('histEmail').value.trim();
   if (!email) return;
-  const ne  = normEmail(email);
   const res = document.getElementById('historicoResult');
   res.style.display = 'block';
+  res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Buscando histórico...</div>`;
 
-  let html = '';
-  let total = 0;
+  const { data } = await _SB.rpc('historico_email', { p_email: email });
+  const leads = data || [];
 
-  ALL_EVENTS.forEach(ev => {
-    const leads = JSON.parse(localStorage.getItem(ev.storage)||'[]').filter(l => normEmail(l.email)===ne);
-    if (!leads.length) return;
-    total += leads.length;
-    html += `<div class="lr-event">${esc(ev.label)} · ${esc(ev.data)}</div>`;
-    leads.forEach(l => {
-      html += `
-        <div class="lr-card">
-          <div class="lr-nome">${esc(l.nome)}</div>
-          <div class="lr-id">Comanda: ${esc(l.ingresso_id)}</div>
-          ${l.titular_nome ? `<div class="lr-group-member">Convidado de ${esc(l.titular_nome)}</div>` : ''}
-        </div>`;
-    });
-  });
-
-  if (!total) {
+  if (!leads.length) {
     res.innerHTML = `<div style="color:var(--muted);font-size:.82rem;text-align:center;padding:16px">Nenhuma inscrição encontrada para este e-mail.</div>`;
-  } else {
-    res.innerHTML = html;
+    return;
   }
+
+  // Agrupa por evento
+  const porEvento = leads.reduce((acc, l) => {
+    (acc[l.evento_id] = acc[l.evento_id] || []).push(l);
+    return acc;
+  }, {});
+
+  res.innerHTML = Object.entries(porEvento).map(([evId, evLeads]) => `
+    <div class="lr-event">${esc(evLeads[0].evento_id.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()))}</div>
+    ${evLeads.map(l => `
+      <div class="lr-card">
+        <div class="lr-nome">${esc(l.nome)}</div>
+        <div class="lr-id">Comanda: ${esc(l.ingresso_id)}</div>
+        ${l.titular_nome ? `<div class="lr-group-member">Convidado de ${esc(l.titular_nome)}</div>` : ''}
+      </div>`).join('')}
+  `).join('');
 }
 
 // ════════════════════════════════════════════════════════

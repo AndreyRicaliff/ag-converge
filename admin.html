@@ -233,14 +233,22 @@ tr:hover td{background:rgba(123,47,224,.04)}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+const _SB = supabase.createClient(
+  'https://hqcbpqkohgmlultnmbyy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
+);
+
 // Eventos registrados na plataforma
 const EVENTS = [
-  { id: 'ag_leads_rh-em-xeque', label: 'RH em Xeque' },
-  { id: 'ag_leads_a-cupula',    label: 'A Cúpula' },
+  { id: 'rh-em-xeque', label: 'RH em Xeque' },
+  { id: 'a-cupula',    label: 'A Cúpula' },
 ];
 
 let activeEvent = EVENTS[0].id;
+const ADMIN_KEY  = 'ag_admin_auth';
+const ADMIN_HASH_KEY = 'ag_admin_hash';
 
 // Build tabs
 const tabsEl = document.getElementById('eventTabs');
@@ -252,8 +260,13 @@ EVENTS.forEach(ev => {
   tabsEl.appendChild(b);
 });
 
-function getLeads() {
-  return JSON.parse(localStorage.getItem(activeEvent) || '[]');
+async function getLeads() {
+  const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
+  const { data, error } = await _SB.rpc('admin_leads', {
+    p_evento_id: activeEvent, p_pwd_hash: h
+  });
+  if (error) { console.error(error); return []; }
+  return data || [];
 }
 
 function fmtDate(iso) {
@@ -275,8 +288,8 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function render() {
-  const leads = getLeads();
+async function render() {
+  const leads = await getLeads();
   updateSummary(leads);
 
   const q = document.getElementById('searchInput').value.toLowerCase();
@@ -320,8 +333,8 @@ function render() {
   `).join('');
 }
 
-function exportCSV() {
-  const leads = getLeads();
+async function exportCSV() {
+  const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
   const cols = ['nome','email','tel','empresa','cargo','origem','doacao','doacao_confirmada','grupo_id','titular','ingresso_id','ingresso_baixado','titular_nome','inscricao_at'];
   const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Doacao_Confirmada','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Titular_Nome','Data_Inscricao'];
@@ -334,8 +347,8 @@ function exportCSV() {
   a.click(); URL.revokeObjectURL(url);
 }
 
-function exportJSON() {
-  const leads = getLeads();
+async function exportJSON() {
+  const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
   const blob = new Blob([JSON.stringify(leads, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -347,14 +360,12 @@ function exportJSON() {
 
 function showClear() { document.getElementById('clearOverlay').classList.add('show') }
 function hideClear() { document.getElementById('clearOverlay').classList.remove('show') }
-function clearAll() { localStorage.removeItem(activeEvent); hideClear(); render() }
+function clearAll() { hideClear(); render(); } // dados ficam no Supabase
 
 render();
-setInterval(render, 8000);
+setInterval(render, 15000);
 
 // ── AUTH GATE ──
-const ADMIN_KEY  = 'ag_admin_auth';
-// SHA-256 da senha — nunca exponha a senha em texto aqui
 const ADMIN_PWD_HASH = '61681c268936f5241e321e2bdacd6748849b9dab35cab8397fb77d0ebe2d2414';
 
 async function sha256hex(str) {
@@ -368,8 +379,10 @@ async function checkAuth() {
   const ok  = (h === ADMIN_PWD_HASH);
   if (ok) {
     sessionStorage.setItem(ADMIN_KEY, '1');
+    sessionStorage.setItem(ADMIN_HASH_KEY, h);
     document.getElementById('authGate').style.display = 'none';
     document.getElementById('authInput').value = '';
+    render();
   } else {
     const inp = document.getElementById('authInput');
     const err = document.getElementById('authErr');
@@ -379,7 +392,6 @@ async function checkAuth() {
   }
 }
 
-// Verificar na carga se já autenticado nesta sessão
 (function() {
   if (sessionStorage.getItem(ADMIN_KEY) === '1') {
     document.getElementById('authGate').style.display = 'none';
