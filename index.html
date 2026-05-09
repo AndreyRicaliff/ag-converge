@@ -37,11 +37,7 @@ nav{
 }
 .nav-left{display:flex;align-items:center;gap:0}
 .nav-mark{
-  width:30px;height:30px;border-radius:7px;flex-shrink:0;
-  background:linear-gradient(135deg,#7B2FE0,#A55EFF);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.7rem;color:#fff;
-  margin-right:10px;letter-spacing:.02em;
+  height:22px;width:auto;flex-shrink:0;object-fit:contain;margin-right:10px;
 }
 .nav-name{font-size:.88rem;font-weight:800;color:var(--white);letter-spacing:-.01em}
 .nav-by{
@@ -352,10 +348,7 @@ footer{
 }
 .footer-brand{display:flex;align-items:center;gap:10px}
 .footer-mark{
-  width:28px;height:28px;border-radius:7px;
-  background:linear-gradient(135deg,var(--purple),var(--purple-hi));
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.72rem;color:#fff;
+  height:26px;width:auto;object-fit:contain;
 }
 .footer-name{font-size:.82rem;font-weight:700}
 .footer-sub{font-size:.62rem;color:var(--muted)}
@@ -400,7 +393,7 @@ footer{
 <!-- ── NAV ── -->
 <nav>
   <div class="nav-left">
-    <div class="nav-mark">AG</div>
+    <img class="nav-mark" src="assets/logos/ag-logo.png" alt="AG Consultoria">
     <span class="nav-name">AG Converge</span>
     <span class="nav-by">por <a href="https://agconsultorialtda.com" target="_blank">AG Consultoria</a></span>
   </div>
@@ -586,7 +579,7 @@ footer{
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="footer-mark">AG</div>
+      <img class="footer-mark" src="assets/logos/ag-logo.png" alt="AG Consultoria">
       <div>
         <div class="footer-name">AG Converge</div>
         <div class="footer-sub">por AG Consultoria · agconsultorialtda.com</div>

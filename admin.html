@@ -27,10 +27,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-
   border-radius:16px;padding:40px 36px;max-width:380px;width:92%;text-align:center;
 }
 .auth-mark{
-  width:52px;height:52px;border-radius:12px;margin:0 auto 18px;
-  background:linear-gradient(135deg,var(--purple),var(--purple-hi));
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:1.1rem;color:#fff;
+  height:36px;width:auto;object-fit:contain;display:block;margin:0 auto 18px;
 }
 .auth-title{font-size:1.1rem;font-weight:800;margin-bottom:6px}
 .auth-sub{font-size:.78rem;color:var(--muted);margin-bottom:24px}
@@ -162,7 +159,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
 <!-- AUTH GATE -->
 <div id="authGate">
   <div class="auth-box">
-    <div class="auth-mark">AG</div>
+    <img class="auth-mark" src="assets/logos/ag-logo.png" alt="AG Consultoria">
     <div class="auth-title">Acesso restrito</div>
     <div class="auth-sub">Digite a senha para acessar o painel de leads</div>
     <input class="auth-input" id="authInput" type="password" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')checkAuth()">
