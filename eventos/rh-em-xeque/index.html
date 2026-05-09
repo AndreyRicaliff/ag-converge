@@ -769,6 +769,8 @@ footer{
   font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   color:var(--purple-hi);margin-top:-2px;
 }
+.dona-chip-cesta{border-color:rgba(245,166,35,.35)!important;color:#F5A623!important}
+.dona-chip-cesta.selected{background:rgba(245,166,35,.18)!important;border-color:#F5A623!important;color:#F5A623!important}
 
 /* ── PDF PRINT ── */
 @media print {
@@ -1017,25 +1019,25 @@ footer{
     <!-- Contexto das enchentes + fotos -->
     <div class="causa-grid">
       <div class="causa-texto">
-        <h3>Enchentes na Paraíba deixam famílias sem nada — e a reconstrução depende de quem está ao lado.</h3>
+        <h3>Bayeux e Santa Rita: quando o rio sobe, quem mora à margem perde tudo.</h3>
         <p>
-          Toda vez que chove forte na Grande João Pessoa, municípios como Bayeux e Santa Rita viram cenário de desastre. Ruas somem debaixo d'água, casas de alvenaria simples desabam e famílias perdem tudo em horas — móveis, documentos, comida.
+          Em maio de 2026, o governo da Paraíba decretou estado de calamidade pública após as chuvas elevarem o nível do Rio Paraíba e do Canal do Cabelo. Bayeux concentrou o maior número de desabrigados do estado — cerca de 600 pessoas, de um total de 12 mil afetados no município.
         </p>
         <p>
-          Bayeux, cortada pelo Rio Sanhauá e pelo Canal do Cabelo, é uma das cidades mais vulneráveis da região. Os bairros às margens do rio são os primeiros a alagar e os últimos a receber ajuda.
+          A cidade é cortada por rios e canais. A Ponte do Baralho, que liga bairros às margens do Canal do Cabelo, é o símbolo dessa vulnerabilidade: quando o rio enche, ela afunda. As famílias que vivem ali não têm para onde ir.
         </p>
         <div class="bairros-afetados">
           <span class="bairro-tag">Bayeux</span>
           <span class="bairro-tag">Santa Rita</span>
-          <span class="bairro-tag">Cabedelo</span>
-          <span class="bairro-tag">Rio Sanhauá</span>
+          <span class="bairro-tag">Rio Tinto</span>
+          <span class="bairro-tag">Rio Paraíba</span>
           <span class="bairro-tag">Canal do Cabelo</span>
-          <span class="bairro-tag">Grande João Pessoa</span>
+          <span class="bairro-tag">600 desabrigados</span>
         </div>
       </div>
       <div class="causa-fotos">
-        <img src="https://images.unsplash.com/photo-1671037876930-265bbf35e6a9?w=800&q=80&fit=crop" alt="Ruas alagadas por enchente" loading="lazy">
-        <img src="https://images.unsplash.com/photo-1668431396687-1181f9855b7d?w=800&q=80&fit=crop" alt="Famílias afetadas por enchente" loading="lazy">
+        <img src="../../assets/images/bayeux-ponte-baralho.jpg" alt="Ponte do Baralho sobre o Canal do Cabelo — Bayeux, PB" loading="lazy">
+        <img src="../../assets/images/bayeux-rio-sanhaua.jpg" alt="Rio Sanhauá em Bayeux — área que alaga nas cheias" loading="lazy">
       </div>
     </div>
 
@@ -1073,11 +1075,11 @@ footer{
       </div>
     </div>
 
-    <!-- Parceiros — todos iguais -->
-    <div style="text-align:center;margin-top:64px;margin-bottom:24px">
-      <span class="sec-label">Realização e parceiros</span>
+    <!-- Realizadores + parceiro -->
+    <div style="text-align:center;margin-top:64px;margin-bottom:8px">
+      <span class="sec-label">Realização</span>
     </div>
-    <div class="parceiros-grid" style="justify-content:center">
+    <div class="parceiros-grid" style="justify-content:center;margin-bottom:40px">
       <div class="parceiro-slot">
         <div class="parceiro-logo-area">
           <img src="../../assets/logos/ag-logo.png" alt="AG Consultoria" style="height:44px;width:auto;object-fit:contain">
@@ -1090,8 +1092,13 @@ footer{
           <img class="parceiro-logo-blend" src="../../assets/logos/protagon-logo.png" alt="Protagon Engenharia">
         </div>
         <span class="parceiro-name">Protagon Engenharia</span>
-        <span class="parceiro-role">Parceiro</span>
+        <span class="parceiro-role">Realização</span>
       </div>
+    </div>
+    <div style="text-align:center;margin-bottom:8px">
+      <span class="sec-label">Parceiro de saúde</span>
+    </div>
+    <div class="parceiros-grid" style="justify-content:center">
       <div class="parceiro-slot">
         <div class="parceiro-logo-area">
           <div class="parceiro-logo-tile">
@@ -1250,6 +1257,7 @@ footer{
           <button type="button" class="dona-chip selected" onclick="selectChip(this,'60')">R$ 60</button>
           <button type="button" class="dona-chip" onclick="selectChip(this,'100')">R$ 100</button>
           <button type="button" class="dona-chip" onclick="selectChip(this,'outro')">Outro valor</button>
+          <button type="button" class="dona-chip dona-chip-cesta" onclick="selectChip(this,'cesta')">🧺 Cesta básica</button>
         </div>
         <div class="fgrp dona-custom-wrap" id="customWrap" style="display:none">
           <label for="customVal">Valor personalizado</label>
@@ -1267,7 +1275,14 @@ footer{
           <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s">Copiar chave Pix</button>
           <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou copie a chave no seu banco.<br>Após pagar, clique em confirmar abaixo.</div>
         </div>
+        <!-- Cesta básica section -->
+        <div id="cestaSection" style="display:none;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.28);border-radius:12px;padding:18px;margin-bottom:16px">
+          <div style="font-size:1.4rem;margin-bottom:8px">🧺</div>
+          <div style="font-size:.8rem;font-weight:700;color:#F5A623;margin-bottom:6px">Você vai trazer uma cesta básica</div>
+          <div style="font-size:.75rem;color:rgba(248,246,255,.6);line-height:1.6">Leve ao evento no dia 20/05 — ela vai direto para a ACCP.<br>Aceitos: arroz, feijão, óleo, macarrão, sal, açúcar, leite em pó.</div>
+        </div>
         <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()">Confirmar + contribuir →</button>
+        <button type="button" id="btnConfirmarCesta" style="display:none" class="btn-submit" onclick="confirmarComCesta()" style="background:linear-gradient(135deg,#c17f24,#F5A623)">Confirmar — trarei uma cesta básica →</button>
         <button type="button" class="btn-skip-dona" onclick="confirmarSemDoa()">Participar sem contribuir</button>
       </div>
 
@@ -1693,12 +1708,29 @@ function selectChip(el, val) {
   document.querySelectorAll('.dona-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   const customWrap = document.getElementById('customWrap');
-  if (val === 'outro') {
-    customWrap.style.display = 'block'; selectedDoa = null;
-    document.getElementById('customVal').focus();
+  const pixSection = document.getElementById('pixSection');
+  const cestaSection = document.getElementById('cestaSection');
+  const btnConfirmar = document.getElementById('btnConfirmar');
+  const btnCesta = document.getElementById('btnConfirmarCesta');
+  if (val === 'cesta') {
+    customWrap.style.display = 'none';
+    pixSection.style.display = 'none';
+    cestaSection.style.display = 'block';
+    btnConfirmar.style.display = 'none';
+    btnCesta.style.display = 'block';
+    selectedDoa = null;
   } else {
-    customWrap.style.display = 'none'; selectedDoa = parseFloat(val);
-    updateDoaBtn();
+    cestaSection.style.display = 'none';
+    pixSection.style.display = 'block';
+    btnConfirmar.style.display = 'block';
+    btnCesta.style.display = 'none';
+    if (val === 'outro') {
+      customWrap.style.display = 'block'; selectedDoa = null;
+      document.getElementById('customVal').focus();
+    } else {
+      customWrap.style.display = 'none'; selectedDoa = parseFloat(val);
+      updateDoaBtn();
+    }
   }
 }
 
@@ -1739,6 +1771,20 @@ async function confirmarSemDoa() {
   } catch(err) {
     console.error(err);
     if (btn) { btn.disabled = false; btn.textContent = 'Confirmar sem contribuição'; }
+    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+  }
+}
+
+async function confirmarComCesta() {
+  grupo[0].doacao = 0; grupo[0].doacao_confirmada = true;
+  const btn = document.getElementById('btnConfirmarCesta');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+  try {
+    await salvarGrupo();
+    mostrarIngressos();
+  } catch(err) {
+    console.error(err);
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirmar — trarei uma cesta básica →'; }
     alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
   }
 }
