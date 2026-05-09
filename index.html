@@ -267,7 +267,7 @@ nav{
 .event-modal{
   background:var(--bg-card);border:1px solid var(--border);
   border-radius:20px;width:100%;max-width:860px;
-  max-height:90vh;overflow-y:auto;
+  max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
   position:relative;
   box-shadow:0 32px 100px rgba(0,0,0,.7),0 0 60px rgba(123,47,224,.2);
   transform:scale(.96) translateY(16px);transition:transform .3s;
@@ -368,7 +368,7 @@ footer{
   .modal-grid{grid-template-columns:1fr}
 }
 @media(max-width:768px){
-  .hero{padding:110px 5% 70px}
+  .hero{padding:100px 5% 64px}
   .hero h1{font-size:clamp(2.4rem,8vw,4rem)}
   .destaque-title{font-size:clamp(1.9rem,6vw,2.8rem)}
   .destaque-actions{flex-direction:column}
@@ -376,14 +376,29 @@ footer{
 }
 @media(max-width:640px){
   nav{padding:0 4%}
-  .hero-stats{gap:20px}
+  .nav-by{display:none}
+  .hero{padding:84px 4% 56px;min-height:auto}
+  .hero-stats{gap:20px;margin-top:48px}
   .hstat-div{display:none}
   .hstat .n{font-size:1.6rem}
   .section,.destaque,.events-section{padding:48px 4%}
   .events-grid{grid-template-columns:1fr}
-  .modal-body{padding:20px}
-  .modal-title{font-size:1.4rem}
+  .event-card:hover{transform:none}
+  .modal-body{padding:16px}
+  .modal-title{font-size:1.35rem}
+  .modal-close{width:40px;height:40px;top:12px}
+  .modal-overlay{padding:0;align-items:flex-end}
+  .event-modal{border-radius:20px 20px 0 0;max-height:92vh}
   .destaque-sponsors{gap:8px}
+  .btn-primary,.btn-ghost{padding:13px 20px;font-size:.86rem}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column;align-items:stretch;gap:10px;padding:0 2px}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center}
+  .hero-stats{flex-direction:column;gap:10px;align-items:center;margin-top:36px}
+  .hstat{display:flex;gap:8px;align-items:baseline}
+  .hstat .l{margin-top:0;font-size:.65rem}
+  .btn-event-main{font-size:.84rem;padding:13px 20px}
 }
 </style>
 </head>
