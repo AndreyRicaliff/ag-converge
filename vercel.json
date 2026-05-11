@@ -2,6 +2,7 @@
   "buildCommand": "echo 'static site — no build'",
   "outputDirectory": ".",
   "installCommand": "echo skip",
+  "framework": null,
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
