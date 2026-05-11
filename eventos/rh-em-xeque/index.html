@@ -12,6 +12,40 @@
 <meta name="twitter:title" content="RH em Xeque — AG Consultoria">
 <meta name="twitter:description" content="NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? 14 de maio, 18h–21h30 · Auditório Slavieiro, Campina Grande.">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png"><link rel="apple-touch-icon" href="/favicon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "RH em Xeque",
+  "description": "NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? Evento para líderes e profissionais de RH em Campina Grande — entrada gratuita, doação voluntária para a ACCP.",
+  "startDate": "2026-05-14T18:00:00-03:00",
+  "endDate": "2026-05-14T21:30:00-03:00",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "location": {
+    "@type": "Place",
+    "name": "Auditório Slavieiro — Heron Marinho",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Campina Grande",
+      "addressRegion": "PB",
+      "addressCountry": "BR"
+    }
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "AG Consultoria",
+    "url": "https://agconsultorialtda.com"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL",
+    "availability": "https://schema.org/InStock",
+    "url": "https://agconsultorialtda.com/eventos/rh-em-xeque"
+  }
+}
+</script>
 <script src="/assets/js/qrcode.min.js"></script>
 <style>
 /* ══════════════════════════════
@@ -1368,7 +1402,13 @@ footer{
           <div class="ingressos-stack" id="ingressosStack"></div>
           <div class="ingresso-actions">
             <button type="button" class="btn-print" onclick="baixarPDF()">⬇ Baixar ingressos (PDF)</button>
+            <a id="calendarBtn" href="#" target="_blank" rel="noopener" class="btn-hub" style="border-color:rgba(123,47,224,.3);color:var(--purple-lo)">📅 Salvar no Calendário</a>
             <a href="/" class="btn-hub">← Todos os eventos</a>
+          </div>
+          <!-- Cesta reminder (shown only when grupo[0].doacao_confirmada && doacao===0) -->
+          <div id="cestaReminder" style="display:none;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.28);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.76rem;color:rgba(248,246,255,.8);line-height:1.55;text-align:left">
+            <div style="font-weight:700;color:#F5A623;margin-bottom:4px">🧺 Lembre-se da sua cesta!</div>
+            Você prometeu trazer uma cesta básica — leve no dia 14/05. Itens aceitos: arroz, feijão, óleo, macarrão, sal, açúcar ou leite em pó. Ela vai direto para a ACCP.
           </div>
           <!-- Compartilhamento pós-inscrição -->
           <div class="share-strip">
@@ -2082,6 +2122,20 @@ function mostrarIngressos() {
   });
 
   setupShare(grupo[0]?.nome || '');
+
+  // Calendar link — 14/05/2026 18h–21h30 BRT
+  const calBtn = document.getElementById('calendarBtn');
+  if (calBtn) {
+    const firstName = (grupo[0]?.nome||'').split(' ')[0] || '';
+    const details   = encodeURIComponent(`RH em Xeque — AG Consultoria\nAuditório Slavieiro, Heron Marinho, Campina Grande.\nEntrada gratuita, evento beneficente.\n${firstName ? 'Ingresso de '+firstName+'.' : ''}`);
+    const location  = encodeURIComponent('Auditório Slavieiro, Heron Marinho, Campina Grande, PB');
+    calBtn.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=RH+em+Xeque+%E2%80%94+AG+Consultoria&dates=20260514T210000Z/20260515T003000Z&details=${details}&location=${location}`;
+  }
+
+  // Cesta reminder
+  const cestaEl = document.getElementById('cestaReminder');
+  if (cestaEl) cestaEl.style.display = (grupo[0]?.doacao_confirmada && grupo[0]?.doacao === 0) ? 'block' : 'none';
+
   goToStep(4);
   document.getElementById('registro').scrollIntoView({behavior:'smooth', block:'start'});
   setTimeout(() => window._launchConfetti?.(), 400);
@@ -2157,13 +2211,24 @@ function showDupModal(dups) {
   overlay.dataset.email = dups[0].email;
   document.getElementById('dupSub').textContent = `Encontramos ${dups.length} ingresso(s) com este e-mail neste evento.`;
   document.getElementById('dupTickets').innerHTML = dups.map(d => `
-    <div class="dup-ticket">
-      <div class="dup-nome">${esc(d.nome)}</div>
-      <div class="dup-id">Comanda: ${esc(d.ingresso_id)}</div>
-      ${d.titular_nome ? `<div style="font-size:.72rem;color:var(--muted);margin-top:4px">Convidado de ${esc(d.titular_nome)}</div>` : ''}
+    <div class="dup-ticket" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="flex:1">
+        <div class="dup-nome">${esc(d.nome)}</div>
+        <div class="dup-id">Comanda: ${esc(d.ingresso_id)}</div>
+        ${d.titular_nome ? `<div style="font-size:.72rem;color:var(--muted);margin-top:4px">Convidado de ${esc(d.titular_nome)}</div>` : ''}
+        ${d.doacao > 0 ? `<div style="font-size:.72rem;color:var(--green);margin-top:4px;font-weight:700">Doação PIX: R$ ${(+d.doacao).toFixed(2).replace('.',',')}</div>` : ''}
+      </div>
+      <div id="dqr-${esc(d.ingresso_id)}" style="flex-shrink:0"></div>
     </div>
   `).join('');
   overlay.classList.add('open');
+  dups.forEach(d => {
+    const wrap = document.getElementById(`dqr-${d.ingresso_id}`);
+    if (wrap) {
+      new QRCode(wrap, { text: d.ingresso_id, width: 72, height: 72, colorDark: '#1A0F3C', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      wrap.querySelector('canvas,img')?.setAttribute('style', 'border-radius:6px;border:2px solid rgba(123,47,224,.3)');
+    }
+  });
 }
 
 function closeDup() {
@@ -2204,18 +2269,27 @@ async function doLookup() {
     <div class="lr-event">${esc(EVENT_CFG.label)}</div>
     ${leads.map(l => `
       <div class="lr-card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <div style="flex:1">
             <div class="lr-nome">${esc(l.nome)}</div>
             <div class="lr-id">Comanda: ${esc(l.ingresso_id)}</div>
             ${l.titular_nome ? `<div class="lr-group-member">Convidado de ${esc(l.titular_nome)}</div>` : ''}
+            <span class="lr-baixado ${l.ingresso_baixado?'sim':'nao'}" style="margin-top:6px;display:inline-block">${l.ingresso_baixado?'PDF baixado':'Não baixado'}</span>
           </div>
-          <span class="lr-baixado ${l.ingresso_baixado?'sim':'nao'}">${l.ingresso_baixado?'PDF baixado':'Não baixado'}</span>
+          <div id="lqr-${esc(l.ingresso_id)}" style="flex-shrink:0"></div>
         </div>
       </div>
     `).join('')}
     <button class="btn-print" style="width:100%;margin-top:4px" onclick="baixarPDFLookup(_lookupEmail)">⬇ Baixar ingresso(s) PDF</button>
   `;
+  // Render QR codes inline so participant can show at portaria
+  leads.forEach(l => {
+    const wrap = document.getElementById(`lqr-${l.ingresso_id}`);
+    if (wrap) {
+      new QRCode(wrap, { text: l.ingresso_id, width: 80, height: 80, colorDark: '#1A0F3C', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      wrap.querySelector('canvas,img')?.setAttribute('style', 'border-radius:6px;border:2px solid #f0eeff');
+    }
+  });
 }
 
 // ════════════════════════════════════════════════════════

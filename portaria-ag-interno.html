@@ -261,12 +261,18 @@ header{
       <div class="h-event">RH em Xeque · 14 mai 2026</div>
     </div>
   </div>
-  <div class="h-counter">
-    <div style="display:flex;flex-direction:column;align-items:center;line-height:1.1">
-      <span style="font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(8,193,106,.6);margin-bottom:1px">Entradas</span>
-      <span class="h-count-n" id="cntEntraram">—</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div id="netStatus" style="display:flex;align-items:center;gap:4px;font-size:.58rem;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:100px;background:rgba(8,193,106,.12);color:var(--green);border:1px solid rgba(8,193,106,.25);transition:all .3s">
+      <span id="netDot" style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>
+      <span id="netLbl">ONLINE</span>
     </div>
-    <span class="h-count-l" style="font-size:.7rem">/ <span id="cntTotal">—</span> inscritos</span>
+    <div class="h-counter">
+      <div style="display:flex;flex-direction:column;align-items:center;line-height:1.1">
+        <span style="font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(8,193,106,.6);margin-bottom:1px">Entradas</span>
+        <span class="h-count-n" id="cntEntraram">—</span>
+      </div>
+      <span class="h-count-l" style="font-size:.7rem">/ <span id="cntTotal">—</span> inscritos</span>
+    </div>
   </div>
 </header>
 
@@ -368,10 +374,28 @@ async function checkAuth() {
   document.getElementById('scanInput').focus();
   keepScreenOn();
   setInterval(refreshCounter, 20000);
+  startPortariaRealtime();
+  updateNetStatus();
+}
+
+function startPortariaRealtime() {
+  try {
+    _SB.channel('portaria-live')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'registrations',
+          filter: `evento_id=eq.${EVENT_ID}` }, () => { refreshCounter(); })
+      .subscribe();
+  } catch(e) {}
 }
 
 document.getElementById('authInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkAuth();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && pwdHash) {
+    clearInput();
+    document.getElementById('resultArea').innerHTML = '';
+  }
 });
 
 // ── COUNTER ──────────────────────────────────────────────
@@ -762,6 +786,25 @@ function playBeep(type) {
 window.addEventListener('load', () => {
   document.getElementById('authInput').focus();
 });
+
+// ── INDICADOR DE REDE ────────────────────────────────────
+function updateNetStatus() {
+  const el  = document.getElementById('netStatus');
+  const dot = document.getElementById('netDot');
+  const lbl = document.getElementById('netLbl');
+  if (!el) return;
+  if (navigator.onLine) {
+    el.style.cssText  = 'display:flex;align-items:center;gap:4px;font-size:.58rem;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:100px;background:rgba(8,193,106,.12);color:#08C16A;border:1px solid rgba(8,193,106,.25);transition:all .3s';
+    dot.style.background = '#08C16A';
+    lbl.textContent = 'ONLINE';
+  } else {
+    el.style.cssText  = 'display:flex;align-items:center;gap:4px;font-size:.58rem;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:100px;background:rgba(255,92,92,.12);color:#FF5C5C;border:1px solid rgba(255,92,92,.25);transition:all .3s';
+    dot.style.background = '#FF5C5C';
+    lbl.textContent = 'SEM REDE';
+  }
+}
+window.addEventListener('online',  updateNetStatus);
+window.addEventListener('offline', updateNetStatus);
 </script>
 </body>
 </html>

@@ -228,6 +228,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
       <button id="btnToggleOpen" onclick="toggleEventOpen()" style="padding:8px 18px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:inherit;border:none;cursor:pointer;transition:all .2s">—</button>
       <button onclick="render();refreshVagas()" style="padding:5px 12px;border-radius:7px;font-size:.68rem;font-weight:600;font-family:inherit;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">↺ Atualizar</button>
+      <span id="livebadge" style="display:none;font-size:.58rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:100px;background:rgba(8,193,106,.1);color:var(--green);border:1px solid rgba(8,193,106,.25)">● LIVE</span>
       <span id="lastUpdated" style="font-size:.62rem;color:rgba(255,255,255,.2)"></span>
     </div>
   </div>
@@ -240,6 +241,11 @@ tr:hover td{background:rgba(123,47,224,.04)}
       <option value="cesta">🧺 Cesta básica</option>
       <option value="nao">Sem contribuição</option>
     </select>
+    <select class="filter-sel" id="fPortaria" onchange="render()">
+      <option value="">Portaria: todos</option>
+      <option value="entrou">✓ Entrou</option>
+      <option value="naoentrou">⏳ Não entrou</option>
+    </select>
     <span class="count-lbl" id="countLbl">—</span>
   </div>
 
@@ -249,7 +255,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
         <tr>
           <th>#</th><th>Nome</th><th>E-mail</th><th>WhatsApp</th>
           <th>Empresa</th><th>Cargo</th><th>Origem</th>
-          <th>Doação</th><th>Grupo</th><th>PDF</th><th>Evento</th><th>Data</th>
+          <th>Doação</th><th>Grupo</th><th>PDF</th><th>Portaria</th><th>Evento</th><th>Data</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -391,8 +397,9 @@ async function render() {
   const leads = await getLeads();
   updateSummary(leads);
 
-  const q = document.getElementById('searchInput').value.toLowerCase();
+  const q  = document.getElementById('searchInput').value.toLowerCase();
   const fd = document.getElementById('fDoa').value;
+  const fp = document.getElementById('fPortaria').value;
 
   const filtered = leads.filter(l => {
     const mq = !q || [l.nome,l.email,l.empresa].some(v=>(v||'').toLowerCase().includes(q));
@@ -400,7 +407,10 @@ async function render() {
       || (fd==='sim'    ? l.doacao>0 : false)
       || (fd==='cesta'  ? (l.doacao===0 && l.doacao_confirmada===true) : false)
       || (fd==='nao'    ? !(l.doacao>0) && !(l.doacao===0 && l.doacao_confirmada===true) : false);
-    return mq && md;
+    const mp = !fp
+      || (fp==='entrou'    ? !!l.entrada_at : false)
+      || (fp==='naoentrou' ? !l.entrada_at  : false);
+    return mq && md && mp;
   });
 
   document.getElementById('countLbl').textContent = filtered.length + ' inscrito(s)';
@@ -429,6 +439,9 @@ async function render() {
       }</td>
       <td style="font-size:.66rem;color:var(--muted)">${esc((l.grupo_id||'—').replace('GRP-',''))}</td>
       <td><span class="badge ${l.ingresso_baixado?'bg':'br'}">${l.ingresso_baixado?'Baixado':'Pendente'}</span></td>
+      <td>${l.entrada_at
+        ? `<span class="badge bg" title="${esc(new Date(l.entrada_at).toLocaleString('pt-BR'))}">✓ ${new Date(l.entrada_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>`
+        : '<span class="dona-zero">—</span>'}</td>
       <td><span class="badge bp">${esc(eventLabel)}</span></td>
       <td style="color:var(--muted);font-size:.72rem;white-space:nowrap">${fmtDate(l.inscricao_at)}</td>
     </tr>
@@ -438,10 +451,10 @@ async function render() {
 async function exportCSV() {
   const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
-  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Tipo_Contribuicao','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Titular_Nome','Data_Inscricao'];
+  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Tipo_Contribuicao','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Portaria_Entrada','Titular_Nome','Data_Inscricao'];
   const rows_data = leads.map(l => {
     const tipo = l.doacao > 0 ? 'Pix' : (l.doacao_confirmada ? 'Cesta' : 'Nenhuma');
-    return [l.nome,l.email,l.tel,l.empresa,l.cargo,l.origem,l.doacao||0,tipo,l.grupo_id,l.titular,l.ingresso_id,l.ingresso_baixado,l.titular_nome||'',l.inscricao_at].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';');
+    return [l.nome,l.email,l.tel,l.empresa,l.cargo,l.origem,l.doacao||0,tipo,l.grupo_id,l.titular,l.ingresso_id,l.ingresso_baixado,l.entrada_at||'',l.titular_nome||'',l.inscricao_at].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';');
   });
   const rows = [hdr.join(';'), ...rows_data];
   const blob = new Blob(['﻿'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
@@ -490,6 +503,7 @@ async function checkAuth() {
     document.getElementById('authGate').style.display = 'none';
     document.getElementById('authInput').value = '';
     render();
+    startRealtime();
   } else {
     const inp = document.getElementById('authInput');
     const err = document.getElementById('authErr');
@@ -499,11 +513,29 @@ async function checkAuth() {
   }
 }
 
+let _realtimeChannel = null;
+
+function startRealtime() {
+  if (_realtimeChannel) return;
+  try {
+    _realtimeChannel = _SB.channel('admin-registrations')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'registrations' }, () => {
+        render();
+        refreshVagas();
+      })
+      .subscribe(status => {
+        const badge = document.getElementById('livebadge');
+        if (badge) badge.style.display = (status === 'SUBSCRIBED') ? 'inline-block' : 'none';
+      });
+  } catch(e) {}
+}
+
 (function() {
   if (sessionStorage.getItem(ADMIN_KEY) === '1') {
     document.getElementById('authGate').style.display = 'none';
     render();
     refreshVagas();
+    startRealtime();
   } else {
     setTimeout(() => document.getElementById('authInput').focus(), 100);
   }
