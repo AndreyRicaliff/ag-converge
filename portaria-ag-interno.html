@@ -273,7 +273,13 @@ header{
 <!-- ── CONTEÚDO ── -->
 <div class="scan-wrap">
 
-  <span class="scan-label">Comanda do participante</span>
+  <!-- Modo toggle: QR/Comanda ↔ Busca por nome -->
+  <div style="display:flex;gap:6px;width:100%">
+    <button id="modeQR"   onclick="setMode('qr')"   style="flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:var(--purple);color:#fff;border:none">📷 Comanda</button>
+    <button id="modeNome" onclick="setMode('nome')" style="flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)">🔍 Nome</button>
+  </div>
+
+  <span class="scan-label" id="scanLabel">Comanda do participante</span>
 
   <div class="scan-input-wrap">
     <input type="text" id="scanInput"
@@ -323,6 +329,7 @@ let recentEntries = [];
 let currentPerson = null;
 let _wakeLock = null;
 let sessionStart = null;
+let _mode = 'qr'; // 'qr' | 'nome'
 
 async function keepScreenOn() {
   try {
@@ -384,6 +391,34 @@ function updateCounter(row) {
   document.getElementById('cntTotal').textContent    = row.total ?? '—';
 }
 
+// ── MODO QR / NOME ────────────────────────────────────────
+function setMode(m) {
+  _mode = m;
+  const inp   = document.getElementById('scanInput');
+  const btn   = document.getElementById('scanBtn');
+  const lbl   = document.getElementById('scanLabel');
+  const mQR   = document.getElementById('modeQR');
+  const mNome = document.getElementById('modeNome');
+  if (m === 'nome') {
+    inp.placeholder = 'Parte do nome...';
+    inp.style.textTransform = 'none';
+    inp.style.letterSpacing = '0';
+    btn.textContent = 'Buscar';
+    lbl.textContent = 'Busca por nome';
+    mNome.style.cssText = 'flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:var(--purple);color:#fff;border:none';
+    mQR.style.cssText   = 'flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)';
+  } else {
+    inp.placeholder = 'RHX-XXXX-XXXX';
+    inp.style.textTransform = 'uppercase';
+    inp.style.letterSpacing = '.12em';
+    btn.textContent = 'Consultar';
+    lbl.textContent = 'Comanda do participante';
+    mQR.style.cssText   = 'flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:var(--purple);color:#fff;border:none';
+    mNome.style.cssText = 'flex:1;padding:8px;border-radius:8px;font-size:.72rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)';
+  }
+  clearInput();
+}
+
 // ── SCAN ─────────────────────────────────────────────────
 function resetState() {
   document.getElementById('scanInput').classList.remove('ok','already','notfound');
@@ -404,7 +439,98 @@ function fmtTime(iso) {
   return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
+async function doNomeLookup() {
+  const q = document.getElementById('scanInput').value.trim();
+  if (q.length < 2) return;
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true; btn.textContent = 'Buscando...';
+  const TIMEOUT_MS = 8000;
+  const timeoutP = new Promise(r => setTimeout(() => r({ data: null, error: { message: 'timeout' } }), TIMEOUT_MS));
+  const { data, error } = await Promise.race([
+    _SB.rpc('lookup_by_nome', { p_nome: q, p_evento_id: EVENT_ID, p_pwd_hash: pwdHash }),
+    timeoutP,
+  ]);
+  btn.disabled = false; btn.textContent = 'Buscar';
+  const res = document.getElementById('resultArea');
+  if (error?.message === 'timeout') {
+    res.innerHTML = `<div class="flash err">⚡ Sem resposta. Verifique a conexão.</div>`; return;
+  }
+  const rows = data || [];
+  if (!rows.length) {
+    playBeep('warn');
+    res.innerHTML = `<div class="result-card status-notfound"><div class="rc-top"><div class="rc-icon">🔍</div><div class="rc-info"><div class="rc-nome">Nenhum resultado para "${esc(q)}"</div><div class="rc-empresa">Verifique o nome ou use a comanda</div></div></div></div>`;
+    return;
+  }
+  // Lista de resultados — operador clica para selecionar
+  res.innerHTML = `
+    <div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${rows.length} resultado(s)</div>
+    ${rows.map((p, i) => `
+      <div class="result-card" style="cursor:pointer;margin-bottom:8px;transition:border-color .2s" onclick="selectFromNome(${i})" onmouseover="this.style.borderColor='var(--purple-hi)'" onmouseout="this.style.borderColor=''">
+        <div class="rc-top">
+          <div class="rc-icon">${p.entrada_at ? '✅' : '🎫'}</div>
+          <div class="rc-info">
+            <div class="rc-nome">${esc(p.nome)}</div>
+            <div class="rc-empresa">${esc(p.empresa||'—')}${p.cargo?' · '+esc(p.cargo):''}</div>
+            <div class="rc-badges">
+              <span class="rc-badge badge-green">${esc(p.ingresso_id)}</span>
+              ${p.entrada_at ? `<span class="rc-badge badge-orange">Entrou às ${fmtTime(p.entrada_at)}</span>` : '<span class="rc-badge badge-green">Não entrou</span>'}
+            </div>
+          </div>
+        </div>
+      </div>`).join('')}
+  `;
+  window._nomeResults = rows;
+}
+
+function selectFromNome(idx) {
+  const p = (window._nomeResults || [])[idx];
+  if (!p) return;
+  currentPerson = p;
+  const res = document.getElementById('resultArea');
+  if (p.entrada_at) {
+    playBeep('warn');
+    document.getElementById('scanInput').classList.add('already');
+    res.innerHTML = `
+      <div class="result-card status-already">
+        <div class="rc-top">
+          <div class="rc-icon">⚠️</div>
+          <div class="rc-info">
+            <div class="rc-nome">${esc(p.nome)}</div>
+            <div class="rc-empresa">${esc(p.empresa||'—')}</div>
+            <div class="rc-badges"><span class="rc-badge badge-orange">Já entrou às ${fmtTime(p.entrada_at)}</span></div>
+          </div>
+        </div>
+        <div class="rc-actions"><button class="btn-cancelar" onclick="clearInput()">Fechar</button></div>
+      </div>`;
+    return;
+  }
+  document.getElementById('scanInput').classList.add('ok');
+  res.innerHTML = `
+    <div class="result-card status-ok">
+      <div class="rc-top">
+        <div class="rc-icon">✅</div>
+        <div class="rc-info">
+          <div class="rc-nome">${esc(p.nome)}</div>
+          <div class="rc-empresa">${esc(p.empresa||'—')}${p.cargo?' · '+esc(p.cargo):''}</div>
+          <div class="rc-badges">
+            <span class="rc-badge badge-green">Inscrito</span>
+            ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : '<span class="rc-badge badge-muted">Sem doação</span>'}
+          </div>
+        </div>
+      </div>
+      <div class="rc-meta">
+        <div class="rc-meta-item"><strong>${esc(p.ingresso_id)}</strong>Comanda</div>
+        <div class="rc-meta-item"><strong>${fmtTime(p.inscricao_at)}</strong>Inscrito às</div>
+      </div>
+      <div class="rc-actions">
+        <button class="btn-confirmar" id="btnConfirmar" onclick="confirmarEntrada()">✓ Confirmar entrada</button>
+        <button class="btn-cancelar" onclick="clearInput()">Cancelar</button>
+      </div>
+    </div>`;
+}
+
 async function doScan() {
+  if (_mode === 'nome') { await doNomeLookup(); return; }
   const raw = document.getElementById('scanInput').value.trim().toUpperCase();
   if (!raw) return;
 
