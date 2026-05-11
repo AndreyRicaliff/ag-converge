@@ -447,9 +447,7 @@ function clearAll() {
   alert('Os dados estão protegidos no Supabase e não podem ser apagados por aqui. Use o painel do Supabase para operações de delete.');
 }
 
-render();
-refreshVagas();
-setInterval(() => { render(); refreshVagas(); }, 15000);
+setInterval(() => { if (sessionStorage.getItem(ADMIN_KEY) === '1') { render(); refreshVagas(); } }, 15000);
 
 // ── AUTH GATE ──
 const ADMIN_PWD_HASH = '61681c268936f5241e321e2bdacd6748849b9dab35cab8397fb77d0ebe2d2414';
@@ -481,6 +479,8 @@ async function checkAuth() {
 (function() {
   if (sessionStorage.getItem(ADMIN_KEY) === '1') {
     document.getElementById('authGate').style.display = 'none';
+    render();
+    refreshVagas();
   } else {
     setTimeout(() => document.getElementById('authInput').focus(), 100);
   }

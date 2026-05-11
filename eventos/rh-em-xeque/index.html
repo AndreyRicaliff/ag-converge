@@ -579,7 +579,7 @@ textarea{resize:vertical;min-height:72px}
   font-size:.85rem;color:var(--muted);line-height:1.75;
   padding:0 22px;
 }
-.faq-item.open .faq-a{max-height:160px;padding:0 22px 18px}
+.faq-item.open .faq-a{max-height:400px;padding:0 22px 18px}
 
 /* ══════════════════════════════
    FOOTER
@@ -850,7 +850,7 @@ footer{
 <!-- ══ NAV ══ -->
 <nav>
   <div class="nav-brand">
-    <a href="../../index.html" class="nav-ag-co">
+    <a href="/" class="nav-ag-co">
       <img class="nav-ag-logo" src="../../assets/logos/ag-logo.png" alt="AG Consultoria">
       <span class="nav-ag-name">AG Consultoria</span>
     </a>
@@ -1248,7 +1248,7 @@ footer{
             <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
           </div>
           <div style="display:flex;gap:8px">
-            <button type="button" class="btn-submit" style="font-size:.8rem;padding:10px" onclick="addGuest()">Adicionar →</button>
+            <button type="button" id="btnConfirmGuest" class="btn-submit" style="font-size:.8rem;padding:10px" onclick="addGuest()">Adicionar →</button>
             <button type="button" class="btn-skip-dona" style="margin:0;width:auto;padding:10px 16px;font-size:.8rem" onclick="cancelGuestForm()">Cancelar</button>
           </div>
         </div>
@@ -1301,8 +1301,8 @@ footer{
           </div>
         </div>
         <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()">Confirmar + contribuir →</button>
-        <button type="button" id="btnConfirmarCesta" style="display:none" class="btn-submit" onclick="confirmarComCesta()" style="background:linear-gradient(135deg,#c17f24,#F5A623)">Confirmar — trarei uma cesta básica →</button>
-        <button type="button" class="btn-skip-dona" onclick="confirmarSemDoa()">Participar sem contribuir</button>
+        <button type="button" id="btnConfirmarCesta" style="display:none;background:linear-gradient(135deg,#c17f24,#F5A623)" class="btn-submit" onclick="confirmarComCesta()">Confirmar — trarei uma cesta básica →</button>
+        <button type="button" id="btnSemDoa" class="btn-skip-dona" onclick="confirmarSemDoa()">Participar sem contribuir</button>
       </div>
 
       <!-- PASSO 4: Ingressos do grupo -->
@@ -1314,7 +1314,7 @@ footer{
           <div class="ingressos-stack" id="ingressosStack"></div>
           <div class="ingresso-actions">
             <button type="button" class="btn-print" onclick="baixarPDF()">⬇ Baixar ingressos (PDF)</button>
-            <a href="../../index.html" class="btn-hub">← Todos os eventos</a>
+            <a href="/" class="btn-hub">← Todos os eventos</a>
           </div>
           <div style="text-align:center;margin-top:10px">
             <button type="button" onclick="openHistorico()" style="background:none;border:none;color:var(--muted);font-size:.73rem;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Analisar histórico de inscrições →</button>
@@ -1445,12 +1445,13 @@ footer{
   </div>
   <div class="footer-bottom">
     <span>© 2026 AG Consultoria Ltda. · AG Converge Platform</span>
-    <a href="../../index.html" style="color:var(--muted)">← Todos os eventos</a>
+    <a href="/" style="color:var(--muted)">← Todos os eventos</a>
   </div>
 </footer>
 
 
 <script src="/assets/js/supabase.min.js"></script>
+<script>if (!window.supabase) { document.body.innerHTML='<div style="color:#fff;background:#09090F;height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui;font-size:.9rem;text-align:center;padding:20px">Erro ao carregar recursos. Recarregue a página.</div>'; }</script>
 <script>
 /* ════════════════════════════════════════════════════════
    AG CONVERGE — CONFIGURAÇÃO DE EVENTO
@@ -2243,7 +2244,7 @@ document.querySelectorAll('.faq-q').forEach(q => {
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    closeLookup(); closeHistorico(); closeDup();
+    closeLightbox(); closeLookup(); closeHistorico(); closeDup();
   }
 });
 
