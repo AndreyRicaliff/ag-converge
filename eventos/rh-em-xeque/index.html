@@ -1699,6 +1699,8 @@ async function getDupsForModal(email) {
 // ════════════════════════════════════════════════════════
 // STEP NAV (agora 4 passos)
 // ════════════════════════════════════════════════════════
+let _ticketWakeLock = null;
+
 function goToStep(n) {
   [1,2,3,4].forEach(i => {
     document.getElementById(`step${i}`).classList.toggle('active', i===n);
@@ -1708,6 +1710,13 @@ function goToStep(n) {
     if (i === n) sn.classList.add('active');
   });
   document.getElementById('form-card-top')?.scrollIntoView({behavior:'smooth',block:'start'});
+  // Keep screen on while participant is showing their ticket
+  if (n === 4) {
+    navigator.wakeLock?.request('screen').then(wl => { _ticketWakeLock = wl; }).catch(() => {});
+  } else if (_ticketWakeLock) {
+    _ticketWakeLock.release().catch(() => {});
+    _ticketWakeLock = null;
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -2094,9 +2103,17 @@ function mostrarIngressos() {
           <div class="ticket-lbl">Entrada</div>
           <div class="ticket-val green">Gratuita</div>
         </div>
+        ${p.doacao>0
+          ? `<div style="text-align:center;margin:10px 0 4px"><span style="font-size:.65rem;font-weight:700;color:#08A15A;background:rgba(8,193,106,.1);border-radius:100px;padding:4px 12px">♥ Doação PIX: R$ ${(+p.doacao).toFixed(2).replace('.',',')} · ACCP</span></div>`
+          : p.doacao_confirmada
+          ? `<div style="text-align:center;margin:10px 0 4px"><span style="font-size:.65rem;font-weight:700;color:#c17f24;background:rgba(245,166,35,.1);border-radius:100px;padding:4px 12px">🧺 Cesta básica prometida</span></div>`
+          : ''}
         <div class="ticket-qr-wrap" id="qr-${esc(p.ingresso_id)}"></div>
         <div class="ticket-id-label">Comanda</div>
-        <div class="ticket-id-val">${esc(p.ingresso_id)}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+          <div class="ticket-id-val">${esc(p.ingresso_id)}</div>
+          <button onclick="copyComanda(this,'${esc(p.ingresso_id)}')" title="Copiar" style="background:rgba(123,47,224,.08);border:1px solid rgba(123,47,224,.2);color:#7B2FE0;font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s;flex-shrink:0">Copiar</button>
+        </div>
       </div>
       <div class="ticket-footer-strip">
         <img class="ag-mark" src="../../assets/logos/ag-logo.png" alt="AG">
@@ -2523,6 +2540,13 @@ function setupShare(nomeParticipante) {
   const liEl = document.getElementById('shareLI');
   if (waEl) waEl.href = `https://api.whatsapp.com/send?text=${text}`;
   if (liEl) liEl.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+}
+
+function copyComanda(btn, id) {
+  navigator.clipboard.writeText(id).then(() => {
+    btn.textContent = '✓ Ok!';
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+  }).catch(() => { prompt('Copie a comanda:', id); });
 }
 
 function copyEventLink() {
