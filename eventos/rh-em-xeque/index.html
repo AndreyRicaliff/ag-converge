@@ -1898,12 +1898,17 @@ async function addGuest() {
 
   if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'Verificando...'; }
 
-  const isDup = await checkDuplicate(email.value.trim());
-  if (isDup) {
-    document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
-    email.classList.add('err');
-    if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar →'; }
-    return;
+  try {
+    const isDup = await checkDuplicate(email.value.trim());
+    if (isDup) {
+      document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
+      email.classList.add('err');
+      if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar →'; }
+      return;
+    }
+  } catch(e) {
+    // falha na verificação de duplicata — permite continuar (insert falhará se duplicado)
+    console.warn('checkDuplicate falhou:', e);
   }
 
   grupo.push({
@@ -1912,9 +1917,9 @@ async function addGuest() {
     evento_id:         EVENT_CFG.slug,
     nome:              nome.value.trim(),
     email:             email.value.trim(),
-    tel:               document.getElementById('g-tel').value.trim(),
-    empresa:           document.getElementById('g-empresa').value.trim(),
-    cargo:             document.getElementById('g-cargo').value.trim(),
+    tel:               document.getElementById('g-tel')?.value.trim() || '',
+    empresa:           document.getElementById('g-empresa')?.value.trim() || '',
+    cargo:             document.getElementById('g-cargo')?.value.trim() || '',
     origem:            'convidado',
     inscricao_at:      new Date().toISOString(),
     doacao:            0,
@@ -2036,6 +2041,9 @@ function parseSaveError(raw) {
   if (msg.includes('unique') || msg.includes('duplicate') || msg.includes('already exists')) {
     return { code: 'DUPLICATE', text: 'Este e-mail já está inscrito neste evento.' };
   }
+  if (raw?.code === 'PARTIAL_INSERT' || msg.includes('partial_insert')) {
+    return { code: 'PARTIAL_INSERT', text: 'Inscrição incompleta: apenas parte do grupo foi salva. Recarregue e tente novamente.' };
+  }
   return { code: 'UNKNOWN', text: 'Erro ao salvar inscrição. Verifique sua conexão e tente novamente.' };
 }
 
@@ -2098,8 +2106,13 @@ async function salvarGrupo() {
     throw e;
   }
 
-  const { error } = await _SB.from('registrations').insert(grupo);
+  const { data: saved, error } = await _SB.from('registrations').insert(grupo).select('ingresso_id');
   if (error) throw error;
+  if (saved && saved.length < grupo.length) {
+    const e = new Error(`partial_insert: ${saved.length}/${grupo.length} salvos`);
+    e.code = 'PARTIAL_INSERT';
+    throw e;
+  }
 }
 
 // ════════════════════════════════════════════════════════
