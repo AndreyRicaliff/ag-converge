@@ -1756,7 +1756,7 @@ async function addGuest() {
   if (isDup) {
     document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
     email.classList.add('err');
-    if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar'; }
+    if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar →'; }
     return;
   }
 
@@ -1778,7 +1778,7 @@ async function addGuest() {
     ingresso_baixado:  false,
   });
 
-  if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar'; }
+  if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar →'; }
   cancelGuestForm();
   renderGrupoList();
 }
