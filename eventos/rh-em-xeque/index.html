@@ -1646,6 +1646,8 @@ async function checkCapacity() {
                 `As ${cap} vagas do Auditório Slavieiro foram preenchidas.`;
   }
 
+  _inscritosHero = total;
+  updateCountdown();
   return { livres, isOpen, cap, total };
 }
 
@@ -2506,14 +2508,20 @@ checkCapacity();
 // COUNTDOWN — tempo restante até o evento
 // ════════════════════════════════════════════════════════
 const EVENT_DATE = new Date('2026-05-14T21:00:00Z'); // 18h BRT = 21h UTC
+let _inscritosHero = null; // updated by checkCapacity()
 
 function updateCountdown() {
   const strip = document.getElementById('countdownStrip');
   if (!strip) return;
   const now  = Date.now();
   const diff = EVENT_DATE - now;
+  const inscBlock = _inscritosHero != null
+    ? `<div class="cd-block" style="border-color:rgba(8,193,106,.3);background:rgba(8,193,106,.07)">
+        <div class="cd-n" style="color:var(--green);font-size:1.2rem">${_inscritosHero}</div>
+        <div class="cd-l">inscritos</div>
+       </div>` : '';
   if (diff <= 0) {
-    strip.innerHTML = '<div style="font-size:.88rem;color:var(--green);font-weight:700;padding:8px 0">🎉 O evento está acontecendo agora!</div>';
+    strip.innerHTML = `${inscBlock}<div style="font-size:.88rem;color:var(--green);font-weight:700;padding:8px 0">🎉 O evento está acontecendo agora!</div>`;
     return;
   }
   const d = Math.floor(diff / 864e5);
@@ -2524,7 +2532,7 @@ function updateCountdown() {
     <div class="cd-block">
       <div class="cd-n">${String(n).padStart(2,'0')}</div>
       <div class="cd-l">${l}</div>
-    </div>`).join('');
+    </div>`).join('') + inscBlock;
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
