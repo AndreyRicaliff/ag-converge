@@ -232,6 +232,7 @@ tr.group-guest td{background:rgba(123,47,224,.025)}
         <div id="vaBar" style="height:100%;border-radius:100px;background:var(--purple);width:0%;transition:width .5s"></div>
       </div>
       <div style="font-size:.75rem;color:var(--muted);margin-top:5px"><span id="vaUsed">—</span> / <span id="vaCap">—</span> vagas · <span id="vaLivres" style="font-weight:700">—</span> livres</div>
+      <div style="font-size:.65rem;color:rgba(255,255,255,.18);margin-top:3px" id="vagasBreakdown"></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
       <button id="btnToggleOpen" onclick="toggleEventOpen()" style="padding:8px 18px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:inherit;border:none;cursor:pointer;transition:all .2s">—</button>
@@ -335,7 +336,7 @@ async function refreshVagas() {
   document.getElementById('vaEvento').textContent = activeEvent;
   document.getElementById('vaUsed').textContent   = used;
   document.getElementById('vaCap').textContent    = cap;
-  document.getElementById('vaLivres').textContent = free + ' livre' + (free !== 1 ? 's' : '');
+  document.getElementById('vaLivres').textContent = free;
   const bar = document.getElementById('vaBar');
   bar.style.width      = pct + '%';
   bar.style.background = free === 0 ? 'var(--red)' : pct >= 80 ? '#F5A623' : 'var(--purple)';
@@ -417,6 +418,9 @@ function updateSummary(leads) {
   document.getElementById('totLeads').textContent = leads.length;
   const totLbl = document.querySelector('#totLeads + .slbl');
   if (totLbl) totLbl.textContent = `Total inscritos (${titulares.length} tit. + ${convidados.length} conv.)`;
+
+  const brkEl = document.getElementById('vagasBreakdown');
+  if (brkEl && leads.length > 0) brkEl.textContent = `${titulares.length} titular(es) · ${convidados.length} convidado(s)`;
 
   document.getElementById('totDoa').textContent = pix.length;
   const tot = pix.reduce((s,l) => s + (+l.doacao||0), 0);
@@ -641,6 +645,7 @@ async function checkAuth() {
     document.getElementById('authGate').style.display = 'none';
     document.getElementById('authInput').value = '';
     loadAndRender();
+    refreshVagas();
     startRealtime();
   } else {
     const inp = document.getElementById('authInput');
@@ -652,10 +657,12 @@ async function checkAuth() {
 }
 
 let _realtimeChannel = null;
+let _realtimeConfigChannel = null;
 
 function startRealtime() {
   if (_realtimeChannel) return;
   try {
+    // Channel 1 — inscrições (leads + vagas)
     _realtimeChannel = _SB.channel('admin-registrations')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'registrations' }, payload => {
         loadAndRender();
@@ -666,6 +673,13 @@ function startRealtime() {
         const badge = document.getElementById('livebadge');
         if (badge) badge.style.display = (status === 'SUBSCRIBED') ? 'inline-block' : 'none';
       });
+
+    // Channel 2 — event_config (capacidade / abrir / fechar)
+    _realtimeConfigChannel = _SB.channel('admin-event-config')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'event_config' }, () => {
+        refreshVagas();
+      })
+      .subscribe();
   } catch(e) {}
 }
 
