@@ -1326,9 +1326,19 @@ footer{
               <div class="ferr" id="g-email-e"></div>
             </div>
           </div>
+          <div class="frow">
+            <div class="fgrp">
+              <label for="g-tel">WhatsApp (opcional)</label>
+              <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
+            </div>
+            <div class="fgrp">
+              <label for="g-empresa">Empresa (opcional)</label>
+              <input type="text" id="g-empresa" placeholder="Nome da empresa">
+            </div>
+          </div>
           <div class="fgrp">
-            <label for="g-tel">WhatsApp (opcional)</label>
-            <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
+            <label for="g-cargo">Cargo (opcional)</label>
+            <input type="text" id="g-cargo" placeholder="Cargo / função">
           </div>
           <div style="display:flex;gap:8px">
             <button type="button" id="btnConfirmGuest" class="btn-submit" style="font-size:.8rem;padding:10px" onclick="addGuest()">Adicionar →</button>
@@ -1660,6 +1670,7 @@ async function capacityOkToRegister() {
 // ════════════════════════════════════════════════════════
 // ESTADO GLOBAL
 // ════════════════════════════════════════════════════════
+const MAX_GUESTS = 3;
 let grupo      = [];
 let grupoId    = '';
 let selectedDoa = null;
@@ -1819,6 +1830,7 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
 // ════════════════════════════════════════════════════════
 function renderGrupoList() {
   const list = document.getElementById('grupoList');
+  const guestCount = grupo.filter(p => !p.titular).length;
   list.innerHTML = grupo.map((p, i) => `
     <div class="grupo-item">
       <div class="gi-avatar">${iniciais(p.nome)}</div>
@@ -1826,15 +1838,29 @@ function renderGrupoList() {
         <div class="gi-nome">${esc(p.nome)}</div>
         <div class="gi-id">${p.ingresso_id}</div>
       </div>
-      <div class="gi-role">${p.titular ? 'Titular' : 'Convidado'}</div>
+      <div class="gi-role">${p.titular ? 'Titular' : `Convidado ${guestCount > 1 ? grupo.slice(0,i).filter(x=>!x.titular).length+1+'/'+guestCount : ''}`}</div>
       ${!p.titular ? `<button class="gi-remove" onclick="removeGuest(${i})" title="Remover">✕</button>` : ''}
     </div>
   `).join('');
+
+  const btn = document.getElementById('btnAddGuest');
+  const formWrap = document.getElementById('guestFormWrap');
+  if (btn && formWrap && formWrap.style.display === 'none') {
+    if (guestCount >= MAX_GUESTS) {
+      btn.style.display = 'none';
+    } else {
+      btn.style.display = 'block';
+      btn.textContent = guestCount > 0
+        ? `+ Adicionar convidado (${guestCount}/${MAX_GUESTS})`
+        : '+ Adicionar convidado';
+    }
+  }
 }
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function showGuestForm() {
+  if (grupo.filter(p => !p.titular).length >= MAX_GUESTS) return;
   document.getElementById('guestFormWrap').style.display = 'block';
   document.getElementById('btnAddGuest').style.display   = 'none';
   document.getElementById('g-nome').focus();
@@ -1843,7 +1869,7 @@ function showGuestForm() {
 function cancelGuestForm() {
   document.getElementById('guestFormWrap').style.display = 'none';
   document.getElementById('btnAddGuest').style.display   = 'block';
-  ['g-nome','g-email','g-tel'].forEach(id => { const el=document.getElementById(id); el.value=''; el.classList.remove('err'); });
+  ['g-nome','g-email','g-tel','g-empresa','g-cargo'].forEach(id => { const el=document.getElementById(id); if(el){el.value=''; el.classList.remove('err');} });
   ['g-nome-e','g-email-e'].forEach(id => document.getElementById(id).textContent='');
 }
 
@@ -1887,8 +1913,8 @@ async function addGuest() {
     nome:              nome.value.trim(),
     email:             email.value.trim(),
     tel:               document.getElementById('g-tel').value.trim(),
-    empresa:           grupo[0].empresa,
-    cargo:             '',
+    empresa:           document.getElementById('g-empresa').value.trim(),
+    cargo:             document.getElementById('g-cargo').value.trim(),
     origem:            'convidado',
     inscricao_at:      new Date().toISOString(),
     doacao:            0,
@@ -2089,6 +2115,7 @@ function mostrarIngressos() {
         <div class="ticket-event-type">${esc(EVENT_CFG.tipo)}</div>
       </div>
       <div class="ticket-body">
+        ${!p.titular ? `<div style="text-align:center;margin-bottom:8px"><span style="font-size:.62rem;font-weight:700;letter-spacing:.05em;color:#7B2FE0;background:rgba(123,47,224,.12);border-radius:100px;padding:3px 12px">Convidado de ${esc(p.titular_nome)}</span></div>` : ''}
         <div class="ticket-row">
           <div class="ticket-lbl">Participante</div>
           <div class="ticket-val">${esc(p.nome)}</div>
