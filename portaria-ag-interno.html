@@ -703,12 +703,17 @@ async function confirmarEntrada() {
 
   const firstName = esc(currentPerson.nome.split(' ')[0]);
 
+  const donaBadge = currentPerson.doacao > 0
+    ? `<span style="font-size:.68rem;background:rgba(8,193,106,.15);color:#08C16A;border-radius:100px;padding:2px 10px;font-weight:700">♥ PIX R$ ${(+currentPerson.doacao).toFixed(2).replace('.',',')}</span>`
+    : (currentPerson.doacao_confirmada ? '<span style="font-size:.68rem;background:rgba(245,166,35,.15);color:#F5A623;border-radius:100px;padding:2px 10px;font-weight:700">🧺 Cesta</span>' : '');
+
   // Flash de sucesso — nome grande, bem visível no check-in rápido
   document.getElementById('resultArea').innerHTML = `
-    <div class="flash ok" style="font-size:1.05rem;padding:18px 20px;flex-direction:column;gap:4px;text-align:center">
+    <div class="flash ok" style="font-size:1.05rem;padding:18px 20px;flex-direction:column;gap:6px;text-align:center">
       <span style="font-size:1.6rem">✓</span>
       <strong>${firstName}</strong>
       <span style="font-size:.82rem;font-weight:400;opacity:.8">Bem-vindo(a)! Entrada confirmada.</span>
+      ${donaBadge}
     </div>`;
 
   refreshCounter();
@@ -718,7 +723,7 @@ async function confirmarEntrada() {
   setTimeout(() => {
     clearInput();
     document.getElementById('resultArea').innerHTML = '';
-  }, 2000);
+  }, 2500);
 }
 
 // ── HISTÓRICO + STATS DE SESSÃO ───────────────────────────

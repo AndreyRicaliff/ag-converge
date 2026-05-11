@@ -202,6 +202,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
     <div class="event-tabs" id="eventTabs"></div>
     <button class="btn btn-export" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn btn-export" onclick="exportJSON()" style="background:var(--blue)">⬇ JSON</button>
+    <button class="btn btn-sec" onclick="printChecklist()" title="Lista de presença para impressão">🖨 Lista</button>
     <button class="btn btn-danger" onclick="showClear()">🗑</button>
     <button class="btn" onclick="location.href='/portaria-ag-interno'" style="background:rgba(8,193,106,.12);color:#08C16A;border:1px solid rgba(8,193,106,.3)">🚪 Portaria</button>
     <button class="btn btn-sec" onclick="location.href='/'">← Hub</button>
@@ -347,7 +348,12 @@ async function refreshVagas() {
   const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
   const { data: pData } = await _SB.rpc('portaria_count', { p_evento_id: activeEvent, p_pwd_hash: h });
   const pRow = pData?.[0] ?? {};
-  document.getElementById('totEntradas').textContent = pRow.entraram != null ? pRow.entraram : '—';
+  const entraram = pRow.entraram ?? null;
+  const pctEnt   = (entraram != null && _totalLeads > 0) ? Math.round(entraram / _totalLeads * 100) : null;
+  document.getElementById('totEntradas').textContent = entraram != null ? entraram : '—';
+  const entLbl = document.querySelector('#totEntradas + .slbl');
+  if (entLbl && pctEnt != null) entLbl.textContent = `Entraram (${pctEnt}%)`;
+  else if (entLbl) entLbl.textContent = 'Entraram (portaria)';
 }
 
 async function toggleEventOpen() {
@@ -378,7 +384,10 @@ function fmtDate(iso) {
   return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
+let _totalLeads = 0;
+
 function updateSummary(leads) {
+  _totalLeads = leads.length;
   document.getElementById('totLeads').textContent = leads.length;
   const pix   = leads.filter(l => l.doacao > 0);
   const cesta = leads.filter(l => l.doacao === 0 && l.doacao_confirmada === true && l.titular === true);
@@ -474,6 +483,46 @@ async function exportJSON() {
   const ev = EVENTS.find(e=>e.id===activeEvent)?.label.replace(/\s+/g,'-').toLowerCase() || 'evento';
   a.href = url; a.download = `ag-leads-${ev}-${new Date().toISOString().slice(0,10)}.json`;
   a.click(); URL.revokeObjectURL(url);
+}
+
+async function printChecklist() {
+  const leads = await getLeads();
+  if (!leads.length) { alert('Nenhum lead para imprimir.'); return; }
+  const sorted  = [...leads].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+  const ev      = EVENTS.find(e=>e.id===activeEvent)?.label || activeEvent;
+  const total   = sorted.length;
+  const rows    = sorted.map((l,i) => `
+    <tr>
+      <td style="width:28px;text-align:center">${i+1}</td>
+      <td style="width:24px;text-align:center"><input type="checkbox" ${l.entrada_at?'checked':''}></td>
+      <td><strong>${esc(l.nome)}</strong>${l.titular===false?` <em style="font-size:.8em;color:#666">(convidado${l.titular_nome?' de '+l.titular_nome:''})</em>`:''}</td>
+      <td>${esc(l.empresa||'—')}</td>
+      <td style="font-size:.75em;color:#666">${l.doacao>0?`PIX R$ ${(+l.doacao).toFixed(2)}`:(l.doacao_confirmada?'🧺 Cesta':'—')}</td>
+      <td style="font-size:.75em;color:#666">${esc(l.ingresso_id)}</td>
+    </tr>`).join('');
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Lista de presença — ${esc(ev)}</title>
+    <style>
+      body{font-family:Arial,sans-serif;font-size:11pt;margin:20mm}
+      h1{font-size:14pt;margin-bottom:4px}
+      p{font-size:9pt;color:#666;margin-bottom:16px}
+      table{width:100%;border-collapse:collapse}
+      th{background:#f0ecff;padding:5px 8px;text-align:left;font-size:9pt;border:1px solid #ccc}
+      td{padding:5px 8px;border:1px solid #ddd;font-size:10pt;vertical-align:middle}
+      tr:nth-child(even) td{background:#faf9ff}
+      @media print{button{display:none}}
+    </style></head><body>
+    <button onclick="window.print()" style="margin-bottom:16px;padding:8px 20px;cursor:pointer;font-size:11pt">Imprimir</button>
+    <h1>Lista de presença — ${esc(ev)}</h1>
+    <p>Gerado em ${new Date().toLocaleString('pt-BR')} · ${total} participante(s)</p>
+    <table>
+      <thead><tr><th>#</th><th>✓</th><th>Nome</th><th>Empresa</th><th>Contribuição</th><th>Comanda</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="margin-top:20px;text-align:center;color:#ccc;font-size:8pt">AG Converge · AG Consultoria</p>
+  </body></html>`);
+  win.document.close();
 }
 
 function showClear() { document.getElementById('clearOverlay').classList.add('show') }
