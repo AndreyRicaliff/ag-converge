@@ -229,7 +229,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
       <button id="btnToggleOpen" onclick="toggleEventOpen()" style="padding:8px 18px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:inherit;border:none;cursor:pointer;transition:all .2s">—</button>
-      <button onclick="render();refreshVagas()" style="padding:5px 12px;border-radius:7px;font-size:.68rem;font-weight:600;font-family:inherit;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">↺ Atualizar</button>
+      <button onclick="loadAndRender();refreshVagas()" style="padding:5px 12px;border-radius:7px;font-size:.68rem;font-weight:600;font-family:inherit;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">↺ Atualizar</button>
       <span id="livebadge" style="display:none;font-size:.58rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:100px;background:rgba(8,193,106,.1);color:var(--green);border:1px solid rgba(8,193,106,.25)">● LIVE</span>
       <span id="lastUpdated" style="font-size:.62rem;color:rgba(255,255,255,.2)"></span>
     </div>
@@ -305,7 +305,7 @@ EVENTS.forEach(ev => {
   const b = document.createElement('button');
   b.className = 'etab' + (ev.id === activeEvent ? ' active' : '');
   b.textContent = ev.label;
-  b.onclick = () => { activeEvent = ev.id; tabsEl.querySelectorAll('.etab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); render(); refreshVagas(); };
+  b.onclick = () => { activeEvent = ev.id; _leadsCache = []; _leadsCacheEvent = null; tabsEl.querySelectorAll('.etab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); loadAndRender(); refreshVagas(); };
   tabsEl.appendChild(b);
 });
 
@@ -370,13 +370,22 @@ async function toggleEventOpen() {
   await refreshVagas();
 }
 
-async function getLeads() {
+let _leadsCache = [];
+let _leadsCacheEvent = null;
+
+async function loadLeads() {
   const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
   const { data, error } = await _SB.rpc('admin_leads', {
     p_evento_id: activeEvent, p_pwd_hash: h
   });
-  if (error) { console.error(error); return []; }
-  return data || [];
+  if (error) { console.error(error); return; }
+  _leadsCache = data || [];
+  _leadsCacheEvent = activeEvent;
+}
+
+async function getLeads() {
+  if (_leadsCacheEvent !== activeEvent) await loadLeads();
+  return _leadsCache;
 }
 
 function fmtDate(iso) {
@@ -403,9 +412,20 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-async function render() {
-  const leads = await getLeads();
-  updateSummary(leads);
+// render() — refilter from cache (instant, no network); call after search/filter change
+function render() {
+  updateSummary(_leadsCache);
+  renderFiltered();
+}
+
+// loadAndRender() — fetch from Supabase then render; call on Realtime, tab switch, auth
+async function loadAndRender() {
+  await loadLeads();
+  render();
+}
+
+function renderFiltered() {
+  const leads = _leadsCache;
 
   const q  = document.getElementById('searchInput').value.toLowerCase();
   const fd = document.getElementById('fDoa').value;
@@ -541,7 +561,7 @@ function clearAll() {
   alert('Os dados estão protegidos no Supabase e não podem ser apagados por aqui. Use o painel do Supabase para operações de delete.');
 }
 
-setInterval(() => { if (sessionStorage.getItem(ADMIN_KEY) === '1') { render(); refreshVagas(); } }, 15000);
+setInterval(() => { if (sessionStorage.getItem(ADMIN_KEY) === '1') { loadAndRender(); refreshVagas(); } }, 15000);
 
 // ── AUTH GATE ──
 const ADMIN_PWD_HASH = '61681c268936f5241e321e2bdacd6748849b9dab35cab8397fb77d0ebe2d2414';
@@ -560,7 +580,7 @@ async function checkAuth() {
     sessionStorage.setItem(ADMIN_HASH_KEY, h);
     document.getElementById('authGate').style.display = 'none';
     document.getElementById('authInput').value = '';
-    render();
+    loadAndRender();
     startRealtime();
   } else {
     const inp = document.getElementById('authInput');
@@ -578,7 +598,7 @@ function startRealtime() {
   try {
     _realtimeChannel = _SB.channel('admin-registrations')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'registrations' }, payload => {
-        render();
+        loadAndRender();
         refreshVagas();
         if (payload?.eventType === 'INSERT') showRealtimeToast(payload.new?.nome);
       })
@@ -592,7 +612,7 @@ function startRealtime() {
 (function() {
   if (sessionStorage.getItem(ADMIN_KEY) === '1') {
     document.getElementById('authGate').style.display = 'none';
-    render();
+    loadAndRender();
     refreshVagas();
     startRealtime();
   } else {
