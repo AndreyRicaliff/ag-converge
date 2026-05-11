@@ -1120,6 +1120,15 @@ footer{
       <span class="sec-label">Inscrição gratuita</span>
       <h2 class="sec-title">Reserve sua vaga</h2>
       <p class="sec-desc">Vagas limitadas ao auditório. Seu ingresso digital aparece aqui mesmo após confirmar.</p>
+      <div id="vagasBar" style="margin-bottom:20px;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Vagas disponíveis</span>
+          <span id="vagasLabel" style="font-size:.78rem;font-weight:800;color:var(--purple-hi)"></span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden">
+          <div id="vagasProgress" style="height:100%;border-radius:100px;background:var(--purple);transition:width .5s ease"></div>
+        </div>
+      </div>
       <div class="reg-perks">
         <div class="reg-perk"><span class="reg-perk-dot"></span> Ingresso digital com QR Code</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Confirmação por e-mail</div>
@@ -1148,6 +1157,13 @@ footer{
         <div class="step-item" id="sn3"><div class="step-num">3</div><div class="step-label">Contribuição</div></div>
         <div class="step-line"></div>
         <div class="step-item" id="sn4"><div class="step-num">4</div><div class="step-label">Ingressos</div></div>
+      </div>
+
+      <!-- Vagas esgotadas (hidden por padrão) -->
+      <div id="vagasEsgotadas" style="display:none;text-align:center;padding:32px 16px">
+        <div style="font-size:2.5rem;margin-bottom:12px">😔</div>
+        <div style="font-size:1rem;font-weight:800;color:var(--white);margin-bottom:8px">Vagas esgotadas</div>
+        <div style="font-size:.82rem;color:var(--muted);line-height:1.65">As 120 vagas do Auditório Slavieiro foram preenchidas.<br>Acompanhe nossas redes para próximos eventos.</div>
       </div>
 
       <!-- PASSO 1: Dados do titular -->
@@ -1448,6 +1464,7 @@ const EVENT_CFG = {
   ticketPrefix: 'RHX',
   type:         'beneficent',
   storage:      'ag_leads_rh-em-xeque',
+  capacity:     120,
   charity: {
     name:      'ACCP · Associação Centro de Cidadania Plena',
     cause:     'Apoio a famílias vulneráveis · Paraíba',
@@ -1468,6 +1485,54 @@ const _SB = supabase.createClient(
   'https://hqcbpqkohgmlultnmbyy.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
 );
+
+// ════════════════════════════════════════════════════════
+// CAPACIDADE
+// ════════════════════════════════════════════════════════
+async function checkCapacity() {
+  const { data } = await _SB.rpc('count_registrations', { p_evento_id: EVENT_CFG.slug });
+  const total = data?.[0]?.total ?? 0;
+  const cap   = EVENT_CFG.capacity;
+  const livres = Math.max(0, cap - total);
+  const pct    = Math.min(100, Math.round((total / cap) * 100));
+
+  // Barra de vagas
+  const bar = document.getElementById('vagasBar');
+  if (bar) {
+    bar.style.display = 'block';
+    const lbl  = document.getElementById('vagasLabel');
+    const prog = document.getElementById('vagasProgress');
+    if (livres === 0) {
+      lbl.textContent = 'Esgotado';
+      lbl.style.color = 'var(--red)';
+      prog.style.background = 'var(--red)';
+    } else if (pct >= 80) {
+      lbl.textContent = `${livres} vaga${livres > 1 ? 's' : ''} restante${livres > 1 ? 's' : ''}`;
+      lbl.style.color = '#F5A623';
+      prog.style.background = '#F5A623';
+    } else {
+      lbl.textContent = `${livres} de ${cap} disponíveis`;
+      lbl.style.color = 'var(--purple-hi)';
+      prog.style.background = 'var(--purple)';
+    }
+    prog.style.width = pct + '%';
+  }
+
+  // Bloqueia formulário se lotado
+  if (livres === 0) {
+    document.getElementById('stepNav').style.display       = 'none';
+    document.getElementById('step1').style.display         = 'none';
+    document.getElementById('vagasEsgotadas').style.display = 'block';
+  }
+
+  return livres;
+}
+
+// Verifica de novo antes de submeter (race condition)
+async function capacityOkToRegister() {
+  const livres = await checkCapacity();
+  return livres > 0;
+}
 
 // ════════════════════════════════════════════════════════
 // ESTADO GLOBAL
@@ -1570,6 +1635,13 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Verificando...';
+
+  // Checa capacidade antes de prosseguir
+  const ok = await capacityOkToRegister();
+  if (!ok) {
+    btn.disabled = false; btn.textContent = 'Próximo →';
+    return;
+  }
 
   const email = document.getElementById('email').value.trim();
   const isDup = await checkDuplicate(email);
@@ -2113,8 +2185,9 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Inicializa doação
+// Inicializa doação e verifica capacidade
 updateDoaBtn();
+checkCapacity();
 </script>
 </body>
 </html>
