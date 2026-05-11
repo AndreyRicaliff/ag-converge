@@ -1330,6 +1330,7 @@ footer{
             <div class="fgrp">
               <label for="g-tel">WhatsApp (opcional)</label>
               <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
+              <div class="ferr" id="g-tel-e"></div>
             </div>
             <div class="fgrp">
               <label for="g-empresa">Empresa (opcional)</label>
@@ -1702,6 +1703,13 @@ async function checkDuplicate(email) {
   return data === true;
 }
 
+async function checkDuplicateTel(tel) {
+  const digits = (tel || '').replace(/\D/g, '');
+  if (digits.length < 8) return null;
+  const { data } = await _SB.rpc('find_by_tel', { p_tel: tel, p_evento_id: EVENT_CFG.slug });
+  return data || null; // retorna nome ou null
+}
+
 async function getDupsForModal(email) {
   const { data } = await _SB.rpc('lookup_ingresso', {
     p_email: email, p_evento_id: EVENT_CFG.slug
@@ -1901,7 +1909,11 @@ async function addGuest() {
   try {
     const isDup = await checkDuplicate(email.value.trim());
     if (isDup) {
-      document.getElementById('g-email-e').textContent = 'Este e-mail já está inscrito neste evento';
+      const dups = await getDupsForModal(email.value.trim()).catch(() => []);
+      const nomesDup = dups.length ? dups.map(d => d.nome).join(', ') : null;
+      document.getElementById('g-email-e').textContent = nomesDup
+        ? `Já cadastrado no nome de: ${nomesDup}`
+        : 'Este e-mail já está inscrito neste evento';
       email.classList.add('err');
       if (addBtn) { addBtn.disabled = false; addBtn.textContent = 'Adicionar →'; }
       return;
@@ -2268,7 +2280,8 @@ function markBaixado(ids) {
 function showDupModal(dups) {
   const overlay = document.getElementById('dupOverlay');
   overlay.dataset.email = dups[0].email;
-  document.getElementById('dupSub').textContent = `Encontramos ${dups.length} ingresso(s) com este e-mail neste evento.`;
+  const nomes = [...new Set(dups.map(d => d.titular ? d.nome : `${d.nome} (convidado de ${d.titular_nome||'?'})`))].join(', ');
+  document.getElementById('dupSub').textContent = `Já cadastrado no nome de: ${nomes}`;
   document.getElementById('dupTickets').innerHTML = dups.map(d => `
     <div class="dup-ticket" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div style="flex:1">
@@ -2632,6 +2645,36 @@ function getQRDataUrl(text, size) {
   document.body.removeChild(tmp);
   return url;
 }
+
+// ── Verificação de tel duplicado ao sair do campo ───────
+document.getElementById('tel')?.addEventListener('blur', async function() {
+  const errEl = document.getElementById('tel-e');
+  if (!errEl) return;
+  const nome = await checkDuplicateTel(this.value.trim()).catch(() => null);
+  if (nome) {
+    errEl.textContent = `Já cadastrado no nome de: ${nome}`;
+    this.classList.add('err');
+  } else {
+    errEl.textContent = '';
+    this.classList.remove('err');
+  }
+});
+
+document.getElementById('g-tel')?.addEventListener('blur', async function() {
+  const errEl = document.getElementById('g-tel-e');
+  if (!errEl) return;
+  const nome = await checkDuplicateTel(this.value.trim()).catch(() => null);
+  // ignora se for o mesmo tel do titular (permitido)
+  const titularTel = (grupo[0]?.tel || '').replace(/\D/g,'');
+  const thisTel    = this.value.replace(/\D/g,'');
+  if (nome && thisTel !== titularTel) {
+    errEl.textContent = `Já cadastrado no nome de: ${nome}`;
+    this.classList.add('err');
+  } else {
+    errEl.textContent = '';
+    this.classList.remove('err');
+  }
+});
 
 // ════════════════════════════════════════════════════════
 // REALTIME — atualiza barra de vagas quando alguém inscreve
