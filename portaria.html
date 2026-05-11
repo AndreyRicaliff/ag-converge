@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Portaria — AG Converge</title>
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<style>
+:root {
+  --bg:       #09090F;
+  --card:     #111019;
+  --raise:    #18162A;
+  --purple:   #7B2FE0;
+  --phi:      #A55EFF;
+  --plo:      #C49FFF;
+  --white:    #F8F6FF;
+  --muted:    #7A708F;
+  --border:   #241B3A;
+  --green:    #08C16A;
+  --red:      #FF5C5C;
+  --orange:   #F5A623;
+  --radius:   14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--white);
+  display:flex;flex-direction:column;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ── AUTH ── */
+#authGate{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+}
+.auth-box{
+  background:var(--raise);border:1px solid var(--border);
+  border-radius:20px;padding:40px 32px;max-width:360px;width:92%;text-align:center;
+}
+.auth-logo{height:32px;width:auto;display:block;margin:0 auto 20px}
+.auth-title{font-size:1.1rem;font-weight:800;margin-bottom:4px}
+.auth-sub{font-size:.78rem;color:var(--muted);margin-bottom:24px}
+.auth-input{
+  width:100%;padding:14px 16px;
+  background:rgba(255,255,255,.04);border:1.5px solid var(--border);
+  border-radius:10px;font-size:1rem;color:var(--white);
+  font-family:inherit;outline:none;text-align:center;letter-spacing:.18em;
+  transition:border-color .2s;margin-bottom:10px;
+}
+.auth-input:focus{border-color:var(--purple)}
+.auth-input.err{border-color:var(--red)}
+.auth-err{color:var(--red);font-size:.72rem;margin-bottom:14px;min-height:16px}
+.auth-btn{
+  width:100%;padding:13px;border-radius:10px;
+  background:var(--purple);color:#fff;font-weight:700;font-size:.9rem;
+  font-family:inherit;border:none;cursor:pointer;transition:background .2s;
+}
+.auth-btn:hover{background:var(--phi)}
+
+/* ── HEADER ── */
+header{
+  height:56px;padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(9,9,15,.95);border-bottom:1px solid var(--border);
+  flex-shrink:0;position:sticky;top:0;z-index:100;
+}
+.h-brand{display:flex;align-items:center;gap:10px}
+.h-logo{height:20px;width:auto;object-fit:contain}
+.h-title{font-size:.78rem;font-weight:800;color:var(--white)}
+.h-event{font-size:.65rem;color:var(--phi);margin-top:1px}
+.h-counter{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(8,193,106,.1);border:1px solid rgba(8,193,106,.3);
+  padding:5px 12px;border-radius:100px;
+}
+.h-count-n{font-size:.88rem;font-weight:800;color:var(--green)}
+.h-count-l{font-size:.63rem;color:rgba(8,193,106,.7);letter-spacing:.04em}
+
+/* ── SCAN AREA ── */
+.scan-wrap{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  padding:24px 16px 16px;gap:16px;
+  max-width:520px;margin:0 auto;width:100%;
+}
+
+.scan-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--phi);
+}
+
+.scan-input-wrap{position:relative;width:100%}
+#scanInput{
+  width:100%;padding:18px 52px 18px 20px;
+  background:var(--card);border:2px solid var(--border);
+  border-radius:var(--radius);font-size:1.05rem;font-weight:700;
+  font-family:'Inter',monospace,'Courier New';color:var(--white);
+  outline:none;text-transform:uppercase;letter-spacing:.12em;
+  transition:border-color .2s;
+}
+#scanInput::placeholder{font-weight:400;letter-spacing:.04em;font-size:.88rem;color:var(--muted);text-transform:none}
+#scanInput:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(123,47,224,.15)}
+#scanInput.ok{border-color:var(--green);box-shadow:0 0 0 3px rgba(8,193,106,.12)}
+#scanInput.already{border-color:var(--orange);box-shadow:0 0 0 3px rgba(245,166,35,.12)}
+#scanInput.notfound{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,92,92,.1)}
+.scan-clear{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:1.1rem;padding:4px;line-height:1;transition:color .2s;
+}
+.scan-clear:hover{color:var(--white)}
+
+#scanBtn{
+  width:100%;padding:16px;border-radius:var(--radius);
+  background:var(--purple);color:#fff;
+  font-weight:800;font-size:1rem;font-family:inherit;
+  border:none;cursor:pointer;transition:all .2s;
+  box-shadow:0 0 28px rgba(123,47,224,.3);
+}
+#scanBtn:hover{background:var(--phi);transform:translateY(-1px)}
+#scanBtn:disabled{opacity:.5;cursor:default;transform:none}
+
+/* ── RESULTADO ── */
+#resultArea{width:100%}
+
+.result-card{
+  background:var(--card);border-radius:var(--radius);
+  border:1.5px solid var(--border);overflow:hidden;
+}
+.result-card.status-ok{border-color:rgba(8,193,106,.5)}
+.result-card.status-already{border-color:rgba(245,166,35,.45)}
+.result-card.status-notfound{border-color:rgba(255,92,92,.4)}
+
+.rc-top{
+  padding:20px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.rc-icon{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.status-ok    .rc-icon{background:rgba(8,193,106,.12)}
+.status-already .rc-icon{background:rgba(245,166,35,.12)}
+.status-notfound .rc-icon{background:rgba(255,92,92,.1)}
+
+.rc-info{flex:1;min-width:0}
+.rc-nome{font-size:1.1rem;font-weight:900;margin-bottom:3px;line-height:1.2}
+.rc-empresa{font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.rc-badges{display:flex;gap:6px;flex-wrap:wrap}
+.rc-badge{
+  font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 9px;border-radius:100px;
+}
+.badge-green{background:rgba(8,193,106,.12);color:var(--green);border:1px solid rgba(8,193,106,.3)}
+.badge-orange{background:rgba(245,166,35,.12);color:var(--orange);border:1px solid rgba(245,166,35,.3)}
+.badge-red{background:rgba(255,92,92,.1);color:var(--red);border:1px solid rgba(255,92,92,.3)}
+.badge-purple{background:rgba(123,47,224,.12);color:var(--phi);border:1px solid rgba(123,47,224,.3)}
+.badge-muted{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
+
+.rc-meta{
+  padding:0 20px 16px;
+  display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;
+}
+.rc-meta-item{font-size:.75rem;color:var(--muted)}
+.rc-meta-item strong{color:var(--white);display:block;font-size:.8rem}
+
+.rc-actions{
+  padding:14px 20px;
+  border-top:1px solid var(--border);
+  display:flex;gap:10px;
+}
+.btn-confirmar{
+  flex:1;padding:13px;border-radius:10px;
+  background:var(--green);color:#fff;
+  font-weight:800;font-size:.9rem;font-family:inherit;
+  border:none;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-confirmar:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-confirmar:disabled{opacity:.5;cursor:default;transform:none}
+.btn-cancelar{
+  padding:13px 18px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);
+  color:var(--muted);font-weight:600;font-size:.88rem;
+  font-family:inherit;cursor:pointer;transition:all .2s;
+}
+.btn-cancelar:hover{border-color:var(--red);color:var(--red)}
+
+/* ── SUCCESS FLASH ── */
+.flash{
+  width:100%;padding:14px 18px;border-radius:var(--radius);
+  display:flex;align-items:center;gap:12px;
+  font-size:.88rem;font-weight:700;
+  animation:fadeIn .25s ease;
+}
+.flash.ok{background:rgba(8,193,106,.12);border:1px solid rgba(8,193,106,.3);color:var(--green)}
+.flash.warn{background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.3);color:var(--orange)}
+.flash.err{background:rgba(255,92,92,.08);border:1px solid rgba(255,92,92,.3);color:var(--red)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HISTÓRICO RECENTE ── */
+.recent-wrap{width:100%}
+.recent-label{
+  font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;
+}
+.recent-list{display:flex;flex-direction:column;gap:6px}
+.recent-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:9px;padding:10px 14px;
+  animation:fadeIn .2s ease;
+}
+.ri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--green)}
+.ri-nome{font-size:.82rem;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-id{font-size:.63rem;color:var(--muted);font-family:monospace;letter-spacing:.04em}
+.ri-time{font-size:.62rem;color:var(--muted);flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  #scanInput{font-size:.95rem;padding:15px 44px 15px 14px}
+  .rc-meta{grid-template-columns:1fr}
+  .rc-nome{font-size:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH GATE ── -->
+<div id="authGate">
+  <div class="auth-box">
+    <img class="auth-logo" src="/assets/logos/ag-logo.png" alt="AG Consultoria">
+    <div class="auth-title">Portaria — AG Converge</div>
+    <div class="auth-sub">Acesso restrito à equipe do evento</div>
+    <input type="password" id="authInput" class="auth-input" placeholder="Senha"
+           onkeydown="if(event.key==='Enter')checkAuth()">
+    <div class="auth-err" id="authErr"></div>
+    <button class="auth-btn" onclick="checkAuth()">Entrar</button>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="h-brand">
+    <img class="h-logo" src="/assets/logos/ag-logo.png" alt="AG">
+    <div>
+      <div class="h-title">Portaria</div>
+      <div class="h-event">RH em Xeque · 14 mai 2026</div>
+    </div>
+  </div>
+  <div class="h-counter">
+    <span class="h-count-n" id="cntEntraram">—</span>
+    <span class="h-count-l">/ <span id="cntTotal">—</span> entraram</span>
+  </div>
+</header>
+
+<!-- ── CONTEÚDO ── -->
+<div class="scan-wrap">
+
+  <span class="scan-label">Comanda do participante</span>
+
+  <div class="scan-input-wrap">
+    <input type="text" id="scanInput"
+           placeholder="RHX-XXXX-XXXX"
+           autocomplete="off" autocorrect="off"
+           spellcheck="false"
+           onkeydown="if(event.key==='Enter')doScan()"
+           oninput="resetState()">
+    <button class="scan-clear" onclick="clearInput()" title="Limpar">✕</button>
+  </div>
+
+  <button id="scanBtn" onclick="doScan()">Consultar</button>
+
+  <div id="resultArea"></div>
+
+  <div class="recent-wrap" id="recentWrap" style="display:none">
+    <div class="recent-label">Últimas entradas desta sessão</div>
+    <div class="recent-list" id="recentList"></div>
+  </div>
+
+</div>
+
+
+<script src="/assets/js/supabase.min.js"></script>
+<script>
+const EVENT_ID = 'rh-em-xeque';
+
+const _SB = supabase.createClient(
+  'https://hqcbpqkohgmlultnmbyy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
+);
+
+let pwdHash = '';
+let recentEntries = [];
+let currentPerson = null;
+
+// ── AUTH ──────────────────────────────────────────────────
+async function sha256hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkAuth() {
+  const val = document.getElementById('authInput').value;
+  if (!val) return;
+  const h = await sha256hex(val);
+  const { data, error } = await _SB.rpc('portaria_count', {
+    p_evento_id: EVENT_ID, p_pwd_hash: h
+  });
+  if (error || !data) {
+    const inp = document.getElementById('authInput');
+    inp.classList.add('err');
+    document.getElementById('authErr').textContent = 'Senha incorreta';
+    setTimeout(() => inp.classList.remove('err'), 1000);
+    return;
+  }
+  pwdHash = h;
+  document.getElementById('authGate').style.display = 'none';
+  updateCounter(data[0]);
+  document.getElementById('scanInput').focus();
+  setInterval(refreshCounter, 20000);
+}
+
+document.getElementById('authInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkAuth();
+});
+
+// ── COUNTER ──────────────────────────────────────────────
+async function refreshCounter() {
+  const { data } = await _SB.rpc('portaria_count', {
+    p_evento_id: EVENT_ID, p_pwd_hash: pwdHash
+  });
+  if (data?.[0]) updateCounter(data[0]);
+}
+
+function updateCounter(row) {
+  document.getElementById('cntEntraram').textContent = row.entraram ?? '—';
+  document.getElementById('cntTotal').textContent    = row.total ?? '—';
+}
+
+// ── SCAN ─────────────────────────────────────────────────
+function resetState() {
+  document.getElementById('scanInput').classList.remove('ok','already','notfound');
+  document.getElementById('resultArea').innerHTML = '';
+  currentPerson = null;
+}
+
+function clearInput() {
+  document.getElementById('scanInput').value = '';
+  resetState();
+  document.getElementById('scanInput').focus();
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+async function doScan() {
+  const raw = document.getElementById('scanInput').value.trim().toUpperCase();
+  if (!raw) return;
+
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true; btn.textContent = 'Buscando...';
+
+  const { data, error } = await _SB.rpc('lookup_by_ingresso_id', {
+    p_ingresso_id: raw
+  });
+
+  btn.disabled = false; btn.textContent = 'Consultar';
+
+  const resultArea = document.getElementById('resultArea');
+  const inp = document.getElementById('scanInput');
+
+  if (error || !data?.length) {
+    inp.classList.add('notfound');
+    resultArea.innerHTML = `
+      <div class="result-card status-notfound">
+        <div class="rc-top">
+          <div class="rc-icon">❌</div>
+          <div class="rc-info">
+            <div class="rc-nome">Comanda não encontrada</div>
+            <div class="rc-empresa">${esc(raw)}</div>
+            <div class="rc-badges">
+              <span class="rc-badge badge-red">Não registrado</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const p = data[0];
+  currentPerson = p;
+
+  // Evento diferente?
+  if (p.evento_id !== EVENT_ID) {
+    inp.classList.add('notfound');
+    resultArea.innerHTML = `
+      <div class="result-card status-notfound">
+        <div class="rc-top">
+          <div class="rc-icon">⚠️</div>
+          <div class="rc-info">
+            <div class="rc-nome">${esc(p.nome)}</div>
+            <div class="rc-empresa">Ingresso de outro evento: <strong>${esc(p.evento_id)}</strong></div>
+            <div class="rc-badges">
+              <span class="rc-badge badge-red">Evento inválido</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Já entrou?
+  if (p.entrada_at) {
+    inp.classList.add('already');
+    resultArea.innerHTML = `
+      <div class="result-card status-already">
+        <div class="rc-top">
+          <div class="rc-icon">⚠️</div>
+          <div class="rc-info">
+            <div class="rc-nome">${esc(p.nome)}</div>
+            <div class="rc-empresa">${esc(p.empresa||'—')}</div>
+            <div class="rc-badges">
+              <span class="rc-badge badge-orange">Já entrou às ${fmtTime(p.entrada_at)}</span>
+              ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="rc-actions">
+          <button class="btn-cancelar" onclick="clearInput()">Limpar</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Novo — pronto para confirmar
+  inp.classList.add('ok');
+  resultArea.innerHTML = `
+    <div class="result-card status-ok">
+      <div class="rc-top">
+        <div class="rc-icon">✅</div>
+        <div class="rc-info">
+          <div class="rc-nome">${esc(p.nome)}</div>
+          <div class="rc-empresa">${esc(p.empresa||'—')}${p.cargo ? ' · '+esc(p.cargo) : ''}</div>
+          <div class="rc-badges">
+            <span class="rc-badge badge-green">Inscrito</span>
+            ${!p.titular ? `<span class="rc-badge badge-purple">Convidado${p.titular_nome?' de '+esc(p.titular_nome.split(' ')[0]):''}</span>` : ''}
+            ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : '<span class="rc-badge badge-muted">Sem doação</span>'}
+          </div>
+        </div>
+      </div>
+      <div class="rc-meta">
+        <div class="rc-meta-item"><strong>${esc(p.ingresso_id)}</strong>Comanda</div>
+        <div class="rc-meta-item"><strong>${fmtTime(p.inscricao_at)}</strong>Inscrito às</div>
+      </div>
+      <div class="rc-actions">
+        <button class="btn-confirmar" id="btnConfirmar" onclick="confirmarEntrada()">
+          ✓ Confirmar entrada
+        </button>
+        <button class="btn-cancelar" onclick="clearInput()">Cancelar</button>
+      </div>
+    </div>`;
+}
+
+// ── CONFIRMAR ENTRADA ─────────────────────────────────────
+async function confirmarEntrada() {
+  if (!currentPerson) return;
+  const btn = document.getElementById('btnConfirmar');
+  if (btn) { btn.disabled = true; btn.textContent = 'Registrando...'; }
+
+  const { error } = await _SB.rpc('mark_entrada', {
+    p_ingresso_id: currentPerson.ingresso_id,
+    p_pwd_hash: pwdHash
+  });
+
+  if (error) {
+    document.getElementById('resultArea').innerHTML = `
+      <div class="flash err">❌ Erro ao registrar. Tente novamente.</div>`;
+    return;
+  }
+
+  // Adiciona ao histórico da sessão
+  recentEntries.unshift({
+    nome: currentPerson.nome,
+    id: currentPerson.ingresso_id,
+    time: new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+  });
+  renderRecent();
+
+  // Flash de sucesso
+  document.getElementById('resultArea').innerHTML = `
+    <div class="flash ok">✓ ${esc(currentPerson.nome.split(' ')[0])} confirmado — bem-vindo(a)!</div>`;
+
+  refreshCounter();
+  currentPerson = null;
+
+  // Limpa e re-foca para próximo scan
+  setTimeout(() => {
+    clearInput();
+    document.getElementById('resultArea').innerHTML = '';
+  }, 1800);
+}
+
+// ── HISTÓRICO ─────────────────────────────────────────────
+function renderRecent() {
+  const wrap = document.getElementById('recentWrap');
+  const list = document.getElementById('recentList');
+  if (!recentEntries.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = recentEntries.slice(0, 8).map(r => `
+    <div class="recent-item">
+      <div class="ri-dot"></div>
+      <div class="ri-nome">${esc(r.nome)}</div>
+      <div class="ri-id">${esc(r.id)}</div>
+      <div class="ri-time">${esc(r.time)}</div>
+    </div>
+  `).join('');
+}
+
+// Foca automaticamente no input ao carregar após auth
+window.addEventListener('load', () => {
+  document.getElementById('authInput').focus();
+});
+</script>
+</body>
+</html>
