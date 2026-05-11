@@ -248,6 +248,11 @@ tr:hover td{background:rgba(123,47,224,.04)}
       <option value="entrou">✓ Entrou</option>
       <option value="naoentrou">⏳ Não entrou</option>
     </select>
+    <select class="filter-sel" id="fPapel" onchange="render()">
+      <option value="">Papel: todos</option>
+      <option value="titular">👤 Titular</option>
+      <option value="convidado">👥 Convidado</option>
+    </select>
     <span class="count-lbl" id="countLbl">—</span>
   </div>
 
@@ -398,12 +403,18 @@ let _totalLeads = 0;
 
 function updateSummary(leads) {
   _totalLeads = leads.length;
+  const titulares   = leads.filter(l => l.titular !== false);
+  const convidados  = leads.filter(l => l.titular === false);
+  const pix         = leads.filter(l => l.doacao > 0);
+  const cesta       = leads.filter(l => l.doacao === 0 && l.doacao_confirmada === true);
+
   document.getElementById('totLeads').textContent = leads.length;
-  const pix   = leads.filter(l => l.doacao > 0);
-  const cesta = leads.filter(l => l.doacao === 0 && l.doacao_confirmada === true && l.titular === true);
-  document.getElementById('totDoa').textContent  = pix.length;
+  const totLbl = document.querySelector('#totLeads + .slbl');
+  if (totLbl) totLbl.textContent = `Total inscritos (${titulares.length} tit. + ${convidados.length} conv.)`;
+
+  document.getElementById('totDoa').textContent = pix.length;
   const tot = pix.reduce((s,l) => s + (+l.doacao||0), 0);
-  document.getElementById('totVal').textContent   = 'R$ ' + tot.toFixed(2).replace('.',',');
+  document.getElementById('totVal').textContent  = 'R$ ' + tot.toFixed(2).replace('.',',');
   const cestaEl = document.getElementById('totCesta');
   if (cestaEl) cestaEl.textContent = cesta.length;
 }
@@ -427,20 +438,24 @@ async function loadAndRender() {
 function renderFiltered() {
   const leads = _leadsCache;
 
-  const q  = document.getElementById('searchInput').value.toLowerCase();
-  const fd = document.getElementById('fDoa').value;
-  const fp = document.getElementById('fPortaria').value;
+  const q   = document.getElementById('searchInput').value.toLowerCase();
+  const fd  = document.getElementById('fDoa').value;
+  const fp  = document.getElementById('fPortaria').value;
+  const fpp = (document.getElementById('fPapel')?.value) || '';
 
   const filtered = leads.filter(l => {
-    const mq = !q || [l.nome,l.email,l.empresa].some(v=>(v||'').toLowerCase().includes(q));
-    const md = !fd
+    const mq   = !q || [l.nome,l.email,l.empresa].some(v=>(v||'').toLowerCase().includes(q));
+    const md   = !fd
       || (fd==='sim'    ? l.doacao>0 : false)
       || (fd==='cesta'  ? (l.doacao===0 && l.doacao_confirmada===true) : false)
       || (fd==='nao'    ? !(l.doacao>0) && !(l.doacao===0 && l.doacao_confirmada===true) : false);
-    const mp = !fp
+    const mp   = !fp
       || (fp==='entrou'    ? !!l.entrada_at : false)
       || (fp==='naoentrou' ? !l.entrada_at  : false);
-    return mq && md && mp;
+    const mrole = !fpp
+      || (fpp==='titular'   ? l.titular !== false : false)
+      || (fpp==='convidado' ? l.titular === false  : false);
+    return mq && md && mp && mrole;
   });
 
   document.getElementById('countLbl').textContent = filtered.length + ' inscrito(s)';
@@ -464,8 +479,8 @@ function renderFiltered() {
       <td style="color:var(--muted)">${esc(l.cargo||'—')}</td>
       <td><span class="badge br">${esc(l.origem||'—')}</span></td>
       <td>${l.doacao>0
-        ? `<span class="dona-val">R$ ${(+l.doacao).toFixed(2).replace('.',',')}</span>`
-        : (l.doacao_confirmada ? '<span style="font-size:.82rem">🧺 Cesta</span>' : '<span class="dona-zero">—</span>')
+        ? `<span class="dona-val" title="Pagamento via Pix">💳 PIX<br><span style="font-size:.72rem">R$ ${(+l.doacao).toFixed(2).replace('.',',')}</span></span>`
+        : (l.doacao_confirmada ? '<span style="font-size:.82rem;color:#F5A623">🧺 Cesta</span>' : '<span class="dona-zero">—</span>')
       }</td>
       <td style="font-size:.66rem;color:var(--muted)">${esc((l.grupo_id||'—').replace('GRP-',''))}</td>
       <td><span class="badge ${l.ingresso_baixado?'bg':'br'}">${l.ingresso_baixado?'Baixado':'Pendente'}</span></td>
