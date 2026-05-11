@@ -1893,6 +1893,21 @@ function parseSaveError(raw) {
   return { code: 'UNKNOWN', text: 'Erro ao salvar inscrição. Verifique sua conexão e tente novamente.' };
 }
 
+function showStep3Error(msg) {
+  let el = document.getElementById('step3SaveErr');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'step3SaveErr';
+    el.style.cssText = 'background:rgba(255,92,92,.08);border:1px solid rgba(255,92,92,.28);border-radius:8px;padding:10px 14px;font-size:.8rem;color:var(--red);margin-bottom:14px;line-height:1.5;';
+    const step3 = document.getElementById('step3');
+    const firstBtn = step3.querySelector('.btn-submit');
+    if (firstBtn) step3.insertBefore(el, firstBtn); else step3.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
 function handleSaveError(rawErr, btn, btnOriginalText) {
   const { code, text } = parseSaveError(rawErr);
   if (btn) { btn.disabled = false; btn.textContent = btnOriginalText; }
@@ -1903,11 +1918,11 @@ function handleSaveError(rawErr, btn, btnOriginalText) {
   if (code === 'DUPLICATE') {
     getDupsForModal(grupo[0]?.email || '').then(dups => {
       if (dups.length) showDupModal(dups);
-      else alert(text);
+      else showStep3Error(text);
     });
     return;
   }
-  alert(text);
+  showStep3Error(text);
 }
 
 // ════════════════════════════════════════════════════════

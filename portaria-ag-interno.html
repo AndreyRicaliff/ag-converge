@@ -303,6 +303,17 @@ const _SB = supabase.createClient(
 let pwdHash = '';
 let recentEntries = [];
 let currentPerson = null;
+let _wakeLock = null;
+
+async function keepScreenOn() {
+  try {
+    _wakeLock = await navigator.wakeLock?.request('screen');
+    _wakeLock?.addEventListener('release', () => { _wakeLock = null; });
+  } catch(e) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !_wakeLock) keepScreenOn();
+});
 
 // ── AUTH ──────────────────────────────────────────────────
 async function sha256hex(str) {
@@ -328,6 +339,7 @@ async function checkAuth() {
   document.getElementById('authGate').style.display = 'none';
   updateCounter(data[0]);
   document.getElementById('scanInput').focus();
+  keepScreenOn();
   setInterval(refreshCounter, 20000);
 }
 
@@ -379,16 +391,25 @@ async function doScan() {
   const btn = document.getElementById('scanBtn');
   btn.disabled = true; btn.textContent = 'Buscando...';
 
-  const { data, error } = await _SB.rpc('lookup_by_ingresso_id', {
-    p_ingresso_id: raw
-  });
+  const TIMEOUT_MS = 8000;
+  const timeoutPromise = new Promise(res => setTimeout(() => res({ data: null, error: { message: 'timeout' } }), TIMEOUT_MS));
+  const { data, error } = await Promise.race([
+    _SB.rpc('lookup_by_ingresso_id', { p_ingresso_id: raw }),
+    timeoutPromise
+  ]);
 
   btn.disabled = false; btn.textContent = 'Consultar';
+
+  if (error?.message === 'timeout') {
+    document.getElementById('resultArea').innerHTML = `<div class="flash err">⚡ Sem resposta do servidor. Verifique a conexão.</div>`;
+    return;
+  }
 
   const resultArea = document.getElementById('resultArea');
   const inp = document.getElementById('scanInput');
 
   if (error || !data?.length) {
+    playBeep('warn');
     inp.classList.add('notfound');
     resultArea.innerHTML = `
       <div class="result-card status-notfound">
@@ -411,6 +432,7 @@ async function doScan() {
 
   // Evento diferente?
   if (p.evento_id !== EVENT_ID) {
+    playBeep('warn');
     inp.classList.add('notfound');
     resultArea.innerHTML = `
       <div class="result-card status-notfound">
@@ -509,9 +531,15 @@ async function confirmarEntrada() {
   });
   renderRecent();
 
-  // Flash de sucesso
+  const firstName = esc(currentPerson.nome.split(' ')[0]);
+
+  // Flash de sucesso — nome grande, bem visível no check-in rápido
   document.getElementById('resultArea').innerHTML = `
-    <div class="flash ok">✓ ${esc(currentPerson.nome.split(' ')[0])} confirmado — bem-vindo(a)!</div>`;
+    <div class="flash ok" style="font-size:1.05rem;padding:18px 20px;flex-direction:column;gap:4px;text-align:center">
+      <span style="font-size:1.6rem">✓</span>
+      <strong>${firstName}</strong>
+      <span style="font-size:.82rem;font-weight:400;opacity:.8">Bem-vindo(a)! Entrada confirmada.</span>
+    </div>`;
 
   refreshCounter();
   currentPerson = null;
@@ -520,7 +548,7 @@ async function confirmarEntrada() {
   setTimeout(() => {
     clearInput();
     document.getElementById('resultArea').innerHTML = '';
-  }, 1800);
+  }, 2000);
 }
 
 // ── HISTÓRICO ─────────────────────────────────────────────

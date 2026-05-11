@@ -211,9 +211,9 @@ tr:hover td{background:rgba(123,47,224,.04)}
 <main>
   <div class="summary">
     <div class="scard hi"><div class="sval purple" id="totLeads">0</div><div class="slbl">Total inscritos</div></div>
+    <div class="scard" style="border-color:rgba(8,193,106,.2)"><div class="sval green" id="totEntradas">—</div><div class="slbl">Entraram (portaria)</div></div>
     <div class="scard"><div class="sval green" id="totDoa">0</div><div class="slbl">Com doação</div></div>
     <div class="scard"><div class="sval" id="totVal">R$ 0</div><div class="slbl">Arrecadado (ACCP)</div></div>
-    <div class="scard"><div class="sval" id="totMed">—</div><div class="slbl">Doação média</div></div>
   </div>
   <!-- Controle de vagas -->
   <div id="vagasAdmin" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
@@ -334,6 +334,12 @@ async function refreshVagas() {
 
   const ts = document.getElementById('lastUpdated');
   if (ts) ts.textContent = 'Atualizado ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  // Entradas da portaria (mesmo hash do admin)
+  const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
+  const { data: pData } = await _SB.rpc('portaria_count', { p_evento_id: activeEvent, p_pwd_hash: h });
+  const pRow = pData?.[0] ?? {};
+  document.getElementById('totEntradas').textContent = pRow.entraram != null ? pRow.entraram : '—';
 }
 
 async function toggleEventOpen() {
@@ -370,7 +376,6 @@ function updateSummary(leads) {
   document.getElementById('totDoa').textContent = com.length;
   const tot = com.reduce((s,l) => s + (+l.doacao||0), 0);
   document.getElementById('totVal').textContent = 'R$ ' + tot.toFixed(2).replace('.',',');
-  document.getElementById('totMed').textContent = com.length ? 'R$ '+(tot/com.length).toFixed(2).replace('.',',') : '—';
 }
 
 function esc(s) {
