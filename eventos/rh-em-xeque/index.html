@@ -1553,6 +1553,7 @@ async function capacityOkToRegister() {
 let grupo      = [];
 let grupoId    = '';
 let selectedDoa = null;
+let _lookupEmail = '';
 
 // ════════════════════════════════════════════════════════
 // UTILITÁRIOS
@@ -2120,6 +2121,7 @@ async function doLookup() {
     return;
   }
 
+  _lookupEmail = email;
   res.innerHTML = `
     <div class="lr-event">${esc(EVENT_CFG.label)}</div>
     ${leads.map(l => `
@@ -2134,7 +2136,7 @@ async function doLookup() {
         </div>
       </div>
     `).join('')}
-    <button class="btn-print" style="width:100%;margin-top:4px" onclick="baixarPDFLookup('${email.replace(/'/g,"\\'")}')">⬇ Baixar ingresso(s) PDF</button>
+    <button class="btn-print" style="width:100%;margin-top:4px" onclick="baixarPDFLookup(_lookupEmail)">⬇ Baixar ingresso(s) PDF</button>
   `;
 }
 
