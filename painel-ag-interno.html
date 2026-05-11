@@ -117,7 +117,7 @@ main{max-width:1300px;margin:0 auto;padding:32px 5%}
 .count-lbl{color:var(--muted);font-size:.75rem;margin-left:auto}
 
 /* Table */
-.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse}
 thead{background:var(--raise)}
 th{
@@ -136,6 +136,12 @@ tr:hover td{background:rgba(123,47,224,.04)}
 
 .dona-val{font-weight:700;color:var(--green)}
 .dona-zero{color:var(--muted)}
+
+/* group separator */
+tr.group-start td{border-top:2px solid rgba(123,47,224,.25)!important}
+tr.group-guest td{background:rgba(123,47,224,.025)}
+.titular-badge{display:inline-block;font-size:.55rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--purple-hi);background:rgba(123,47,224,.12);border:1px solid rgba(123,47,224,.2);border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:middle}
+.guest-badge{display:inline-block;font-size:.55rem;font-weight:700;letter-spacing:.04em;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:middle}
 
 .empty{text-align:center;padding:56px 20px;color:var(--muted)}
 .empty .big{font-size:2.5rem;margin-bottom:10px}
@@ -465,13 +471,35 @@ function renderFiltered() {
   if (!filtered.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
   empty.style.display = 'none';
 
+  // Sort: by grupo_id → titular first within group → inscricao_at
+  const sorted = [...filtered].sort((a,b) => {
+    const g = (a.grupo_id||'').localeCompare(b.grupo_id||'');
+    if (g !== 0) return g;
+    const t = ((b.titular !== false) ? 1 : 0) - ((a.titular !== false) ? 1 : 0);
+    if (t !== 0) return t;
+    return new Date(a.inscricao_at) - new Date(b.inscricao_at);
+  });
+
   const eventLabel = EVENTS.find(e=>e.id===activeEvent)?.label || '—';
-  tbody.innerHTML = filtered.map((l,i) => `
-    <tr>
+  let prevGrupo = null;
+  tbody.innerHTML = sorted.map((l,i) => {
+    const isGroupStart = l.grupo_id && l.grupo_id !== prevGrupo;
+    prevGrupo = l.grupo_id;
+    const isGuest = l.titular === false;
+    const rowClass = isGroupStart ? 'group-start' : (isGuest ? 'group-guest' : '');
+    // find group size for this group
+    const grpSize = l.grupo_id ? sorted.filter(x => x.grupo_id === l.grupo_id).length : 1;
+    const grpLabel = l.grupo_id
+      ? `${esc((l.grupo_id).replace('GRP-',''))}<br><span style="font-size:.58rem;color:rgba(255,255,255,.25)">${grpSize} pessoa${grpSize>1?'s':''}</span>`
+      : '—';
+    return `
+    <tr class="${rowClass}">
       <td style="color:var(--muted)">${i+1}</td>
       <td>
-        <strong>${esc(l.nome)}</strong>
-        ${l.titular===false ? `<br><span style="font-size:.63rem;color:var(--purple-lo)">Convidado${l.titular_nome?` de ${esc(l.titular_nome)}`:''}</span>` : ''}
+        <strong>${esc(l.nome)}</strong>${isGuest
+          ? `<span class="guest-badge">Conv.</span>`
+          : (grpSize > 1 ? `<span class="titular-badge">Titular</span>` : '')}
+        ${isGuest && l.titular_nome ? `<br><span style="font-size:.63rem;color:var(--muted)">↳ de ${esc(l.titular_nome)}</span>` : ''}
       </td>
       <td><a href="mailto:${esc(l.email)}" style="color:var(--purple-lo)">${esc(l.email)}</a></td>
       <td>${esc(l.tel||'—')}</td>
@@ -482,15 +510,15 @@ function renderFiltered() {
         ? `<span class="dona-val" title="Pagamento via Pix">💳 PIX<br><span style="font-size:.72rem">R$ ${(+l.doacao).toFixed(2).replace('.',',')}</span></span>`
         : (l.doacao_confirmada ? '<span style="font-size:.82rem;color:#F5A623">🧺 Cesta</span>' : '<span class="dona-zero">—</span>')
       }</td>
-      <td style="font-size:.66rem;color:var(--muted)">${esc((l.grupo_id||'—').replace('GRP-',''))}</td>
+      <td style="font-size:.66rem;color:var(--muted)">${grpLabel}</td>
       <td><span class="badge ${l.ingresso_baixado?'bg':'br'}">${l.ingresso_baixado?'Baixado':'Pendente'}</span></td>
       <td>${l.entrada_at
         ? `<span class="badge bg" title="${esc(new Date(l.entrada_at).toLocaleString('pt-BR'))}">✓ ${new Date(l.entrada_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</span>`
         : '<span class="dona-zero">—</span>'}</td>
       <td><span class="badge bp">${esc(eventLabel)}</span></td>
       <td style="color:var(--muted);font-size:.72rem;white-space:nowrap">${fmtDate(l.inscricao_at)}</td>
-    </tr>
-  `).join('');
+    </tr>`;
+  }).join('');
 }
 
 async function exportCSV() {
