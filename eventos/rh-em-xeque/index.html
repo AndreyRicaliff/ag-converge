@@ -779,6 +779,40 @@ footer{
 .dona-chip-cesta{border-color:rgba(245,166,35,.35)!important;color:#F5A623!important}
 .dona-chip-cesta.selected{background:rgba(245,166,35,.18)!important;border-color:#F5A623!important;color:#F5A623!important}
 
+/* ── COUNTDOWN ── */
+.countdown-strip{
+  display:flex;gap:10px;justify-content:center;
+  margin:20px 0 8px;flex-wrap:wrap;
+}
+.cd-block{
+  text-align:center;min-width:62px;
+  background:rgba(123,47,224,.08);border:1px solid rgba(123,47,224,.2);
+  border-radius:10px;padding:10px 12px;
+}
+.cd-n{font-size:1.55rem;font-weight:900;color:var(--purple-hi);line-height:1;font-variant-numeric:tabular-nums}
+.cd-l{font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:3px}
+
+/* ── COMPARTILHAR PÓS-INSCRIÇÃO ── */
+.share-strip{
+  margin-top:14px;padding:14px 12px;
+  background:rgba(123,47,224,.06);border:1px solid rgba(123,47,224,.18);
+  border-radius:10px;text-align:center;
+}
+.share-strip-lbl{font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:10px}
+.share-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.share-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:7px;font-size:.75rem;font-weight:700;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  border:none;cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.share-wa{background:#25D366;color:#fff}
+.share-wa:hover{background:#1dbb5a}
+.share-li{background:#0A66C2;color:#fff}
+.share-li:hover{background:#094fa3}
+.share-cp{background:rgba(255,255,255,.08);color:var(--white);border:1px solid var(--border)}
+.share-cp:hover{border-color:var(--purple-hi);color:var(--purple-hi)}
+
 /* ── PDF PRINT ── */
 @media print {
   body>*:not(#print-pdf-area){display:none!important}
@@ -907,6 +941,9 @@ footer{
       <div><span class="lbl">Local</span><span class="val">Auditório Slavieiro · Heron Marinho · Campina Grande</span></div>
     </div>
   </div>
+
+  <!-- Countdown -->
+  <div class="countdown-strip" id="countdownStrip"></div>
 
   <div class="hero-actions">
     <button class="btn-hero" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">
@@ -1327,6 +1364,24 @@ footer{
           <div class="ingresso-actions">
             <button type="button" class="btn-print" onclick="baixarPDF()">⬇ Baixar ingressos (PDF)</button>
             <a href="/" class="btn-hub">← Todos os eventos</a>
+          </div>
+          <!-- Compartilhamento pós-inscrição -->
+          <div class="share-strip">
+            <div class="share-strip-lbl">Leve alguém! Compartilhe o evento</div>
+            <div class="share-btns">
+              <a id="shareWA" class="share-btn share-wa" href="#" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.553 4.107 1.523 5.83L0 24l6.335-1.504A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.005-1.371l-.36-.213-3.718.883.9-3.625-.234-.372A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818S17.424 21.818 12 21.818z"/></svg>
+                WhatsApp
+              </a>
+              <a id="shareLI" class="share-btn share-li" href="#" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                LinkedIn
+              </a>
+              <button id="shareCopyBtn" class="share-btn share-cp" onclick="copyEventLink()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copiar link
+              </button>
+            </div>
           </div>
           <div style="text-align:center;margin-top:10px">
             <button type="button" onclick="openHistorico()" style="background:none;border:none;color:var(--muted);font-size:.73rem;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:color .2s" onmouseover="this.style.color='var(--purple-lo)'" onmouseout="this.style.color='var(--muted)'">Analisar histórico de inscrições →</button>
@@ -2020,6 +2075,7 @@ function mostrarIngressos() {
     }
   });
 
+  setupShare(grupo[0]?.nome || '');
   goToStep(4);
   document.getElementById('registro').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -2028,21 +2084,29 @@ function mostrarIngressos() {
 // PDF — gera área de impressão e chama window.print()
 // ════════════════════════════════════════════════════════
 function buildPDFTickets(pessoas) {
-  return pessoas.map(p => `
+  return pessoas.map(p => {
+    const qrSrc = getQRDataUrl(p.ingresso_id, 120);
+    return `
     <div class="pdf-ticket" style="margin-bottom:28px;page-break-inside:avoid">
       <div class="pdf-top">
         <div class="pdf-platform">AG Converge · Plataforma de Eventos</div>
         <div class="pdf-event">${esc(EVENT_CFG.label)}</div>
       </div>
-      <div class="pdf-body">
-        <div class="pdf-row"><span class="pdf-lbl">Participante</span><span class="pdf-val">${esc(p.nome)}</span></div>
-        <div class="pdf-row"><span class="pdf-lbl">Data</span><span class="pdf-val">${esc(EVENT_CFG.data)}</span></div>
-        <div class="pdf-row"><span class="pdf-lbl">Local</span><span class="pdf-val">${esc(EVENT_CFG.local)}</span></div>
-        <div class="pdf-row" style="border-bottom:none"><span class="pdf-lbl">Comanda</span><span class="pdf-val" style="font-size:15px;font-weight:900;color:#7B2FE0">${esc(p.ingresso_id)}</span></div>
+      <div class="pdf-body" style="display:flex;align-items:flex-start;gap:18px">
+        <div style="flex:1">
+          <div class="pdf-row"><span class="pdf-lbl">Participante</span><span class="pdf-val">${esc(p.nome)}</span></div>
+          <div class="pdf-row"><span class="pdf-lbl">Data</span><span class="pdf-val">${esc(EVENT_CFG.data)}</span></div>
+          <div class="pdf-row"><span class="pdf-lbl">Local</span><span class="pdf-val">${esc(EVENT_CFG.local)}</span></div>
+          <div class="pdf-row" style="border-bottom:none"><span class="pdf-lbl">Comanda</span><span class="pdf-val" style="font-size:14px;font-weight:900;color:#7B2FE0">${esc(p.ingresso_id)}</span></div>
+        </div>
+        ${qrSrc ? `<div style="flex-shrink:0;padding-top:2px;text-align:center">
+          <img src="${qrSrc}" width="96" height="96" style="display:block;border-radius:4px;border:1px solid #e0d8ff">
+          <div style="font-size:7px;color:#9B91C0;margin-top:3px;letter-spacing:.04em">escaneie na portaria</div>
+        </div>` : ''}
       </div>
       <div class="pdf-footer">AG Consultoria Ltda. · agconsultorialtda.com · ${esc(EVENT_CFG.label)}</div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function _doPrint(area, pessoas) {
@@ -2284,6 +2348,89 @@ document.addEventListener('keydown', e => {
 // Inicializa doação e verifica capacidade
 updateDoaBtn();
 checkCapacity();
+
+// ════════════════════════════════════════════════════════
+// COUNTDOWN — tempo restante até o evento
+// ════════════════════════════════════════════════════════
+const EVENT_DATE = new Date('2026-05-14T21:00:00Z'); // 18h BRT = 21h UTC
+
+function updateCountdown() {
+  const strip = document.getElementById('countdownStrip');
+  if (!strip) return;
+  const now  = Date.now();
+  const diff = EVENT_DATE - now;
+  if (diff <= 0) {
+    strip.innerHTML = '<div style="font-size:.88rem;color:var(--green);font-weight:700;padding:8px 0">🎉 O evento está acontecendo agora!</div>';
+    return;
+  }
+  const d = Math.floor(diff / 864e5);
+  const h = Math.floor((diff % 864e5) / 36e5);
+  const m = Math.floor((diff % 36e5) / 6e4);
+  const s = Math.floor((diff % 6e4) / 1e3);
+  strip.innerHTML = [[d,'dias'],[h,'horas'],[m,'min'],[s,'seg']].map(([n,l]) => `
+    <div class="cd-block">
+      <div class="cd-n">${String(n).padStart(2,'0')}</div>
+      <div class="cd-l">${l}</div>
+    </div>`).join('');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ════════════════════════════════════════════════════════
+// SHARE — botões de compartilhamento pós-inscrição
+// ════════════════════════════════════════════════════════
+function setupShare(nomeParticipante) {
+  const url  = window.location.origin + '/eventos/rh-em-xeque';
+  const firstName = (nomeParticipante||'').split(' ')[0] || 'Eu';
+  const text = encodeURIComponent(`${firstName} vai estar no RH em Xeque — 14 de maio em Campina Grande!\nEntrada gratuita, evento beneficente. Garanta sua vaga: ${url}`);
+  const waEl = document.getElementById('shareWA');
+  const liEl = document.getElementById('shareLI');
+  if (waEl) waEl.href = `https://api.whatsapp.com/send?text=${text}`;
+  if (liEl) liEl.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+}
+
+function copyEventLink() {
+  const url = window.location.origin + '/eventos/rh-em-xeque';
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('shareCopyBtn');
+    if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => {
+      btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar link';
+    }, 2200); }
+  }).catch(() => { prompt('Copie o link:', url); });
+}
+
+// ════════════════════════════════════════════════════════
+// QR CODE PARA PDF — gera data URL de um QR
+// ════════════════════════════════════════════════════════
+function getQRDataUrl(text, size) {
+  const tmp = document.createElement('div');
+  tmp.style.cssText = 'position:absolute;left:-9999px;top:-9999px;pointer-events:none';
+  document.body.appendChild(tmp);
+  new QRCode(tmp, {
+    text, width: size, height: size,
+    colorDark: '#1A0F3C', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+  const canvas = tmp.querySelector('canvas');
+  const img    = tmp.querySelector('img');
+  const url    = canvas ? canvas.toDataURL('image/png') : (img ? img.src : '');
+  document.body.removeChild(tmp);
+  return url;
+}
+
+// ════════════════════════════════════════════════════════
+// REALTIME — atualiza barra de vagas quando alguém inscreve
+// ════════════════════════════════════════════════════════
+(function initRealtime() {
+  try {
+    _SB.channel('registrations-live')
+      .on('postgres_changes', {
+        event: 'INSERT', schema: 'public', table: 'registrations',
+        filter: `evento_id=eq.${EVENT_CFG.slug}`,
+      }, () => { checkCapacity(); })
+      .subscribe();
+  } catch(e) { /* Realtime não crítico */ }
+})();
 </script>
 </body>
 </html>

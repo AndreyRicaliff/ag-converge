@@ -212,8 +212,9 @@ tr:hover td{background:rgba(123,47,224,.04)}
   <div class="summary">
     <div class="scard hi"><div class="sval purple" id="totLeads">0</div><div class="slbl">Total inscritos</div></div>
     <div class="scard" style="border-color:rgba(8,193,106,.2)"><div class="sval green" id="totEntradas">—</div><div class="slbl">Entraram (portaria)</div></div>
-    <div class="scard"><div class="sval green" id="totDoa">0</div><div class="slbl">Com doação</div></div>
+    <div class="scard"><div class="sval green" id="totDoa">0</div><div class="slbl">Com doação Pix</div></div>
     <div class="scard"><div class="sval" id="totVal">R$ 0</div><div class="slbl">Arrecadado (ACCP)</div></div>
+    <div class="scard" style="border-color:rgba(245,166,35,.2)"><div class="sval" style="color:#F5A623" id="totCesta">0</div><div class="slbl">🧺 Cestas prometidas</div></div>
   </div>
   <!-- Controle de vagas -->
   <div id="vagasAdmin" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
@@ -235,8 +236,9 @@ tr:hover td{background:rgba(123,47,224,.04)}
     <input class="search" id="searchInput" type="text" placeholder="Buscar nome, e-mail ou empresa..." oninput="render()">
     <select class="filter-sel" id="fDoa" onchange="render()">
       <option value="">Todos</option>
-      <option value="sim">Com doação</option>
-      <option value="nao">Sem doação</option>
+      <option value="sim">Com doação Pix</option>
+      <option value="cesta">🧺 Cesta básica</option>
+      <option value="nao">Sem contribuição</option>
     </select>
     <span class="count-lbl" id="countLbl">—</span>
   </div>
@@ -372,10 +374,13 @@ function fmtDate(iso) {
 
 function updateSummary(leads) {
   document.getElementById('totLeads').textContent = leads.length;
-  const com = leads.filter(l => l.doacao > 0);
-  document.getElementById('totDoa').textContent = com.length;
-  const tot = com.reduce((s,l) => s + (+l.doacao||0), 0);
-  document.getElementById('totVal').textContent = 'R$ ' + tot.toFixed(2).replace('.',',');
+  const pix   = leads.filter(l => l.doacao > 0);
+  const cesta = leads.filter(l => l.doacao === 0 && l.doacao_confirmada === true && l.titular === true);
+  document.getElementById('totDoa').textContent  = pix.length;
+  const tot = pix.reduce((s,l) => s + (+l.doacao||0), 0);
+  document.getElementById('totVal').textContent   = 'R$ ' + tot.toFixed(2).replace('.',',');
+  const cestaEl = document.getElementById('totCesta');
+  if (cestaEl) cestaEl.textContent = cesta.length;
 }
 
 function esc(s) {
@@ -391,7 +396,10 @@ async function render() {
 
   const filtered = leads.filter(l => {
     const mq = !q || [l.nome,l.email,l.empresa].some(v=>(v||'').toLowerCase().includes(q));
-    const md = !fd || (fd==='sim' ? l.doacao>0 : !(l.doacao>0));
+    const md = !fd
+      || (fd==='sim'    ? l.doacao>0 : false)
+      || (fd==='cesta'  ? (l.doacao===0 && l.doacao_confirmada===true) : false)
+      || (fd==='nao'    ? !(l.doacao>0) && !(l.doacao===0 && l.doacao_confirmada===true) : false);
     return mq && md;
   });
 
@@ -417,7 +425,7 @@ async function render() {
       <td><span class="badge br">${esc(l.origem||'—')}</span></td>
       <td>${l.doacao>0
         ? `<span class="dona-val">R$ ${(+l.doacao).toFixed(2).replace('.',',')}</span>`
-        : '<span class="dona-zero">—</span>'
+        : (l.doacao_confirmada ? '<span style="font-size:.82rem">🧺 Cesta</span>' : '<span class="dona-zero">—</span>')
       }</td>
       <td style="font-size:.66rem;color:var(--muted)">${esc((l.grupo_id||'—').replace('GRP-',''))}</td>
       <td><span class="badge ${l.ingresso_baixado?'bg':'br'}">${l.ingresso_baixado?'Baixado':'Pendente'}</span></td>
@@ -430,9 +438,12 @@ async function render() {
 async function exportCSV() {
   const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
-  const cols = ['nome','email','tel','empresa','cargo','origem','doacao','doacao_confirmada','grupo_id','titular','ingresso_id','ingresso_baixado','titular_nome','inscricao_at'];
-  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Doacao_Confirmada','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Titular_Nome','Data_Inscricao'];
-  const rows = [hdr.join(';'), ...leads.map(l => cols.map(c => '"'+(l[c]??'').toString().replace(/"/g,'""')+'"').join(';'))];
+  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Tipo_Contribuicao','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Titular_Nome','Data_Inscricao'];
+  const rows_data = leads.map(l => {
+    const tipo = l.doacao > 0 ? 'Pix' : (l.doacao_confirmada ? 'Cesta' : 'Nenhuma');
+    return [l.nome,l.email,l.tel,l.empresa,l.cargo,l.origem,l.doacao||0,tipo,l.grupo_id,l.titular,l.ingresso_id,l.ingresso_baixado,l.titular_nome||'',l.inscricao_at].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';');
+  });
+  const rows = [hdr.join(';'), ...rows_data];
   const blob = new Blob(['﻿'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

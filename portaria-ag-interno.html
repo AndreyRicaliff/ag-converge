@@ -220,6 +220,16 @@ header{
 .ri-id{font-size:.63rem;color:var(--muted);font-family:monospace;letter-spacing:.04em}
 .ri-time{font-size:.62rem;color:var(--muted);flex-shrink:0}
 
+/* ── SESSION STATS ── */
+.session-stats{
+  width:100%;display:flex;gap:8px;flex-wrap:wrap;
+  background:rgba(255,255,255,.02);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;
+}
+.ss-item{flex:1;min-width:80px;text-align:center}
+.ss-val{font-size:1.05rem;font-weight:900;color:var(--phi);line-height:1}
+.ss-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:2px}
+
 /* ── RESPONSIVE ── */
 @media(max-width:480px){
   #scanInput{font-size:.95rem;padding:15px 44px 15px 14px}
@@ -279,6 +289,14 @@ header{
 
   <div id="resultArea"></div>
 
+  <!-- Stats de sessão (visível quando há entradas) -->
+  <div class="session-stats" id="sessionStats" style="display:none">
+    <div class="ss-item"><div class="ss-val" id="ssCount">0</div><div class="ss-lbl">entradas</div></div>
+    <div class="ss-item"><div class="ss-val" id="ssRate">—</div><div class="ss-lbl">/hora</div></div>
+    <div class="ss-item"><div class="ss-val" id="ssLast">—</div><div class="ss-lbl">última</div></div>
+    <div class="ss-item"><div class="ss-val" id="ssSession">—</div><div class="ss-lbl">sessão</div></div>
+  </div>
+
   <div class="recent-wrap" id="recentWrap" style="display:none">
     <div class="recent-label">Últimas entradas desta sessão</div>
     <div class="recent-list" id="recentList"></div>
@@ -304,6 +322,7 @@ let pwdHash = '';
 let recentEntries = [];
 let currentPerson = null;
 let _wakeLock = null;
+let sessionStart = null;
 
 async function keepScreenOn() {
   try {
@@ -336,6 +355,7 @@ async function checkAuth() {
     return;
   }
   pwdHash = h;
+  sessionStart = Date.now();
   document.getElementById('authGate').style.display = 'none';
   updateCounter(data[0]);
   document.getElementById('scanInput').focus();
@@ -551,11 +571,32 @@ async function confirmarEntrada() {
   }, 2000);
 }
 
-// ── HISTÓRICO ─────────────────────────────────────────────
+// ── HISTÓRICO + STATS DE SESSÃO ───────────────────────────
 function renderRecent() {
-  const wrap = document.getElementById('recentWrap');
-  const list = document.getElementById('recentList');
-  if (!recentEntries.length) { wrap.style.display = 'none'; return; }
+  const wrap  = document.getElementById('recentWrap');
+  const list  = document.getElementById('recentList');
+  const stats = document.getElementById('sessionStats');
+
+  if (!recentEntries.length) {
+    wrap.style.display  = 'none';
+    stats.style.display = 'none';
+    return;
+  }
+
+  // Session stats
+  stats.style.display = 'flex';
+  const n = recentEntries.length;
+  const elapsed = sessionStart ? (Date.now() - sessionStart) / 36e5 : 0; // hours
+  const rate    = elapsed > 0 ? Math.round(n / elapsed) : n;
+  const lastT   = recentEntries[0]?.time || '—';
+  const sessionT = sessionStart
+    ? new Date(sessionStart).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
+    : '—';
+  document.getElementById('ssCount').textContent   = n;
+  document.getElementById('ssRate').textContent    = rate;
+  document.getElementById('ssLast').textContent    = lastT;
+  document.getElementById('ssSession').textContent = sessionT;
+
   wrap.style.display = 'block';
   list.innerHTML = recentEntries.slice(0, 8).map(r => `
     <div class="recent-item">
