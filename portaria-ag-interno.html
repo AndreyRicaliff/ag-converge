@@ -287,6 +287,10 @@ header{
 
 <script src="/assets/js/supabase.min.js"></script>
 <script>
+if (!window.supabase) {
+  document.body.innerHTML = '<div style="color:#fff;background:#09090F;height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui;font-size:.9rem;text-align:center;padding:20px">Erro ao carregar recursos. Verifique a conexão e recarregue a página.</div>';
+}
+
 const EVENT_ID = 'rh-em-xeque';
 
 const _SB = supabase.createClient(
@@ -331,10 +335,14 @@ document.getElementById('authInput').addEventListener('keydown', e => {
 
 // ── COUNTER ──────────────────────────────────────────────
 async function refreshCounter() {
-  const { data } = await _SB.rpc('portaria_count', {
-    p_evento_id: EVENT_ID, p_pwd_hash: pwdHash
-  });
-  if (data?.[0]) updateCounter(data[0]);
+  try {
+    const { data } = await _SB.rpc('portaria_count', {
+      p_evento_id: EVENT_ID, p_pwd_hash: pwdHash
+    });
+    if (data?.[0]) updateCounter(data[0]);
+  } catch(e) {
+    console.warn('refreshCounter:', e);
+  }
 }
 
 function updateCounter(row) {

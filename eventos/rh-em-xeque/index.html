@@ -1163,7 +1163,7 @@ footer{
       <div id="vagasEsgotadas" style="display:none;text-align:center;padding:32px 16px">
         <div style="font-size:2.5rem;margin-bottom:12px">😔</div>
         <div style="font-size:1rem;font-weight:800;color:var(--white);margin-bottom:8px">Vagas esgotadas</div>
-        <div style="font-size:.82rem;color:var(--muted);line-height:1.65">As 120 vagas do Auditório Slavieiro foram preenchidas.<br>Acompanhe nossas redes para próximos eventos.</div>
+        <div id="vagasMsg" style="font-size:.82rem;color:var(--muted);line-height:1.65">As 120 vagas do Auditório Slavieiro foram preenchidas.<br>Acompanhe nossas redes para próximos eventos.</div>
       </div>
 
       <!-- PASSO 1: Dados do titular -->
@@ -1527,7 +1527,7 @@ async function checkCapacity() {
     document.getElementById('stepNav').style.display        = 'none';
     document.getElementById('step1').style.display          = 'none';
     document.getElementById('vagasEsgotadas').style.display = 'block';
-    document.getElementById('vagasEsgotadas').querySelector('div:nth-child(3)').textContent =
+    document.getElementById('vagasMsg').textContent =
       !isOpen ? 'As inscrições foram encerradas pelo organizador.' :
                 `As ${cap} vagas do Auditório Slavieiro foram preenchidas.`;
   }

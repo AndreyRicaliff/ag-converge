@@ -203,8 +203,8 @@ tr:hover td{background:rgba(123,47,224,.04)}
     <button class="btn btn-export" onclick="exportCSV()">⬇ CSV</button>
     <button class="btn btn-export" onclick="exportJSON()" style="background:var(--blue)">⬇ JSON</button>
     <button class="btn btn-danger" onclick="showClear()">🗑</button>
-    <button class="btn" onclick="location.href='portaria-ag-interno.html'" style="background:rgba(8,193,106,.12);color:#08C16A;border:1px solid rgba(8,193,106,.3)">🚪 Portaria</button>
-    <button class="btn btn-sec" onclick="location.href='index.html'">← Hub</button>
+    <button class="btn" onclick="location.href='/portaria-ag-interno'" style="background:rgba(8,193,106,.12);color:#08C16A;border:1px solid rgba(8,193,106,.3)">🚪 Portaria</button>
+    <button class="btn btn-sec" onclick="location.href='/'">← Hub</button>
   </div>
 </header>
 
@@ -268,6 +268,7 @@ tr:hover td{background:rgba(123,47,224,.04)}
 </div>
 
 <script src="/assets/js/supabase.min.js"></script>
+<script>if (!window.supabase) { document.body.innerHTML='<div style="color:#fff;background:#09090F;height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui;padding:20px;text-align:center">Erro ao carregar recursos. Recarregue a página.</div>'; }</script>
 <script>
 const _SB = supabase.createClient(
   'https://hqcbpqkohgmlultnmbyy.supabase.co',
@@ -441,7 +442,10 @@ async function exportJSON() {
 
 function showClear() { document.getElementById('clearOverlay').classList.add('show') }
 function hideClear() { document.getElementById('clearOverlay').classList.remove('show') }
-function clearAll() { hideClear(); render(); } // dados ficam no Supabase
+function clearAll() {
+  hideClear();
+  alert('Os dados estão protegidos no Supabase e não podem ser apagados por aqui. Use o painel do Supabase para operações de delete.');
+}
 
 render();
 refreshVagas();
