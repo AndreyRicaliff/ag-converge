@@ -1491,10 +1491,12 @@ const _SB = supabase.createClient(
 // ════════════════════════════════════════════════════════
 async function checkCapacity() {
   const { data } = await _SB.rpc('count_registrations', { p_evento_id: EVENT_CFG.slug });
-  const total = data?.[0]?.total ?? 0;
-  const cap   = EVENT_CFG.capacity;
-  const livres = Math.max(0, cap - total);
-  const pct    = Math.min(100, Math.round((total / cap) * 100));
+  const row      = data?.[0] ?? {};
+  const total    = Number(row.total    ?? 0);
+  const cap      = Number(row.capacity ?? EVENT_CFG.capacity);
+  const livres   = Math.max(0, cap - total);
+  const isOpen   = row.open !== false;
+  const pct      = cap > 0 ? Math.min(100, Math.round((total / cap) * 100)) : 0;
 
   // Barra de vagas
   const bar = document.getElementById('vagasBar');
@@ -1502,36 +1504,41 @@ async function checkCapacity() {
     bar.style.display = 'block';
     const lbl  = document.getElementById('vagasLabel');
     const prog = document.getElementById('vagasProgress');
-    if (livres === 0) {
+    if (!isOpen || livres === 0) {
       lbl.textContent = 'Esgotado';
       lbl.style.color = 'var(--red)';
       prog.style.background = 'var(--red)';
+      prog.style.width = '100%';
     } else if (pct >= 80) {
       lbl.textContent = `${livres} vaga${livres > 1 ? 's' : ''} restante${livres > 1 ? 's' : ''}`;
       lbl.style.color = '#F5A623';
       prog.style.background = '#F5A623';
+      prog.style.width = pct + '%';
     } else {
       lbl.textContent = `${livres} de ${cap} disponíveis`;
       lbl.style.color = 'var(--purple-hi)';
       prog.style.background = 'var(--purple)';
+      prog.style.width = pct + '%';
     }
-    prog.style.width = pct + '%';
   }
 
-  // Bloqueia formulário se lotado
-  if (livres === 0) {
-    document.getElementById('stepNav').style.display       = 'none';
-    document.getElementById('step1').style.display         = 'none';
+  // Bloqueia formulário se lotado ou fechado
+  if (!isOpen || livres === 0) {
+    document.getElementById('stepNav').style.display        = 'none';
+    document.getElementById('step1').style.display          = 'none';
     document.getElementById('vagasEsgotadas').style.display = 'block';
+    document.getElementById('vagasEsgotadas').querySelector('div:nth-child(3)').textContent =
+      !isOpen ? 'As inscrições foram encerradas pelo organizador.' :
+                `As ${cap} vagas do Auditório Slavieiro foram preenchidas.`;
   }
 
-  return livres;
+  return { livres, isOpen, cap, total };
 }
 
-// Verifica de novo antes de submeter (race condition)
+// Verificação rápida para o step 1 (UX gate)
 async function capacityOkToRegister() {
-  const livres = await checkCapacity();
-  return livres > 0;
+  const { livres, isOpen } = await checkCapacity();
+  return isOpen && livres > 0;
 }
 
 // ════════════════════════════════════════════════════════
@@ -1825,14 +1832,14 @@ async function confirmarInscricao() {
   grupo[0].doacao = v;
   grupo[0].doacao_confirmada = v > 0;
   const btn = document.getElementById('btnConfirmar');
+  const orig = btn?.textContent || 'Confirmar →';
   if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
   try {
     await salvarGrupo();
     mostrarIngressos();
   } catch(err) {
     console.error(err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Tentar novamente'; }
-    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+    handleSaveError(err, btn, orig);
   }
 }
 
@@ -1845,8 +1852,7 @@ async function confirmarSemDoa() {
     mostrarIngressos();
   } catch(err) {
     console.error(err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Confirmar sem contribuição'; }
-    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+    handleSaveError(err, btn, 'Participar sem contribuir');
   }
 }
 
@@ -1859,15 +1865,71 @@ async function confirmarComCesta() {
     mostrarIngressos();
   } catch(err) {
     console.error(err);
-    if (btn) { btn.disabled = false; btn.textContent = 'Confirmar — trarei uma cesta básica →'; }
-    alert('Erro ao salvar inscrição. Verifique sua conexão e tente novamente.');
+    handleSaveError(err, btn, 'Confirmar — trarei uma cesta básica →');
   }
+}
+
+// ════════════════════════════════════════════════════════
+// ERROS DE SAVE — parser + mensagens amigáveis
+// ════════════════════════════════════════════════════════
+function parseSaveError(raw) {
+  const msg = (raw?.message || raw?.details || '').toLowerCase();
+  if (msg.includes('capacity_exceeded') || msg.includes('vagas esgotadas')) {
+    return { code: 'CAPACITY_EXCEEDED', text: 'Vagas esgotadas. Não foi possível concluir a inscrição.' };
+  }
+  if (msg.includes('event_closed') || msg.includes('encerradas')) {
+    return { code: 'EVENT_CLOSED', text: 'As inscrições para este evento foram encerradas.' };
+  }
+  if (msg.includes('unique') || msg.includes('duplicate') || msg.includes('already exists')) {
+    return { code: 'DUPLICATE', text: 'Este e-mail já está inscrito neste evento.' };
+  }
+  return { code: 'UNKNOWN', text: 'Erro ao salvar inscrição. Verifique sua conexão e tente novamente.' };
+}
+
+function handleSaveError(rawErr, btn, btnOriginalText) {
+  const { code, text } = parseSaveError(rawErr);
+  if (btn) { btn.disabled = false; btn.textContent = btnOriginalText; }
+  if (code === 'CAPACITY_EXCEEDED' || code === 'EVENT_CLOSED') {
+    checkCapacity(); // atualiza UI de vagas esgotadas
+    return;
+  }
+  if (code === 'DUPLICATE') {
+    getDupsForModal(grupo[0]?.email || '').then(dups => {
+      if (dups.length) showDupModal(dups);
+      else alert(text);
+    });
+    return;
+  }
+  alert(text);
 }
 
 // ════════════════════════════════════════════════════════
 // SALVAR GRUPO NO SUPABASE
 // ════════════════════════════════════════════════════════
 async function salvarGrupo() {
+  // Verificação final server-side considerando tamanho real do grupo
+  const { data: capData } = await _SB.rpc('count_registrations', { p_evento_id: EVENT_CFG.slug });
+  const row      = capData?.[0] ?? {};
+  const current  = Number(row.total    ?? 0);
+  const cap      = Number(row.capacity ?? EVENT_CFG.capacity);
+  const isOpen   = row.open !== false;
+  const needed   = grupo.length;
+  const available = cap - current;
+
+  if (!isOpen) {
+    const e = new Error('event_closed'); e.code = 'EVENT_CLOSED'; throw e;
+  }
+  if (available < needed) {
+    const e = new Error('capacity_exceeded');
+    e.code = 'CAPACITY_EXCEEDED';
+    e.available = available;
+    e.needed = needed;
+    if (needed > 1) {
+      e.message = `Vagas insuficientes para seu grupo: ${available} disponível(is), ${needed} solicitada(s).`;
+    }
+    throw e;
+  }
+
   const { error } = await _SB.from('registrations').insert(grupo);
   if (error) throw error;
 }

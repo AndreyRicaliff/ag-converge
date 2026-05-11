@@ -215,6 +215,17 @@ tr:hover td{background:rgba(123,47,224,.04)}
     <div class="scard"><div class="sval" id="totVal">R$ 0</div><div class="slbl">Arrecadado (ACCP)</div></div>
     <div class="scard"><div class="sval" id="totMed">—</div><div class="slbl">Doação média</div></div>
   </div>
+  <!-- Controle de vagas -->
+  <div id="vagasAdmin" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Vagas — <span id="vaEvento" style="color:var(--purple-hi)">—</span></div>
+      <div style="height:8px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden">
+        <div id="vaBar" style="height:100%;border-radius:100px;background:var(--purple);width:0%;transition:width .5s"></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:5px"><span id="vaUsed">—</span> / <span id="vaCap">—</span> vagas · <span id="vaLivres" style="font-weight:700">—</span> livres</div>
+    </div>
+    <button id="btnToggleOpen" onclick="toggleEventOpen()" style="padding:8px 18px;border-radius:8px;font-size:.78rem;font-weight:700;font-family:inherit;border:none;cursor:pointer;transition:all .2s">—</button>
+  </div>
 
   <div class="toolbar">
     <input class="search" id="searchInput" type="text" placeholder="Buscar nome, e-mail ou empresa..." oninput="render()">
@@ -279,9 +290,56 @@ EVENTS.forEach(ev => {
   const b = document.createElement('button');
   b.className = 'etab' + (ev.id === activeEvent ? ' active' : '');
   b.textContent = ev.label;
-  b.onclick = () => { activeEvent = ev.id; tabsEl.querySelectorAll('.etab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); render(); };
+  b.onclick = () => { activeEvent = ev.id; tabsEl.querySelectorAll('.etab').forEach(t=>t.classList.remove('active')); b.classList.add('active'); render(); refreshVagas(); };
   tabsEl.appendChild(b);
 });
+
+// ── CONTROLE DE VAGAS ──
+let _eventOpen = true;
+
+async function refreshVagas() {
+  const { data } = await _SB.rpc('count_registrations', { p_evento_id: activeEvent });
+  const row = data?.[0] ?? {};
+  const used = Number(row.total ?? 0);
+  const cap  = Number(row.capacity ?? 0);
+  const free = Math.max(0, cap - used);
+  const pct  = cap > 0 ? Math.min(100, Math.round(used / cap * 100)) : 0;
+  _eventOpen = row.open !== false;
+
+  document.getElementById('vaEvento').textContent = activeEvent;
+  document.getElementById('vaUsed').textContent   = used;
+  document.getElementById('vaCap').textContent    = cap;
+  document.getElementById('vaLivres').textContent = free + ' livre' + (free !== 1 ? 's' : '');
+  const bar = document.getElementById('vaBar');
+  bar.style.width      = pct + '%';
+  bar.style.background = free === 0 ? 'var(--red)' : pct >= 80 ? '#F5A623' : 'var(--purple)';
+
+  const btn = document.getElementById('btnToggleOpen');
+  if (_eventOpen) {
+    btn.textContent       = '🔒 Fechar inscrições';
+    btn.style.background  = 'rgba(255,92,92,.12)';
+    btn.style.color       = 'var(--red)';
+    btn.style.border      = '1px solid rgba(255,92,92,.3)';
+  } else {
+    btn.textContent       = '🔓 Reabrir inscrições';
+    btn.style.background  = 'rgba(8,193,106,.12)';
+    btn.style.color       = 'var(--green)';
+    btn.style.border      = '1px solid rgba(8,193,106,.3)';
+  }
+}
+
+async function toggleEventOpen() {
+  const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
+  const btn = document.getElementById('btnToggleOpen');
+  btn.disabled = true;
+  const newOpen = !_eventOpen;
+  const { error } = await _SB.rpc('set_event_open', {
+    p_evento_id: activeEvent, p_open: newOpen, p_pwd_hash: h
+  });
+  btn.disabled = false;
+  if (error) { alert('Erro ao alterar status: ' + error.message); return; }
+  await refreshVagas();
+}
 
 async function getLeads() {
   const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
@@ -386,7 +444,8 @@ function hideClear() { document.getElementById('clearOverlay').classList.remove(
 function clearAll() { hideClear(); render(); } // dados ficam no Supabase
 
 render();
-setInterval(render, 15000);
+refreshVagas();
+setInterval(() => { render(); refreshVagas(); }, 15000);
 
 // ── AUTH GATE ──
 const ADMIN_PWD_HASH = '61681c268936f5241e321e2bdacd6748849b9dab35cab8397fb77d0ebe2d2414';
