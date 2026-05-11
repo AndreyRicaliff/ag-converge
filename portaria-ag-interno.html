@@ -463,6 +463,19 @@ function fmtTime(iso) {
   return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
+function maskEmail(e) {
+  if (!e) return null;
+  const [u, d] = e.split('@');
+  if (!d) return null;
+  return u[0] + '***@' + d;
+}
+
+function maskTel(t) {
+  if (!t) return null;
+  const d = t.replace(/\D/g,'');
+  return d.length >= 4 ? '****-' + d.slice(-4) : null;
+}
+
 async function doNomeLookup() {
   const q = document.getElementById('scanInput').value.trim();
   if (q.length < 2) return;
@@ -499,6 +512,7 @@ async function doNomeLookup() {
               <span class="rc-badge badge-green">${esc(p.ingresso_id)}</span>
               ${p.entrada_at ? `<span class="rc-badge badge-orange">Entrou às ${fmtTime(p.entrada_at)}</span>` : '<span class="rc-badge badge-green">Não entrou</span>'}
             </div>
+            ${(maskEmail(p.email)||maskTel(p.tel)) ? `<div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.02em">Confirmar: ${[maskEmail(p.email), maskTel(p.tel)].filter(Boolean).join(' · ')}</div>` : ''}
           </div>
         </div>
       </div>`).join('')}
@@ -522,6 +536,7 @@ function selectFromNome(idx) {
             <div class="rc-nome">${esc(p.nome)}</div>
             <div class="rc-empresa">${esc(p.empresa||'—')}</div>
             <div class="rc-badges"><span class="rc-badge badge-orange">Já entrou às ${fmtTime(p.entrada_at)}</span></div>
+            ${(maskEmail(p.email)||maskTel(p.tel)) ? `<div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.02em">Confirmar: ${[maskEmail(p.email), maskTel(p.tel)].filter(Boolean).join(' · ')}</div>` : ''}
           </div>
         </div>
         <div class="rc-actions"><button class="btn-cancelar" onclick="clearInput()">Fechar</button></div>
@@ -540,6 +555,7 @@ function selectFromNome(idx) {
             <span class="rc-badge badge-green">Inscrito</span>
             ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : '<span class="rc-badge badge-muted">Sem doação</span>'}
           </div>
+          ${(maskEmail(p.email)||maskTel(p.tel)) ? `<div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.02em">Confirmar: ${[maskEmail(p.email), maskTel(p.tel)].filter(Boolean).join(' · ')}</div>` : ''}
         </div>
       </div>
       <div class="rc-meta">
@@ -635,6 +651,7 @@ async function doScan() {
               <span class="rc-badge badge-orange">Já entrou às ${fmtTime(p.entrada_at)}</span>
               ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : ''}
             </div>
+            ${(maskEmail(p.email)||maskTel(p.tel)) ? `<div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.02em">Confirmar: ${[maskEmail(p.email), maskTel(p.tel)].filter(Boolean).join(' · ')}</div>` : ''}
           </div>
         </div>
         <div class="rc-actions">
@@ -658,6 +675,7 @@ async function doScan() {
             ${!p.titular ? `<span class="rc-badge badge-purple">Convidado${p.titular_nome?' de '+esc(p.titular_nome.split(' ')[0]):''}</span>` : ''}
             ${p.doacao>0 ? `<span class="rc-badge badge-purple">Doou R$ ${(+p.doacao).toFixed(2).replace('.',',')}</span>` : '<span class="rc-badge badge-muted">Sem doação</span>'}
           </div>
+          ${(maskEmail(p.email)||maskTel(p.tel)) ? `<div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.02em">Confirmar: ${[maskEmail(p.email), maskTel(p.tel)].filter(Boolean).join(' · ')}</div>` : ''}
         </div>
       </div>
       <div class="rc-meta">

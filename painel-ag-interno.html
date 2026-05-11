@@ -481,10 +481,16 @@ function renderFiltered() {
 async function exportCSV() {
   const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para exportar.'); return; }
-  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Tipo_Contribuicao','Grupo_ID','Titular','Ingresso_ID','PDF_Baixado','Portaria_Entrada','Titular_Nome','Data_Inscricao'];
-  const rows_data = leads.map(l => {
+  const hdr = ['Nome','E-mail','WhatsApp','Empresa','Cargo','Origem','Doacao_R$','Tipo_Contribuicao','Grupo_ID','Papel','Ingresso_ID','PDF_Baixado','Portaria_Entrada','Titular_Nome','Data_Inscricao'];
+  const sorted = [...leads].sort((a,b) => {
+    const g = (a.grupo_id||'').localeCompare(b.grupo_id||'');
+    if (g !== 0) return g;
+    return (b.titular ? 1 : 0) - (a.titular ? 1 : 0);
+  });
+  const rows_data = sorted.map(l => {
     const tipo = l.doacao > 0 ? 'Pix' : (l.doacao_confirmada ? 'Cesta' : 'Nenhuma');
-    return [l.nome,l.email,l.tel,l.empresa,l.cargo,l.origem,l.doacao||0,tipo,l.grupo_id,l.titular,l.ingresso_id,l.ingresso_baixado,l.entrada_at||'',l.titular_nome||'',l.inscricao_at].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';');
+    const papel = l.titular === false ? 'Convidado' : 'Titular';
+    return [l.nome,l.email,l.tel,l.empresa,l.cargo,l.origem,l.doacao||0,tipo,l.grupo_id,papel,l.ingresso_id,l.ingresso_baixado,l.entrada_at||'',l.titular_nome||'',l.inscricao_at].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';');
   });
   const rows = [hdr.join(';'), ...rows_data];
   const blob = new Blob(['﻿'+rows.join('\n')], {type:'text/csv;charset=utf-8'});
@@ -509,18 +515,29 @@ async function exportJSON() {
 async function printChecklist() {
   const leads = await getLeads();
   if (!leads.length) { alert('Nenhum lead para imprimir.'); return; }
-  const sorted  = [...leads].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+  const sorted  = [...leads].sort((a,b) => {
+    const g = (a.grupo_id||'').localeCompare(b.grupo_id||'');
+    if (g !== 0) return g;
+    const t = (b.titular ? 1 : 0) - (a.titular ? 1 : 0);
+    if (t !== 0) return t;
+    return a.nome.localeCompare(b.nome,'pt');
+  });
   const ev      = EVENTS.find(e=>e.id===activeEvent)?.label || activeEvent;
   const total   = sorted.length;
-  const rows    = sorted.map((l,i) => `
-    <tr>
+  const rows    = sorted.map((l,i) => {
+    const isGuest = l.titular === false;
+    const papel = isGuest ? 'Convidado' : 'Titular';
+    return `
+    <tr style="${isGuest?'background:#faf6ff':''}">
       <td style="width:28px;text-align:center">${i+1}</td>
       <td style="width:24px;text-align:center"><input type="checkbox" ${l.entrada_at?'checked':''}></td>
-      <td><strong>${esc(l.nome)}</strong>${l.titular===false?` <em style="font-size:.8em;color:#666">(convidado${l.titular_nome?' de '+l.titular_nome:''})</em>`:''}</td>
+      <td style="font-size:.75em">${papel}</td>
+      <td><strong>${esc(l.nome)}</strong>${isGuest?`<br><span style="font-size:.8em;color:#666">de ${esc(l.titular_nome||'')}</span>`:''}</td>
       <td>${esc(l.empresa||'—')}</td>
       <td style="font-size:.75em;color:#666">${l.doacao>0?`PIX R$ ${(+l.doacao).toFixed(2)}`:(l.doacao_confirmada?'🧺 Cesta':'—')}</td>
       <td style="font-size:.75em;color:#666">${esc(l.ingresso_id)}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
     <title>Lista de presença — ${esc(ev)}</title>
@@ -538,7 +555,7 @@ async function printChecklist() {
     <h1>Lista de presença — ${esc(ev)}</h1>
     <p>Gerado em ${new Date().toLocaleString('pt-BR')} · ${total} participante(s)</p>
     <table>
-      <thead><tr><th>#</th><th>✓</th><th>Nome</th><th>Empresa</th><th>Contribuição</th><th>Comanda</th></tr></thead>
+      <thead><tr><th>#</th><th>✓</th><th>Papel</th><th>Nome</th><th>Empresa</th><th>Contribuição</th><th>Comanda</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
     <p style="margin-top:20px;text-align:center;color:#ccc;font-size:8pt">AG Converge · AG Consultoria</p>
