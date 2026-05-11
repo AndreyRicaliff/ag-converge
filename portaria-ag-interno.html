@@ -252,8 +252,11 @@ header{
     </div>
   </div>
   <div class="h-counter">
-    <span class="h-count-n" id="cntEntraram">—</span>
-    <span class="h-count-l">/ <span id="cntTotal">—</span> entraram</span>
+    <div style="display:flex;flex-direction:column;align-items:center;line-height:1.1">
+      <span style="font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(8,193,106,.6);margin-bottom:1px">Entradas</span>
+      <span class="h-count-n" id="cntEntraram">—</span>
+    </div>
+    <span class="h-count-l" style="font-size:.7rem">/ <span id="cntTotal">—</span> inscritos</span>
   </div>
 </header>
 
@@ -427,6 +430,7 @@ async function doScan() {
 
   // Já entrou?
   if (p.entrada_at) {
+    playBeep('warn');
     inp.classList.add('already');
     resultArea.innerHTML = `
       <div class="result-card status-already">
@@ -489,10 +493,13 @@ async function confirmarEntrada() {
   });
 
   if (error) {
+    playBeep('warn');
     document.getElementById('resultArea').innerHTML = `
       <div class="flash err">❌ Erro ao registrar. Tente novamente.</div>`;
     return;
   }
+
+  playBeep('ok');
 
   // Adiciona ao histórico da sessão
   recentEntries.unshift({
@@ -530,6 +537,30 @@ function renderRecent() {
       <div class="ri-time">${esc(r.time)}</div>
     </div>
   `).join('');
+}
+
+// ── FEEDBACK SONORO + HÁPTICO ────────────────────────────
+function playBeep(type) {
+  try {
+    const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if (type === 'ok') {
+      osc.frequency.value = 1046; // C6 — tom de sucesso
+      gain.gain.setValueAtTime(0.22, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.28);
+      osc.start(); osc.stop(ctx.currentTime + 0.28);
+      navigator.vibrate?.([90]);
+    } else {
+      osc.type = 'square';
+      osc.frequency.value = 380;
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+      osc.start(); osc.stop(ctx.currentTime + 0.45);
+      navigator.vibrate?.([180, 80, 180]);
+    }
+  } catch(e) {}
 }
 
 // Foca automaticamente no input ao carregar após auth

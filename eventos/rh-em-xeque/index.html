@@ -1130,8 +1130,8 @@ footer{
         </div>
       </div>
       <div class="reg-perks">
-        <div class="reg-perk"><span class="reg-perk-dot"></span> Ingresso digital com QR Code</div>
-        <div class="reg-perk"><span class="reg-perk-dot"></span> Confirmação por e-mail</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Ingresso digital com QR Code imediato</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Download do ingresso em PDF</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Entrada 100% gratuita</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Coffee e networking inclusos</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Certificado digital ao final</div>
@@ -1259,7 +1259,7 @@ footer{
       <!-- PASSO 3: Contribuição voluntária (beneficente) -->
       <div class="step-body" id="step3">
         <div class="dona-head">Contribuição voluntária</div>
-        <div class="dona-sub">Sua participação é <strong>gratuita</strong> — o valor é 100% de sua escolha. Sugerimos <strong style="color:var(--purple-lo)">R$ 60</strong> por participante, mas qualquer valor ajuda a ACCP a apoiar <strong>famílias vulneráveis</strong> na Paraíba.</div>
+        <div class="dona-sub">Sua participação é <strong>gratuita</strong> e sua vaga está garantida ao clicar em confirmar. Sugerimos <strong style="color:var(--purple-lo)">R$ 60</strong> de contribuição voluntária para a ACCP — qualquer valor ajuda as <strong>famílias vulneráveis</strong> na Paraíba. Prefere não contribuir? Clique em "Participar sem contribuir" abaixo.</div>
         <div class="dona-charity-box">
           <div class="dcb-icon">❤️</div>
           <div>
@@ -1269,7 +1269,7 @@ footer{
         </div>
         <div class="dona-suggestions" id="donaChips">
           <button type="button" class="dona-chip" onclick="selectChip(this,'20')">R$ 20</button>
-          <button type="button" class="dona-chip selected" onclick="selectChip(this,'60')">R$ 60</button>
+          <button type="button" class="dona-chip" onclick="selectChip(this,'60')">R$ 60</button>
           <button type="button" class="dona-chip" onclick="selectChip(this,'100')">R$ 100</button>
           <button type="button" class="dona-chip" onclick="selectChip(this,'outro')">Outro valor</button>
           <button type="button" class="dona-chip dona-chip-cesta" onclick="selectChip(this,'cesta')">🧺 Cesta básica</button>
@@ -1282,13 +1282,13 @@ footer{
           </div>
         </div>
         <!-- Pix QR -->
-        <div id="pixSection" style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;text-align:center">
+        <div id="pixSection" style="display:none;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;text-align:center">
           <div style="font-size:.68rem;font-weight:700;color:var(--purple-lo);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Pagamento via Pix</div>
           <div id="pixQrWrap" style="display:flex;justify-content:center;margin-bottom:10px"></div>
           <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Valor: <strong id="pixValorLabel" style="color:var(--purple-lo)">R$ 60,00</strong></div>
           <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;word-break:break-all;padding:0 8px;opacity:.7">AGBR TECNOLOGIA LTDA · Cora</div>
-          <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s">Copiar chave Pix</button>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou copie a chave no seu banco.<br>Após pagar, clique em confirmar abaixo.</div>
+          <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s">Copiar código Pix</button>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou cole o código no app do seu banco (Pix copia e cola).<br>Após pagar, clique em confirmar abaixo.</div>
         </div>
         <!-- Cesta básica section -->
         <div id="cestaSection" style="display:none;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.28);border-radius:12px;padding:18px;margin-bottom:16px">
@@ -1311,6 +1311,11 @@ footer{
           <div class="ingresso-ok-ico">✓</div>
           <div class="ingresso-title" id="ingressoTitle">Inscrição confirmada!</div>
           <div class="ingresso-sub" id="ingressoSub">Baixe o PDF com o(s) seu(s) ingresso(s)</div>
+          <div style="background:rgba(123,47,224,.08);border:1px solid rgba(123,47,224,.22);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:.75rem;color:rgba(248,246,255,.65);line-height:1.55;text-align:left">
+            <div style="font-weight:700;color:var(--purple-lo);margin-bottom:5px">📍 No dia do evento</div>
+            Auditório Slavieiro · Heron Marinho · Campina Grande — <strong style="color:var(--white)">14/05 às 18h</strong><br>
+            Apresente o QR code abaixo (ou informe seu nome) na portaria.
+          </div>
           <div class="ingressos-stack" id="ingressosStack"></div>
           <div class="ingresso-actions">
             <button type="button" class="btn-print" onclick="baixarPDF()">⬇ Baixar ingressos (PDF)</button>
@@ -1343,7 +1348,7 @@ footer{
     </div>
     <div class="faq-item">
       <div class="faq-q">Como recebo o ingresso? <span class="arr">▼</span></div>
-      <div class="faq-a">Você receberá um e-mail de confirmação com QR Code em até 1h após a inscrição. Apresente o QR no credenciamento no dia 14 de maio.</div>
+      <div class="faq-a">Seu ingresso com QR Code aparece nesta página imediatamente após a confirmação. Baixe o PDF pelo botão "Baixar ingressos" ou salve o QR na tela — apresente na portaria no dia 14 de maio. Também é possível recuperar o ingresso a qualquer momento pelo botão "Já garantiu seu ingresso? Consultar →".</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Posso levar colegas? <span class="arr">▼</span></div>
@@ -1547,7 +1552,7 @@ async function capacityOkToRegister() {
 // ════════════════════════════════════════════════════════
 let grupo      = [];
 let grupoId    = '';
-let selectedDoa = 60;
+let selectedDoa = null;
 
 // ════════════════════════════════════════════════════════
 // UTILITÁRIOS
@@ -1812,8 +1817,8 @@ function selectChip(el, val) {
       document.getElementById('customVal').focus();
     } else {
       customWrap.style.display = 'none'; selectedDoa = parseFloat(val);
-      updateDoaBtn();
     }
+    updateDoaBtn();
   }
 }
 
@@ -1821,7 +1826,8 @@ function updateDoaBtn() {
   const v = selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
   const btn = document.getElementById('btnConfirmar');
   if (btn) btn.textContent = v > 0 ? `Confirmar + contribuir R$ ${v.toFixed(2).replace('.',',')} →` : 'Confirmar inscrição →';
-  renderPixQR(v);
+  const pix = document.getElementById('pixSection');
+  if (pix && pix.style.display !== 'none') renderPixQR(v);
 }
 
 function getDonationValue() {
@@ -2221,12 +2227,15 @@ function renderPixQR(valor) {
 }
 
 function copyPixKey() {
-  const chave = EVENT_CFG.pix?.chave || '';
-  navigator.clipboard.writeText(chave).then(() => {
+  const cfg = EVENT_CFG.pix;
+  if (!cfg) return;
+  const v       = getDonationValue() || 0;
+  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, v);
+  navigator.clipboard.writeText(payload).then(() => {
     const btn = document.getElementById('btnCopyPix');
-    if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(()=>btn.textContent='Copiar chave Pix',2500); }
+    if (btn) { btn.textContent = '✓ Código copiado!'; setTimeout(()=>btn.textContent='Copiar código Pix',2500); }
   }).catch(() => {
-    prompt('Copie a chave Pix:', chave);
+    prompt('Copie o código Pix (copia e cola):', payload);
   });
 }
 
