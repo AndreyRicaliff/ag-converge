@@ -371,9 +371,10 @@ async function refreshVagas() {
 
 async function toggleEventOpen() {
   const h = sessionStorage.getItem(ADMIN_HASH_KEY) || '';
+  const newOpen = !_eventOpen;
+  if (!newOpen && !confirm(`Fechar inscrições para "${activeEvent}"?\nO site público vai mostrar "Vagas esgotadas" imediatamente.`)) return;
   const btn = document.getElementById('btnToggleOpen');
   btn.disabled = true;
-  const newOpen = !_eventOpen;
   const { error } = await _SB.rpc('set_event_open', {
     p_evento_id: activeEvent, p_open: newOpen, p_pwd_hash: h
   });
