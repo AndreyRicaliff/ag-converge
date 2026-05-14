@@ -697,7 +697,7 @@ async function confirmarEntrada() {
   const btn = document.getElementById('btnConfirmar');
   if (btn) { btn.disabled = true; btn.textContent = 'Registrando...'; }
 
-  const { error } = await _SB.rpc('mark_entrada', {
+  const { data: confirmado, error } = await _SB.rpc('mark_entrada', {
     p_ingresso_id: currentPerson.ingresso_id,
     p_pwd_hash: pwdHash
   });
@@ -706,6 +706,16 @@ async function confirmarEntrada() {
     playBeep('warn');
     document.getElementById('resultArea').innerHTML = `
       <div class="flash err">❌ Erro ao registrar. Tente novamente.</div>`;
+    return;
+  }
+
+  if (!confirmado) {
+    playBeep('warn');
+    document.getElementById('resultArea').innerHTML = `
+      <div class="flash warn">⚠️ Entrada já confirmada por outro terminal.</div>`;
+    refreshCounter();
+    currentPerson = null;
+    setTimeout(() => { clearInput(); document.getElementById('resultArea').innerHTML = ''; }, 2500);
     return;
   }
 

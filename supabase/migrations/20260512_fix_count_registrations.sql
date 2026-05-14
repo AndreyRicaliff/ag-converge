@@ -1,10 +1,8 @@
 -- AG Converge — fix count_registrations
 --
--- Bug anterior: count_registrations fazia LEFT JOIN a partir de event_config.
--- Se o evento não tivesse linha em event_config a query retornava vazio,
--- e todo o grupo (titular + convidados) ficava com total = 0 na barra de vagas.
---
--- Fix: conta registrations diretamente, join event_config apenas para capacity/open.
+-- Bug: RETURNS TABLE declara saída chamada "capacity", criando ambiguidade
+-- com a coluna event_config.capacity no SELECT interno (mesmo em PLPGSQL).
+-- Fix: qualificar com alias de tabela (ec.capacity, ec.open).
 
 DROP FUNCTION IF EXISTS count_registrations(TEXT);
 CREATE OR REPLACE FUNCTION count_registrations(p_evento_id TEXT)
@@ -19,9 +17,9 @@ BEGIN
   FROM registrations
   WHERE evento_id = p_evento_id;
 
-  SELECT capacity, open INTO v_capacity, v_open
-  FROM event_config
-  WHERE evento_id = p_evento_id;
+  SELECT ec.capacity, ec.open INTO v_capacity, v_open
+  FROM event_config ec
+  WHERE ec.evento_id = p_evento_id;
 
   RETURN QUERY SELECT
     v_total,

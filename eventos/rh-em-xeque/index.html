@@ -7,7 +7,7 @@
 <meta name="description" content="NR-1 já é lei. A escala 5x2 está chegando. Sua empresa está preparada? 14 de maio, 18h às 21h30 — Auditório Slavieiro, Heron Marinho · Campina Grande.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="RH em Xeque — AG Consultoria">
-<meta property="og:description" content="NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? 14 de maio, 18h–21h30 · Auditório Slavieiro, Campina Grande. Entrada gratuita — doação voluntária para a ACCP.">
+<meta property="og:description" content="NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? 14 de maio, 18h–21h30 · Auditório Slavieiro, Campina Grande. Entrada com contribuição para a ACCP.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RH em Xeque — AG Consultoria">
 <meta name="twitter:description" content="NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? 14 de maio, 18h–21h30 · Auditório Slavieiro, Campina Grande.">
@@ -17,7 +17,7 @@
   "@context": "https://schema.org",
   "@type": "Event",
   "name": "RH em Xeque",
-  "description": "NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? Evento para líderes e profissionais de RH em Campina Grande — entrada gratuita, doação voluntária para a ACCP.",
+  "description": "NR-1 já é lei. A escala 5×2 está chegando. Sua empresa está preparada? Evento para líderes e profissionais de RH em Campina Grande — entrada com contribuição para a ACCP.",
   "startDate": "2026-05-14T18:00:00-03:00",
   "endDate": "2026-05-14T21:30:00-03:00",
   "eventStatus": "https://schema.org/EventScheduled",
@@ -820,6 +820,51 @@ footer{
   color:var(--purple-hi);margin-top:-2px;
 }
 .dona-chip-cesta{border-color:rgba(245,166,35,.35)!important;color:#F5A623!important}
+/* PIX externo */
+.pix-externo{
+  max-width:980px;margin:40px auto 0;
+  background:linear-gradient(135deg,rgba(123,47,224,.13) 0%,rgba(123,47,224,.04) 100%);
+  border:1px solid rgba(123,47,224,.3);border-radius:20px;
+  padding:36px 40px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.pix-externo::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple-hi),#a855f7);
+}
+.pix-externo-label{
+  display:inline-flex;align-items:center;
+  background:rgba(123,47,224,.14);border:1px solid rgba(123,47,224,.3);
+  color:var(--purple-hi);font-size:.63rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:14px;
+}
+.pix-externo h3{font-size:1.15rem;font-weight:800;color:var(--white);margin-bottom:10px}
+.pix-externo p{font-size:.85rem;color:rgba(248,246,255,.65);line-height:1.7;margin-bottom:20px}
+.pix-key-box{
+  background:rgba(255,255,255,.04);border:1px solid rgba(123,47,224,.22);
+  border-radius:10px;padding:11px 16px;
+  font-size:.72rem;font-family:monospace;color:rgba(248,246,255,.75);
+  word-break:break-all;margin-bottom:10px;line-height:1.5;
+}
+.pix-copy-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--purple-hi);color:#fff;border:none;border-radius:10px;
+  padding:9px 18px;font-size:.8rem;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:opacity .2s;
+}
+.pix-copy-btn:hover{opacity:.85}
+.pix-copy-ok{font-size:.78rem;color:#4ade80;margin-left:10px;display:none}
+.pix-externo-qr{
+  display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0;
+}
+.pix-externo-qr canvas,.pix-externo-qr img{
+  background:#fff;border-radius:14px;padding:10px;border:1px solid rgba(123,47,224,.2);
+}
+.pix-externo-qr span{font-size:.7rem;color:rgba(248,246,255,.45);text-align:center}
+@media(max-width:640px){
+  .pix-externo{grid-template-columns:1fr;gap:28px;padding:24px 20px}
+  .pix-externo-qr{order:-1}
+}
 .dona-chip-cesta.selected{background:rgba(245,166,35,.18)!important;border-color:#F5A623!important;color:#F5A623!important}
 
 /* ── COUNTDOWN ── */
@@ -1039,18 +1084,13 @@ footer{
           <div class="badge-icon">❤️</div>
           <div class="badge-text">
             <strong>Evento beneficente</strong>
-            <span>Entrada gratuita — doação voluntária para a ACCP</span>
+            <span>Entrada com contribuição para a ACCP</span>
           </div>
         </div>
       </div>
     </div>
-    <div class="sobre-palestrantes">
-      <div class="sobre-img">
-        <img src="../../assets/images/rh-web.jpg" alt="Regina Leite — Palestrante">
-      </div>
-      <div class="sobre-img">
-        <img src="../../assets/images/ricardo-moraes-palestrante.jpg" alt="Ricardo Moraes — Protagon Engenharia">
-      </div>
+    <div class="sobre-img" style="max-width:360px;aspect-ratio:9/16">
+      <img src="../../assets/images/rh-web.jpg" alt="RH em Xeque — pôster do evento" style="object-position:center top">
     </div>
   </div>
 </section>
@@ -1059,7 +1099,7 @@ footer{
 <div class="strip">
   <div class="strip-inner">
     <div><div class="strip-num">1 noite</div><div class="strip-lbl">Conteúdo intenso</div></div>
-    <div><div class="strip-num">100%</div><div class="strip-lbl">Gratuito</div></div>
+    <div><div class="strip-num">ACCP</div><div class="strip-lbl">Beneficiada</div></div>
     <div><div class="strip-num">+RH</div><div class="strip-lbl">Líderes esperados</div></div>
   </div>
 </div>
@@ -1081,14 +1121,29 @@ footer{
       <span class="midia-video-label">▶ Vídeo de divulgação</span>
     </div>
 
-    <!-- Foto 1 — pôster com palestrante -->
-    <div class="midia-foto" style="aspect-ratio:9/16;max-height:420px" onclick="openLightbox('../../assets/images/rh-web.jpg')">
-      <img src="../../assets/images/rh-web.jpg" alt="RH em Xeque — palestrante">
-    </div>
-
-    <!-- Foto 2 — palestrante Ricardo Moraes -->
+    <!-- Palestrante Ricardo Moraes -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/ricardo-moraes-palestrante.jpg')">
       <img src="../../assets/images/ricardo-moraes-palestrante.jpg" alt="Ricardo Moraes — Palestrante Protagon Engenharia">
+    </div>
+
+    <!-- Palestrante Francisco Cid -->
+    <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/francisco-cid-palestrante.jpg')">
+      <img src="../../assets/images/palestrantes/francisco-cid-palestrante.jpg" alt="Francisco Cid — Palestrante AG Consultoria">
+    </div>
+
+    <!-- Palestrante Matheus Ferreira -->
+    <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg')">
+      <img src="../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg" alt="Matheus Ferreira — Palestrante AG Consultoria">
+    </div>
+
+    <!-- Palestrante Alisson Galdino -->
+    <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/alisson-galdino-palestrante.jpg')">
+      <img src="../../assets/images/palestrantes/alisson-galdino-palestrante.jpg" alt="Alisson Galdino — Palestrante AG Consultoria">
+    </div>
+
+    <!-- Palestrante Regina Leite -->
+    <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/regina-leite-palestrante.jpg')">
+      <img src="../../assets/images/palestrantes/regina-leite-palestrante.jpg" alt="Regina Leite — Palestrante AG Consultoria">
     </div>
   </div>
 </section>
@@ -1105,7 +1160,7 @@ footer{
     <div style="text-align:center;margin-bottom:48px">
       <span class="sec-label">Evento beneficente</span>
       <h2 class="sec-title">Além do debate, uma causa real</h2>
-      <p class="sec-desc" style="margin:0 auto">O evento é gratuito. A sua presença já é suficiente — mas se quiser ir além, cada contribuição voluntária chega inteira à ACCP.</p>
+      <p class="sec-desc" style="margin:0 auto">A entrada neste evento requer uma contribuição para a ACCP. Cada real ou cesta básica chega inteiro às famílias atendidas.</p>
     </div>
 
     <!-- Contexto das enchentes + fotos -->
@@ -1145,7 +1200,7 @@ footer{
           A ACCP atua no apoio a famílias em situação de vulnerabilidade na Paraíba — distribuindo alimentos, itens de higiene e suporte nas comunidades afetadas. Toda doação feita na inscrição vai integralmente para eles, sem intermediários.
         </p>
         <p style="text-align:left;margin-top:8px">
-          Participação gratuita. Doação totalmente voluntária. Sem valor mínimo.
+          Contribuição obrigatória para a ACCP: R$ 60, R$ 120 ou R$ 180 via Pix — ou cesta básica na AG Consultoria até 14/05 às 13h.
         </p>
       </div>
 
@@ -1158,7 +1213,7 @@ footer{
           Prefere contribuir em alimentos? Traga uma cesta básica até 14/05 na Rua João Quirino, 1026 (AG Consultoria) ou no dia do evento — ela vai direto para as famílias atendidas pela ACCP.
         </p>
         <p>
-          Aceitamos cestas completas ou itens avulsos: arroz, feijão, óleo, macarrão, sal, açúcar, leite em pó.
+          Aceitamos cestas básicas completas.
         </p>
         <div class="cesta-prazo">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1168,6 +1223,29 @@ footer{
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Entrega até 14 de maio — dia do evento
         </div>
+      </div>
+    </div>
+
+    <!-- PIX externo — contribuição sem inscrição -->
+    <div class="pix-externo" id="pixExterno">
+      <div>
+        <div class="pix-externo-label">Doe sem se inscrever</div>
+        <h3>Contribuição direta para a ACCP</h3>
+        <p>Não vai ao evento mas quer apoiar as famílias atendidas pela ACCP? Faça sua doação via Pix — qualquer valor é bem-vindo e vai inteiro para a causa.</p>
+        <div style="font-size:.72rem;color:rgba(248,246,255,.45);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Chave PIX (UUID)</div>
+        <div class="pix-key-box" id="pixExternoKeyDisplay">5db69cba-ecfd-4c6b-b718-eaca7113aeb5</div>
+        <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
+          <button class="pix-copy-btn" onclick="copiarPixExterno()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar código Pix
+          </button>
+          <span class="pix-copy-ok" id="pixExternoCopied">✓ Copiado!</span>
+        </div>
+        <div style="font-size:.7rem;color:rgba(248,246,255,.35);margin-top:12px">Beneficiário: AGBR TECNOLOGIA LTDA · Valor: livre</div>
+      </div>
+      <div class="pix-externo-qr">
+        <div id="pixExternoQr"></div>
+        <span>Escaneie com qualquer app bancário<br>e insira o valor que desejar</span>
       </div>
     </div>
 
@@ -1209,7 +1287,7 @@ footer{
 
     <!-- Coluna info -->
     <div class="reg-info">
-      <span class="sec-label">Inscrição gratuita</span>
+      <span class="sec-label">Inscrição</span>
       <h2 class="sec-title">Reserve sua vaga</h2>
       <p class="sec-desc">Vagas limitadas ao auditório. Seu ingresso digital aparece aqui mesmo após confirmar.</p>
       <div id="vagasBar" style="margin-bottom:20px;display:none">
@@ -1224,7 +1302,7 @@ footer{
       <div class="reg-perks">
         <div class="reg-perk"><span class="reg-perk-dot"></span> Ingresso digital com QR Code imediato</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Download do ingresso em PDF</div>
-        <div class="reg-perk"><span class="reg-perk-dot"></span> Entrada 100% gratuita</div>
+        <div class="reg-perk"><span class="reg-perk-dot"></span> Contribuição via Pix (R$ 60, 120 ou 180) ou cesta básica</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Coffee e networking inclusos</div>
         <div class="reg-perk"><span class="reg-perk-dot"></span> Certificado digital ao final</div>
       </div>
@@ -1232,8 +1310,17 @@ footer{
         <div class="rb-icon">❤️</div>
         <div>
           <div class="rb-title">Evento beneficente · ACCP</div>
-          <div class="rb-desc">Doação voluntária para famílias atingidas por famílias em vulnerabilidade na Paraíba. Qualquer valor na inscrição — ou traga uma <strong style="color:#F5A623">cesta básica até 14/05</strong>.</div>
+          <div class="rb-desc">Contribuição obrigatória para a ACCP: R$ 60, R$ 120, R$ 180 via Pix — ou cesta básica na AG Consultoria até <strong style="color:#F5A623">14/05 às 13h</strong>.</div>
         </div>
+      </div>
+
+      <!-- Doe sem se inscrever — minimalista -->
+      <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.025)">
+        <span style="font-size:.76rem;color:rgba(248,246,255,.4);line-height:1.4">Não vai ao evento?<br><strong style="color:rgba(248,246,255,.6);font-weight:600">Doe diretamente para a ACCP via Pix</strong></span>
+        <button onclick="copiarPixExterno()" style="flex-shrink:0;display:inline-flex;align-items:center;gap:6px;background:rgba(123,47,224,.18);border:1px solid rgba(123,47,224,.3);color:var(--purple-hi);border-radius:8px;padding:7px 13px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .2s" onmouseover="this.style.background='rgba(123,47,224,.28)'" onmouseout="this.style.background='rgba(123,47,224,.18)'">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copiar Pix
+        </button>
       </div>
     </div>
 
@@ -1337,7 +1424,7 @@ footer{
           </div>
           <div class="frow">
             <div class="fgrp">
-              <label for="g-tel">WhatsApp (opcional)</label>
+              <label for="g-tel">WhatsApp</label>
               <input type="tel" id="g-tel" placeholder="(83) 99999-9999">
               <div class="ferr" id="g-tel-e"></div>
             </div>
@@ -1359,10 +1446,10 @@ footer{
         <button type="button" class="btn-skip-dona" onclick="goToStep(3)">Só eu mesmo, continuar</button>
       </div>
 
-      <!-- PASSO 3: Contribuição voluntária (beneficente) -->
+      <!-- PASSO 3: Contribuição obrigatória (beneficente) -->
       <div class="step-body" id="step3">
-        <div class="dona-head">Contribuição voluntária</div>
-        <div class="dona-sub">Sua participação é <strong>gratuita</strong> e sua vaga está garantida ao clicar em confirmar. Sugerimos <strong style="color:var(--purple-lo)">R$ 60</strong> de contribuição voluntária para a ACCP — qualquer valor ajuda as <strong>famílias vulneráveis</strong> na Paraíba. Prefere não contribuir? Clique em "Participar sem contribuir" abaixo.</div>
+        <div class="dona-head">Contribuição obrigatória</div>
+        <div class="dona-sub">A entrada neste evento requer uma contribuição para a ACCP. Escolha o valor, pague via <strong>Pix</strong> e clique em confirmar — seu ingresso é gerado na hora. Prefere contribuir com alimentos? Escolha a cesta básica.</div>
         <div class="dona-charity-box">
           <div class="dcb-icon">❤️</div>
           <div>
@@ -1371,41 +1458,32 @@ footer{
           </div>
         </div>
         <div class="dona-suggestions" id="donaChips">
-          <button type="button" class="dona-chip" onclick="selectChip(this,'20')">R$ 20</button>
           <button type="button" class="dona-chip" onclick="selectChip(this,'60')">R$ 60</button>
-          <button type="button" class="dona-chip" onclick="selectChip(this,'100')">R$ 100</button>
-          <button type="button" class="dona-chip" onclick="selectChip(this,'outro')">Outro valor</button>
+          <button type="button" class="dona-chip" onclick="selectChip(this,'120')">R$ 120</button>
+          <button type="button" class="dona-chip" onclick="selectChip(this,'180')">R$ 180</button>
           <button type="button" class="dona-chip dona-chip-cesta" onclick="selectChip(this,'cesta')">🧺 Cesta básica</button>
-        </div>
-        <div class="fgrp dona-custom-wrap" id="customWrap" style="display:none">
-          <label for="customVal">Valor personalizado</label>
-          <div style="position:relative">
-            <span class="dona-prefix">R$</span>
-            <input type="number" id="customVal" placeholder="0,00" min="0" step="0.01" oninput="updateDoaBtn()">
-          </div>
         </div>
         <!-- Pix QR -->
         <div id="pixSection" style="display:none;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;text-align:center">
           <div style="font-size:.68rem;font-weight:700;color:var(--purple-lo);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Pagamento via Pix</div>
           <div id="pixQrWrap" style="display:flex;justify-content:center;margin-bottom:10px"></div>
           <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Valor: <strong id="pixValorLabel" style="color:var(--purple-lo)">R$ 60,00</strong></div>
-          <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;word-break:break-all;padding:0 8px;opacity:.7">AGBR TECNOLOGIA LTDA · Cora</div>
+          <div style="font-size:.66rem;color:var(--muted);margin-bottom:10px;word-break:break-all;padding:0 8px;opacity:.7">AGBR TECNOLOGIA LTDA · Campina Grande</div>
           <button id="btnCopyPix" type="button" onclick="copyPixKey()" style="background:rgba(123,47,224,.1);border:1px solid rgba(123,47,224,.3);color:var(--purple-lo);font-size:.75rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,sans-serif;transition:all .2s">Copiar código Pix</button>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou cole o código no app do seu banco (Pix copia e cola).<br>Após pagar, clique em confirmar abaixo.</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:8px;line-height:1.5">Escaneie o QR ou cole o código no app do seu banco.<br>Após pagar, clique em confirmar abaixo.</div>
         </div>
         <!-- Cesta básica section -->
         <div id="cestaSection" style="display:none;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.28);border-radius:12px;padding:18px;margin-bottom:16px">
           <div style="font-size:1.4rem;margin-bottom:8px">🧺</div>
           <div style="font-size:.8rem;font-weight:700;color:#F5A623;margin-bottom:6px">Você vai trazer uma cesta básica</div>
-          <div style="font-size:.75rem;color:rgba(248,246,255,.6);line-height:1.6">Leve ao evento no dia 14/05 — ela vai direto para a ACCP.<br>Aceitos: arroz, feijão, óleo, macarrão, sal, açúcar, leite em pó.</div>
+          <div style="font-size:.75rem;color:rgba(248,246,255,.6);line-height:1.6">Traga à <strong style="color:#F5A623">AG Consultoria</strong> até <strong style="color:#F5A623">14/05 às 13h</strong> — ela vai direto para a ACCP.</div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.75rem;font-weight:700;color:#F5A623">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Rua João Quirino, 1026 — AG Consultoria
+            Rua João Quirino, 1026 — AG Consultoria · até 14/05 às 13h
           </div>
         </div>
-        <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()">Confirmar + contribuir →</button>
+        <button type="button" class="btn-submit" id="btnConfirmar" onclick="confirmarInscricao()" style="display:none">Confirmar inscrição →</button>
         <button type="button" id="btnConfirmarCesta" style="display:none;background:linear-gradient(135deg,#c17f24,#F5A623)" class="btn-submit" onclick="confirmarComCesta()">Confirmar — trarei uma cesta básica →</button>
-        <button type="button" id="btnSemDoa" class="btn-skip-dona" onclick="confirmarSemDoa()">Participar sem contribuir</button>
       </div>
 
       <!-- PASSO 4: Ingressos do grupo -->
@@ -1428,7 +1506,7 @@ footer{
           <!-- Cesta reminder (shown only when grupo[0].doacao_confirmada && doacao===0) -->
           <div id="cestaReminder" style="display:none;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.28);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.76rem;color:rgba(248,246,255,.8);line-height:1.55;text-align:left">
             <div style="font-weight:700;color:#F5A623;margin-bottom:4px">🧺 Lembre-se da sua cesta!</div>
-            Você prometeu trazer uma cesta básica — leve no dia 14/05. Itens aceitos: arroz, feijão, óleo, macarrão, sal, açúcar ou leite em pó. Ela vai direto para a ACCP.
+            Você prometeu trazer uma cesta básica — entregue na <strong>AG Consultoria (Rua João Quirino, 1026) até 14/05 às 13h</strong>. Ela vai direto para a ACCP.
           </div>
           <!-- Compartilhamento pós-inscrição -->
           <div class="share-strip">
@@ -1466,8 +1544,8 @@ footer{
   </div>
   <div class="faq-list">
     <div class="faq-item">
-      <div class="faq-q">O evento é realmente gratuito? <span class="arr">▼</span></div>
-      <div class="faq-a">Sim, 100% gratuito. A doação para a ACCP é totalmente voluntária e aparece apenas como sugestão no momento da inscrição. Você pode pular sem nenhum problema.</div>
+      <div class="faq-q">Como funciona a contribuição obrigatória? <span class="arr">▼</span></div>
+      <div class="faq-a">A entrada neste evento requer uma contribuição para a ACCP. Os valores disponíveis são R$ 60, R$ 120 ou R$ 180 pagos via Pix — o QR Code e o código copia-e-cola aparecem na inscrição. Prefere alimentos? Escolha a opção de cesta básica e entregue na AG Consultoria (Rua João Quirino, 1026) até 14/05 às 13h. O ingresso é gerado imediatamente após confirmar.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q">Para onde vai minha doação? <span class="arr">▼</span></div>
@@ -1592,7 +1670,7 @@ footer{
 const EVENT_CFG = {
   slug:         'rh-em-xeque',
   label:        'RH em Xeque',
-  tipo:         'Beneficente · Gratuito',
+  tipo:         'Beneficente · Entrada com contribuição',
   data:         '14 mai 2026 · 18h–21h30',
   local:        'Aud. Slavieiro · Campina Grande',
   ticketPrefix: 'RHX',
@@ -1904,6 +1982,12 @@ async function addGuest() {
     email.classList.add('err'); document.getElementById('g-email-e').textContent='E-mail inválido'; ok=false;
   } else { email.classList.remove('err'); document.getElementById('g-email-e').textContent=''; }
 
+  const gTel = document.getElementById('g-tel');
+  const gTelE = document.getElementById('g-tel-e');
+  if (gTel.value.replace(/\D/g,'').length < 10) {
+    gTel.classList.add('err'); if(gTelE) gTelE.textContent='Informe o WhatsApp'; ok=false;
+  } else { gTel.classList.remove('err'); if(gTelE) gTelE.textContent=''; }
+
   if (!ok) return;
 
   // Verifica duplicata dentro do grupo atual (local, síncrona)
@@ -1967,43 +2051,33 @@ function removeGuest(idx) {
 function selectChip(el, val) {
   document.querySelectorAll('.dona-chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
-  const customWrap = document.getElementById('customWrap');
-  const pixSection = document.getElementById('pixSection');
+  const pixSection  = document.getElementById('pixSection');
   const cestaSection = document.getElementById('cestaSection');
   const btnConfirmar = document.getElementById('btnConfirmar');
-  const btnCesta = document.getElementById('btnConfirmarCesta');
+  const btnCesta    = document.getElementById('btnConfirmarCesta');
   if (val === 'cesta') {
-    customWrap.style.display = 'none';
-    pixSection.style.display = 'none';
+    pixSection.style.display   = 'none';
     cestaSection.style.display = 'block';
     btnConfirmar.style.display = 'none';
-    btnCesta.style.display = 'block';
+    btnCesta.style.display     = 'block';
     selectedDoa = null;
   } else {
     cestaSection.style.display = 'none';
-    pixSection.style.display = 'block';
+    pixSection.style.display   = 'block';
     btnConfirmar.style.display = 'block';
-    btnCesta.style.display = 'none';
-    if (val === 'outro') {
-      customWrap.style.display = 'block'; selectedDoa = null;
-      document.getElementById('customVal').focus();
-    } else {
-      customWrap.style.display = 'none'; selectedDoa = parseFloat(val);
-    }
-    updateDoaBtn();
+    btnCesta.style.display     = 'none';
+    selectedDoa = parseFloat(val);
+    renderPixQR(selectedDoa, grupo[0]?.ingresso_id);
   }
 }
 
 function updateDoaBtn() {
-  const v = selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
   const btn = document.getElementById('btnConfirmar');
-  if (btn) btn.textContent = v > 0 ? `Confirmar + contribuir R$ ${v.toFixed(2).replace('.',',')} →` : 'Confirmar inscrição →';
-  const pix = document.getElementById('pixSection');
-  if (pix && pix.style.display !== 'none') renderPixQR(v);
+  if (btn && selectedDoa > 0) btn.textContent = `Confirmar + pagar R$ ${selectedDoa.toFixed(2).replace('.',',')} →`;
 }
 
 function getDonationValue() {
-  return selectedDoa !== null ? selectedDoa : (parseFloat(document.getElementById('customVal')?.value)||0);
+  return selectedDoa !== null ? selectedDoa : 0;
 }
 
 async function confirmarInscricao() {
@@ -2127,13 +2201,8 @@ async function salvarGrupo() {
     throw e;
   }
 
-  const { data: saved, error } = await _SB.from('registrations').insert(grupo).select('ingresso_id');
+  const { error } = await _SB.from('registrations').insert(grupo);
   if (error) throw error;
-  if (saved && saved.length < grupo.length) {
-    const e = new Error(`partial_insert: ${saved.length}/${grupo.length} salvos`);
-    e.code = 'PARTIAL_INSERT';
-    throw e;
-  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -2163,14 +2232,10 @@ function mostrarIngressos() {
           <div class="ticket-val">${esc(EVENT_CFG.local)}</div>
         </div>
         <div class="ticket-row">
-          <div class="ticket-lbl">Entrada</div>
-          <div class="ticket-val green">Gratuita</div>
+          <div class="ticket-lbl">Contribuição</div>
+          <div class="ticket-val" style="color:${p.doacao>0?'var(--green)':'#F5A623'}">${p.doacao>0 ? `R$ ${(+p.doacao).toFixed(2).replace('.',',')} — ACCP` : '🧺 Cesta básica'}</div>
         </div>
-        ${p.doacao>0
-          ? `<div style="text-align:center;margin:10px 0 4px"><span style="font-size:.65rem;font-weight:700;color:#08A15A;background:rgba(8,193,106,.1);border-radius:100px;padding:4px 12px">♥ Doação PIX: R$ ${(+p.doacao).toFixed(2).replace('.',',')} · ACCP</span></div>`
-          : p.doacao_confirmada
-          ? `<div style="text-align:center;margin:10px 0 4px"><span style="font-size:.65rem;font-weight:700;color:#c17f24;background:rgba(245,166,35,.1);border-radius:100px;padding:4px 12px">🧺 Cesta básica prometida</span></div>`
-          : ''}
+        ${p.doacao>0 ? `<div style="text-align:center;margin:6px 0 4px"><span style="font-size:.62rem;color:rgba(8,193,106,.5);line-height:1.4">♥ Pix · ACCP</span></div>` : `<div style="text-align:center;margin:6px 0 4px"><span style="font-size:.62rem;color:rgba(245,166,35,.6);line-height:1.4">Entregar cesta na AG Consultoria · até 14/05 às 13h</span></div>`}
         <div class="ticket-qr-wrap" id="qr-${esc(p.ingresso_id)}"></div>
         <div class="ticket-id-label">Comanda</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:8px">
@@ -2207,7 +2272,7 @@ function mostrarIngressos() {
   const calBtn = document.getElementById('calendarBtn');
   if (calBtn) {
     const firstName = (grupo[0]?.nome||'').split(' ')[0] || '';
-    const details   = encodeURIComponent(`RH em Xeque — AG Consultoria\nAuditório Slavieiro, Heron Marinho, Campina Grande.\nEntrada gratuita, evento beneficente.\n${firstName ? 'Ingresso de '+firstName+'.' : ''}`);
+    const details   = encodeURIComponent(`RH em Xeque — AG Consultoria\nAuditório Slavieiro, Heron Marinho, Campina Grande.\nEvento beneficente — contribuição obrigatória.\n${firstName ? 'Ingresso de '+firstName+'.' : ''}`);
     const location  = encodeURIComponent('Auditório Slavieiro, Heron Marinho, Campina Grande, PB');
     calBtn.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=RH+em+Xeque+%E2%80%94+AG+Consultoria&dates=20260514T210000Z/20260515T003000Z&details=${details}&location=${location}`;
   }
@@ -2455,22 +2520,23 @@ function crc16Pix(str) {
   return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 
-function buildPixPayload(chave, nome, cidade, valor) {
+function buildPixPayload(chave, nome, cidade, valor, txid) {
   function f(id, v) { return id + v.length.toString().padStart(2, '0') + v; }
   const mai = f('00','BR.GOV.BCB.PIX') + f('01', chave);
   let p = f('00','01') + f('26', mai) + f('52','0000') + f('53','986');
   if (valor > 0) p += f('54', valor.toFixed(2));
   p += f('58','BR') + f('59', nome.substring(0,25)) + f('60', cidade.substring(0,15));
-  p += f('62', f('05','***')) + '6304';
+  const cleanTxid = (txid || 'RHX').replace(/[^a-zA-Z0-9]/g, '').substring(0, 25) || 'RHX';
+  p += f('62', f('05', cleanTxid)) + '6304';
   p += crc16Pix(p);
   return p;
 }
 
 let pixQrInstance = null;
-function renderPixQR(valor) {
+function renderPixQR(valor, txid) {
   const cfg = EVENT_CFG.pix;
   if (!cfg) return;
-  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, valor || 0);
+  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, valor || 0, txid);
   const wrap = document.getElementById('pixQrWrap');
   if (!wrap) return;
   wrap.innerHTML = '';
@@ -2487,7 +2553,7 @@ function copyPixKey() {
   const cfg = EVENT_CFG.pix;
   if (!cfg) return;
   const v       = getDonationValue() || 0;
-  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, v);
+  const payload = buildPixPayload(cfg.chave, cfg.beneficiario, cfg.cidade, v, grupo[0]?.ingresso_id);
   navigator.clipboard.writeText(payload).then(() => {
     const btn = document.getElementById('btnCopyPix');
     if (btn) { btn.textContent = '✓ Código copiado!'; setTimeout(()=>btn.textContent='Copiar código Pix',2500); }
@@ -2612,7 +2678,7 @@ setInterval(updateCountdown, 1000);
 function setupShare(nomeParticipante) {
   const url  = window.location.origin + '/eventos/rh-em-xeque';
   const firstName = (nomeParticipante||'').split(' ')[0] || 'Eu';
-  const text = encodeURIComponent(`${firstName} vai estar no RH em Xeque — 14 de maio em Campina Grande!\nEntrada gratuita, evento beneficente. Garanta sua vaga: ${url}`);
+  const text = encodeURIComponent(`${firstName} vai estar no RH em Xeque — 14 de maio em Campina Grande!\nEvento beneficente para a ACCP. Garanta sua vaga: ${url}`);
   const waEl = document.getElementById('shareWA');
   const liEl = document.getElementById('shareLI');
   if (waEl) waEl.href = `https://api.whatsapp.com/send?text=${text}`;
@@ -2698,6 +2764,40 @@ document.getElementById('g-tel')?.addEventListener('blur', async function() {
       .subscribe();
   } catch(e) { /* Realtime não crítico */ }
 })();
+
+// ── PIX externo (doação sem inscrição) ────────────────────────────
+(function() {
+  const el = document.getElementById('pixExternoQr');
+  if (!el || typeof QRCode === 'undefined' || typeof buildPixPayload === 'undefined') return;
+  try {
+    const payload = buildPixPayload(
+      '5db69cba-ecfd-4c6b-b718-eaca7113aeb5',
+      'AGBR TECNOLOGIA LTDA',
+      'CAMPINA GRANDE',
+      0,
+      'DOACAOACCP'
+    );
+    new QRCode(el, {
+      text: payload,
+      width: 190, height: 190,
+      colorDark: '#1a0533',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    el.dataset.payload = payload;
+  } catch(e) { el.closest('.pix-externo-qr').style.display = 'none'; }
+})();
+
+function copiarPixExterno() {
+  const el = document.getElementById('pixExternoQr');
+  const payload = el && el.dataset.payload;
+  if (!payload) return;
+  navigator.clipboard.writeText(payload).then(() => {
+    const ok = document.getElementById('pixExternoCopied');
+    ok.style.display = 'inline';
+    setTimeout(() => ok.style.display = 'none', 2500);
+  });
+}
 </script>
 </body>
 </html>
