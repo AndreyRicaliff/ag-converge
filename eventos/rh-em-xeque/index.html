@@ -296,6 +296,7 @@ nav{
   letter-spacing:.06em; text-transform:uppercase;
 }
 .midia-foto {
+  position:relative;
   border-radius:var(--radius); overflow:hidden;
   border:1px solid var(--border);
   background:var(--bg-card);
@@ -303,6 +304,11 @@ nav{
 }
 .midia-foto:hover { border-color:var(--purple-hi); transform:scale(1.01); box-shadow:var(--sh-lg) }
 .midia-foto img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+.foto-mark{
+  position:absolute;top:10px;right:10px;
+  display:flex;align-items:center;gap:5px;pointer-events:none;
+}
+.foto-mark img{height:22px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.9}
 
 /* lightbox */
 .lightbox {
@@ -1124,26 +1130,31 @@ footer{
     <!-- Palestrante Ricardo Moraes -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/ricardo-moraes-palestrante.jpg')">
       <img src="../../assets/images/ricardo-moraes-palestrante.jpg" alt="Ricardo Moraes — Palestrante Protagon Engenharia">
+      <div class="foto-mark"><img src="../../assets/logos/protagon-mark.png" alt="Protagon"></div>
     </div>
 
     <!-- Palestrante Francisco Cid -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/francisco-cid-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/francisco-cid-palestrante.jpg" alt="Francisco Cid — Palestrante AG Consultoria">
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark.png" alt="AG Consultoria"></div>
     </div>
 
     <!-- Palestrante Matheus Ferreira -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg" alt="Matheus Ferreira — Palestrante AG Consultoria">
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark.png" alt="AG Consultoria"></div>
     </div>
 
     <!-- Palestrante Alisson Galdino -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/alisson-galdino-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/alisson-galdino-palestrante.jpg" alt="Alisson Galdino — Palestrante AG Consultoria">
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark.png" alt="AG Consultoria"></div>
     </div>
 
     <!-- Palestrante Regina Leite -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/regina-leite-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/regina-leite-palestrante.jpg" alt="Regina Leite — Palestrante AG Consultoria">
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark.png" alt="AG Consultoria"></div>
     </div>
   </div>
 </section>
