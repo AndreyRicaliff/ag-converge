@@ -243,67 +243,69 @@ const SB = supabase.createClient(
 const EVENTO = 'rh-em-xeque-2026-05-14';
 
 // ── PERGUNTAS ────────────────────────────────────────────────────────
-// 🔧 Substitua pelo conteúdo real quando enviar as perguntas
 const PERGUNTAS = [
   {
-    id: 'avaliacao_geral',
-    tipo: 'escala',     // escala | escolha | texto
-    pergunta: 'Como você avalia o evento de forma geral?',
+    id: 'satisfacao_geral',
+    tipo: 'escala',
+    pergunta: 'Você ficou satisfeito com o evento?',
+    dica: null,
+    min: 1, max: 6,
+    label_min: 'Insatisfeito', label_max: 'Muito satisfeito',
+    obrigatorio: true
+  },
+  {
+    id: 'conteudo_relevante',
+    tipo: 'escala',
+    pergunta: 'O conteúdo foi relevante e útil para seu trabalho?',
+    dica: null,
+    min: 1, max: 5,
+    label_min: 'Pouco útil', label_max: 'Muito útil',
+    obrigatorio: true
+  },
+  {
+    id: 'palestra_nr1',
+    tipo: 'escala',
+    pergunta: 'Como você avalia a palestra NR-1?',
     dica: null,
     min: 1, max: 5,
     label_min: 'Ruim', label_max: 'Excelente',
     obrigatorio: true
   },
   {
-    id: 'conteudo',
+    id: 'palestra_saude_mental',
     tipo: 'escala',
-    pergunta: 'Como foi a qualidade do conteúdo apresentado?',
-    dica: 'Palestras, dinâmicas e discussões',
-    min: 1, max: 5,
-    label_min: 'Fraco', label_max: 'Excelente',
-    obrigatorio: true
-  },
-  {
-    id: 'palestrantes',
-    tipo: 'escala',
-    pergunta: 'Como você avalia os palestrantes?',
+    pergunta: 'Como você avalia a palestra sobre saúde mental?',
     dica: null,
     min: 1, max: 5,
-    label_min: 'Fraco', label_max: 'Excelente',
+    label_min: 'Ruim', label_max: 'Excelente',
     obrigatorio: true
   },
   {
-    id: 'estrutura',
+    id: 'palestra_felicidade',
     tipo: 'escala',
-    pergunta: 'Como foi a estrutura e organização do evento?',
-    dica: 'Espaço, recepção, pontualidade',
+    pergunta: 'Como você avalia a palestra: a felicidade do colaborador como regra?',
+    dica: null,
     min: 1, max: 5,
-    label_min: 'Ruim', label_max: 'Ótima',
+    label_min: 'Ruim', label_max: 'Excelente',
     obrigatorio: true
   },
   {
-    id: 'recomendacao',
-    tipo: 'escolha',
-    pergunta: 'Você recomendaria o RH em Xeque para um colega?',
+    id: 'talk_rh',
+    tipo: 'escala',
+    pergunta: 'Como você avalia o Talk RH?',
     dica: null,
-    opcoes: ['Com certeza!', 'Provavelmente sim', 'Não tenho certeza', 'Provavelmente não'],
+    min: 1, max: 5,
+    label_min: 'Ruim', label_max: 'Excelente',
     obrigatorio: true
   },
   {
-    id: 'proxima_edicao',
-    tipo: 'escolha',
-    pergunta: 'Você participaria da próxima edição?',
+    id: 'recomendacao_nps',
+    tipo: 'escala',
+    pergunta: 'Em uma escala de 0 a 10, quão provável é que você recomende este evento a um colega?',
     dica: null,
-    opcoes: ['Sim, com certeza', 'Sim, talvez', 'Não sei ainda', 'Não'],
+    min: 0, max: 10,
+    label_min: 'Muito improvável', label_max: 'Muito provável',
     obrigatorio: true
-  },
-  {
-    id: 'sugestoes',
-    tipo: 'texto',
-    pergunta: 'Alguma sugestão ou comentário para os próximos eventos?',
-    dica: 'Opcional — fique à vontade',
-    placeholder: 'Escreva aqui...',
-    obrigatorio: false
   }
 ];
 

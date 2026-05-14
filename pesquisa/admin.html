@@ -101,15 +101,15 @@ const EVENTO = 'rh-em-xeque-2026-05-14';
 
 // IDs e labels das perguntas escalares
 const ESCALA_IDS = [
-  { id: 'avaliacao_geral', label: 'Avaliação Geral' },
-  { id: 'conteudo',        label: 'Conteúdo' },
-  { id: 'palestrantes',    label: 'Palestrantes' },
-  { id: 'estrutura',       label: 'Estrutura' },
+  { id: 'satisfacao_geral',    label: 'Satisfação Geral (1-6)' },
+  { id: 'conteudo_relevante',  label: 'Conteúdo' },
+  { id: 'palestra_nr1',        label: 'Palestra NR-1' },
+  { id: 'palestra_saude_mental', label: 'Saúde Mental' },
+  { id: 'palestra_felicidade', label: 'Felicidade do Colaborador' },
+  { id: 'talk_rh',             label: 'Talk RH' },
+  { id: 'recomendacao_nps',    label: 'NPS (0-10)' },
 ];
-const ESCOLHA_IDS = [
-  { id: 'recomendacao',   label: 'Recomendaria?' },
-  { id: 'proxima_edicao', label: 'Voltaria na próxima?' },
-];
+const ESCOLHA_IDS = [];
 
 let allData = [];
 
@@ -144,7 +144,7 @@ function renderStats() {
     const vals = allData.map(r => r.respostas?.[e.id]).filter(v => v !== undefined && v !== null).map(Number);
     return { label: e.label, avg: avg(vals) };
   });
-  const mediaGeral = avg(allData.map(r => r.respostas?.avaliacao_geral).filter(v=>v).map(Number));
+  const mediaGeral = avg(allData.map(r => r.respostas?.satisfacao_geral).filter(v=>v).map(Number));
   const html = `
     <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Respostas</div></div>
     <div class="stat"><div class="stat-value" style="color:var(--green)">${mediaGeral}</div><div class="stat-label">Média Geral (/5)</div></div>
@@ -198,8 +198,8 @@ function renderTable() {
     return JSON.stringify(r.respostas).toLowerCase().includes(filter);
   });
 
-  const keys = ['avaliacao_geral','conteudo','palestrantes','estrutura','recomendacao','proxima_edicao','sugestoes'];
-  const labels = ['Geral','Conteúdo','Palest.','Estrut.','Recomenda','Próxima','Sugestão'];
+  const keys = ['satisfacao_geral','conteudo_relevante','palestra_nr1','palestra_saude_mental','palestra_felicidade','talk_rh','recomendacao_nps'];
+  const labels = ['Satisfação','Conteúdo','NR-1','Saúde Mental','Felicidade','Talk RH','NPS'];
 
   const thead = document.querySelector('#data-table thead');
   const tbody = document.querySelector('#data-table tbody');
