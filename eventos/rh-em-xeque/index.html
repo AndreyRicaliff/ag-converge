@@ -308,7 +308,18 @@ nav{
   position:absolute;top:10px;right:10px;
   display:flex;align-items:center;gap:5px;pointer-events:none;
 }
-.foto-mark img{height:18px;width:auto;object-fit:contain;opacity:.85}
+.foto-mark img{height:18px;width:auto;object-fit:contain;opacity:.9}
+.foto-event-logo{
+  position:absolute;top:10px;left:10px;pointer-events:none;
+}
+.foto-event-logo img{height:26px;width:auto;object-fit:contain;opacity:.9}
+.foto-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.45) 55%,transparent 100%);
+  padding:44px 14px 14px;pointer-events:none;
+}
+.foto-caption-name{display:block;font-size:.95rem;font-weight:800;color:#fff;line-height:1.2}
+.foto-caption-role{display:block;font-size:.7rem;color:rgba(255,255,255,.65);margin-top:3px}
 
 /* lightbox */
 .lightbox {
@@ -1130,31 +1141,51 @@ footer{
     <!-- Palestrante Ricardo Moraes -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/ricardo-moraes-palestrante.jpg')">
       <img src="../../assets/images/ricardo-moraes-palestrante.jpg" alt="Ricardo Moraes — Palestrante Protagon Engenharia">
-      <div class="foto-mark"><img src="../../assets/logos/ag-pulse-overlay.png" alt="AG Consultoria"></div>
+      <div class="foto-mark"><img src="../../assets/logos/protagon-mark.png" alt="Protagon Engenharia"></div>
     </div>
 
     <!-- Palestrante Francisco Cid -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/francisco-cid-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/francisco-cid-palestrante.jpg" alt="Francisco Cid — Palestrante AG Consultoria">
-      <div class="foto-mark"><img src="../../assets/logos/ag-pulse-overlay.png" alt="AG Consultoria"></div>
+      <div class="foto-event-logo"><img src="../../assets/logos/rh-em-xeque-logo.png" alt="RH em Xeque"></div>
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark-boosted.png" alt="AG Consultoria"></div>
+      <div class="foto-caption">
+        <span class="foto-caption-name">Francisco Cid</span>
+        <span class="foto-caption-role">Palestrante · AG Consultoria</span>
+      </div>
     </div>
 
     <!-- Palestrante Matheus Ferreira -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/matheus-ferreira-palestrante.jpg" alt="Matheus Ferreira — Palestrante AG Consultoria">
-      <div class="foto-mark"><img src="../../assets/logos/ag-pulse-overlay.png" alt="AG Consultoria"></div>
+      <div class="foto-event-logo"><img src="../../assets/logos/rh-em-xeque-logo.png" alt="RH em Xeque"></div>
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark-boosted.png" alt="AG Consultoria"></div>
+      <div class="foto-caption">
+        <span class="foto-caption-name">Matheus Ferreira</span>
+        <span class="foto-caption-role">Palestrante · AG Consultoria</span>
+      </div>
     </div>
 
     <!-- Palestrante Alisson Galdino -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/alisson-galdino-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/alisson-galdino-palestrante.jpg" alt="Alisson Galdino — Palestrante AG Consultoria">
-      <div class="foto-mark"><img src="../../assets/logos/ag-pulse-overlay.png" alt="AG Consultoria"></div>
+      <div class="foto-event-logo"><img src="../../assets/logos/rh-em-xeque-logo.png" alt="RH em Xeque"></div>
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark-boosted.png" alt="AG Consultoria"></div>
+      <div class="foto-caption">
+        <span class="foto-caption-name">Alisson Galdino</span>
+        <span class="foto-caption-role">Palestrante · AG Consultoria</span>
+      </div>
     </div>
 
     <!-- Palestrante Regina Leite -->
     <div class="midia-foto" style="aspect-ratio:3/4;max-height:420px" onclick="openLightbox('../../assets/images/palestrantes/regina-leite-palestrante.jpg')">
       <img src="../../assets/images/palestrantes/regina-leite-palestrante.jpg" alt="Regina Leite — Palestrante AG Consultoria">
-      <div class="foto-mark"><img src="../../assets/logos/ag-pulse-overlay.png" alt="AG Consultoria"></div>
+      <div class="foto-event-logo"><img src="../../assets/logos/rh-em-xeque-logo.png" alt="RH em Xeque"></div>
+      <div class="foto-mark"><img src="../../assets/logos/ag-mark-boosted.png" alt="AG Consultoria"></div>
+      <div class="foto-caption">
+        <span class="foto-caption-name">Regina Leite</span>
+        <span class="foto-caption-role">Palestrante · AG Consultoria</span>
+      </div>
     </div>
   </div>
 </section>
