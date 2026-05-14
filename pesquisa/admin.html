@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Pesquisa RH em Xeque</title>
+<style>
+:root {
+  --bg:#09090F;--bg-card:#0F0E1A;--bg-raise:#16142A;
+  --purple:#7B2FE0;--purple-hi:#A55EFF;--purple-lo:#C49FFF;
+  --white:#F8F6FF;--muted:#6B6380;--border:#1E1830;
+  --green:#08C16A;--red:#E05;--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--white);padding:24px 20px 60px}
+h1{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.sub{font-size:.78rem;color:var(--muted);margin-bottom:28px}
+.bar{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.btn{padding:9px 18px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:all .18s}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-primary:hover{background:var(--purple-hi)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--purple-hi);color:var(--white)}
+.btn-green{background:var(--green);color:#000}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:28px}
+.stat{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.stat-value{font-size:2rem;font-weight:800;color:var(--purple-hi);line-height:1}
+.stat-label{font-size:.7rem;color:var(--muted);margin-top:4px}
+
+/* CHART BARS */
+.chart-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+.chart-title{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:.82rem}
+.bar-label{min-width:24px;text-align:right;color:var(--muted);font-weight:700}
+.bar-track{flex:1;height:18px;background:var(--bg-raise);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purple-hi));border-radius:6px;transition:width .5s ease}
+.bar-count{min-width:40px;font-size:.75rem;color:var(--muted)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+thead th{background:var(--bg-raise);color:var(--muted);font-weight:700;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:hover{background:var(--bg-card)}
+tbody td{padding:9px 12px;color:var(--white);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.68rem;font-weight:700}
+.badge-5,.badge-ótim{background:rgba(8,193,106,.15);color:var(--green)}
+.badge-4{background:rgba(123,47,224,.15);color:var(--purple-lo)}
+.badge-3{background:rgba(255,200,50,.1);color:#ffc832}
+.badge-2,.badge-1{background:rgba(220,0,85,.1);color:#ff6b8a}
+
+/* FILTER */
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.filter-row label{font-size:.78rem;color:var(--muted)}
+.filter-row input{
+  background:var(--bg-raise);border:1px solid var(--border);color:var(--white);
+  padding:7px 10px;border-radius:7px;font-size:.78rem;outline:none;
+}
+.filter-row input:focus{border-color:var(--purple-hi)}
+
+/* SPINNER */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--purple-hi);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading-msg{font-size:.82rem;color:var(--muted);display:none}
+</style>
+</head>
+<body>
+
+<h1>Pesquisa — RH em Xeque 2026</h1>
+<div class="sub" id="last-update">Carregando...</div>
+
+<div class="bar">
+  <button class="btn btn-primary" onclick="loadData()">↻ Atualizar</button>
+  <button class="btn btn-green" onclick="exportCSV()">⬇ Exportar CSV</button>
+  <button class="btn btn-outline" onclick="exportJSON()">⬇ Exportar JSON</button>
+</div>
+<span id="loading-msg"><span class="spinner"></span>Carregando respostas...</span>
+
+<!-- TOTAIS -->
+<div class="stats" id="stats"></div>
+
+<!-- GRÁFICOS POR PERGUNTA -->
+<div id="charts"></div>
+
+<!-- TABELA BRUTA -->
+<div class="filter-row">
+  <label>Filtrar comentários:</label>
+  <input type="text" id="filter-input" placeholder="Buscar..." oninput="renderTable()">
+</div>
+<div class="table-wrap"><table id="data-table"><thead></thead><tbody></tbody></table></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB = supabase.createClient(
+  'https://hqcbpqkohgmlultnmbyy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
+);
+const EVENTO = 'rh-em-xeque-2026-05-14';
+
+// IDs e labels das perguntas escalares
+const ESCALA_IDS = [
+  { id: 'avaliacao_geral', label: 'Avaliação Geral' },
+  { id: 'conteudo',        label: 'Conteúdo' },
+  { id: 'palestrantes',    label: 'Palestrantes' },
+  { id: 'estrutura',       label: 'Estrutura' },
+];
+const ESCOLHA_IDS = [
+  { id: 'recomendacao',   label: 'Recomendaria?' },
+  { id: 'proxima_edicao', label: 'Voltaria na próxima?' },
+];
+
+let allData = [];
+
+async function loadData() {
+  document.getElementById('loading-msg').style.display = 'inline';
+  try {
+    const { data, error } = await SB
+      .from('survey_responses')
+      .select('*')
+      .eq('evento', EVENTO)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    allData = data || [];
+    renderStats();
+    renderCharts();
+    renderTable();
+    const d = new Date();
+    document.getElementById('last-update').textContent =
+      `${allData.length} respostas · Atualizado às ${d.toLocaleTimeString('pt-BR')}`;
+  } catch (e) {
+    document.getElementById('last-update').textContent = 'Erro ao carregar: ' + e.message;
+  } finally {
+    document.getElementById('loading-msg').style.display = 'none';
+  }
+}
+
+function avg(arr) { return arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2) : '—'; }
+
+function renderStats() {
+  const total = allData.length;
+  const scores = ESCALA_IDS.map(e => {
+    const vals = allData.map(r => r.respostas?.[e.id]).filter(v => v !== undefined && v !== null).map(Number);
+    return { label: e.label, avg: avg(vals) };
+  });
+  const mediaGeral = avg(allData.map(r => r.respostas?.avaliacao_geral).filter(v=>v).map(Number));
+  const html = `
+    <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Respostas</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--green)">${mediaGeral}</div><div class="stat-label">Média Geral (/5)</div></div>
+    ${scores.map(s=>`<div class="stat"><div class="stat-value">${s.avg}</div><div class="stat-label">${s.label}</div></div>`).join('')}`;
+  document.getElementById('stats').innerHTML = html;
+}
+
+function renderCharts() {
+  const container = document.getElementById('charts');
+  let html = '';
+
+  ESCALA_IDS.forEach(e => {
+    const vals = allData.map(r => r.respostas?.[e.id]).filter(v=>v).map(Number);
+    const counts = [1,2,3,4,5].map(v => ({ v, c: vals.filter(x=>x===v).length }));
+    const max = Math.max(...counts.map(x=>x.c), 1);
+    html += `<div class="chart-section">
+      <div class="chart-title">${e.label}</div>
+      ${counts.map(({v,c})=>`
+        <div class="bar-row">
+          <div class="bar-label">${v}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(c/max*100).toFixed(0)}%"></div></div>
+          <div class="bar-count">${c} resp.</div>
+        </div>`).join('')}
+    </div>`;
+  });
+
+  ESCOLHA_IDS.forEach(e => {
+    const vals = allData.map(r => r.respostas?.[e.id]).filter(v=>v);
+    const unique = [...new Set(vals)];
+    const max = Math.max(...unique.map(u => vals.filter(v=>v===u).length), 1);
+    html += `<div class="chart-section">
+      <div class="chart-title">${e.label}</div>
+      ${unique.map(u => {
+        const c = vals.filter(v=>v===u).length;
+        return `<div class="bar-row">
+          <div class="bar-label" style="min-width:0;flex:0 0 140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--white)">${u}</div>
+          <div class="bar-track" style="margin-left:10px"><div class="bar-fill" style="width:${(c/max*100).toFixed(0)}%"></div></div>
+          <div class="bar-count">${c}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderTable() {
+  const filter = (document.getElementById('filter-input').value || '').toLowerCase();
+  const filtered = allData.filter(r => {
+    if (!filter) return true;
+    return JSON.stringify(r.respostas).toLowerCase().includes(filter);
+  });
+
+  const keys = ['avaliacao_geral','conteudo','palestrantes','estrutura','recomendacao','proxima_edicao','sugestoes'];
+  const labels = ['Geral','Conteúdo','Palest.','Estrut.','Recomenda','Próxima','Sugestão'];
+
+  const thead = document.querySelector('#data-table thead');
+  const tbody = document.querySelector('#data-table tbody');
+  thead.innerHTML = `<tr><th>#</th><th>Horário</th>${labels.map(l=>`<th>${l}</th>`).join('')}</tr>`;
+  tbody.innerHTML = filtered.map((r, i) => {
+    const d = new Date(r.created_at);
+    const hora = d.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<tr><td>${filtered.length - i}</td><td>${hora}</td>
+      ${keys.map(k => {
+        const v = r.respostas?.[k] ?? '—';
+        const cls = typeof v === 'number' || /^[1-5]$/.test(String(v)) ? `badge badge-${v}` : '';
+        return `<td><span class="${cls}" title="${v}">${v}</span></td>`;
+      }).join('')}</tr>`;
+  }).join('');
+}
+
+// ── EXPORT ──────────────────────────────────────────────────────────
+function exportCSV() {
+  if (!allData.length) return alert('Nenhum dado para exportar.');
+  const keys = Object.keys(allData[0].respostas || {});
+  const header = ['id','created_at',...keys].join(',');
+  const rows = allData.map(r => {
+    const base = [r.id, r.created_at];
+    const vals = keys.map(k => {
+      const v = r.respostas?.[k] ?? '';
+      return `"${String(v).replace(/"/g,'""')}"`;
+    });
+    return [...base,...vals].join(',');
+  });
+  download([header,...rows].join('\n'), `pesquisa-rh-xeque-${Date.now()}.csv`, 'text/csv');
+}
+
+function exportJSON() {
+  if (!allData.length) return alert('Nenhum dado para exportar.');
+  download(JSON.stringify(allData, null, 2), `pesquisa-rh-xeque-${Date.now()}.json`, 'application/json');
+}
+
+function download(content, filename, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type}));
+  a.download = filename;
+  a.click();
+}
+
+// Auto-refresh a cada 30s
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

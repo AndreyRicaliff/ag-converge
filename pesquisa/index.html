@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pesquisa de Satisfação — RH em Xeque</title>
+<meta name="theme-color" content="#09090F">
+<link rel="icon" type="image/png" href="/favicon.png">
+<style>
+:root {
+  --bg:        #09090F;
+  --bg-card:   #0F0E1A;
+  --bg-raise:  #16142A;
+  --purple:    #7B2FE0;
+  --purple-hi: #A55EFF;
+  --purple-lo: #C49FFF;
+  --white:     #F8F6FF;
+  --muted:     #6B6380;
+  --border:    #1E1830;
+  --green:     #08C16A;
+  --radius:    14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--white)}
+body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 0 48px;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -5%, rgba(123,47,224,.18) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* ── HEADER ── */
+.header{
+  width:100%;padding:18px 20px 14px;text-align:center;
+  border-bottom:1px solid var(--border);
+  background:rgba(9,9,15,.9);backdrop-filter:blur(16px);
+  position:sticky;top:0;z-index:10;
+}
+.header-tag{
+  display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  color:var(--purple-lo);background:rgba(123,47,224,.15);
+  border:1px solid rgba(123,47,224,.3);border-radius:20px;
+  padding:3px 10px;text-transform:uppercase;margin-bottom:6px;
+}
+.header h1{font-size:1.05rem;font-weight:800;color:var(--white);letter-spacing:-.02em}
+.header p{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* ── PROGRESS ── */
+.progress-bar{
+  width:calc(100% - 40px);max-width:520px;height:3px;
+  background:var(--border);border-radius:3px;margin:18px auto 0;
+  overflow:hidden;
+}
+.progress-fill{height:100%;background:var(--purple-hi);border-radius:3px;transition:width .4s ease}
+
+/* ── CARD ── */
+.card{
+  width:calc(100% - 32px);max-width:520px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px 20px;margin-top:20px;
+}
+.step-num{font-size:.65rem;font-weight:700;color:var(--purple-lo);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.question{font-size:1rem;font-weight:700;color:var(--white);line-height:1.4;margin-bottom:16px}
+.question small{display:block;font-size:.75rem;font-weight:400;color:var(--muted);margin-top:4px}
+
+/* ── ESCALA NPS ── */
+.scale-wrap{display:flex;gap:6px;flex-wrap:wrap}
+.scale-wrap label{flex:1;min-width:38px}
+.scale-wrap input{display:none}
+.scale-wrap .btn-scale{
+  display:block;text-align:center;padding:10px 4px;
+  border:1px solid var(--border);border-radius:9px;
+  font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:all .18s;
+}
+.scale-wrap input:checked + .btn-scale{
+  border-color:var(--purple-hi);background:rgba(123,47,224,.2);color:var(--purple-hi);
+}
+.scale-wrap .btn-scale:hover{border-color:var(--purple-hi);color:var(--white)}
+.scale-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:.62rem;color:var(--muted)}
+
+/* ── ESCOLHA MÚLTIPLA ── */
+.choices{display:flex;flex-direction:column;gap:8px}
+.choices label{cursor:pointer}
+.choices input{display:none}
+.choices .btn-choice{
+  display:block;padding:11px 14px;
+  border:1px solid var(--border);border-radius:9px;
+  font-size:.85rem;color:var(--muted);transition:all .18s;
+}
+.choices input:checked + .btn-choice{
+  border-color:var(--purple-hi);background:rgba(123,47,224,.15);color:var(--white);
+}
+.choices .btn-choice:hover{border-color:var(--purple-hi);color:var(--white)}
+
+/* ── TEXTO ABERTO ── */
+textarea{
+  width:100%;background:var(--bg-raise);border:1px solid var(--border);
+  border-radius:9px;padding:12px;color:var(--white);font-size:.88rem;
+  font-family:inherit;resize:vertical;min-height:90px;
+  transition:border .2s;outline:none;
+}
+textarea:focus{border-color:var(--purple-hi)}
+textarea::placeholder{color:var(--muted)}
+
+/* ── BOTÕES ── */
+.actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.btn{
+  padding:11px 22px;border-radius:9px;font-size:.85rem;font-weight:700;
+  cursor:pointer;border:none;transition:all .18s;
+}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-primary:hover{background:var(--purple-hi)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--purple-hi);color:var(--white)}
+.btn-submit{
+  width:100%;padding:14px;font-size:.95rem;font-weight:800;
+  background:linear-gradient(135deg,var(--purple),#3662FF);
+  color:#fff;border:none;border-radius:var(--radius);cursor:pointer;
+  transition:opacity .2s;margin-top:20px;
+}
+.btn-submit:hover{opacity:.88}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── TELA INICIAL ── */
+#screen-intro{text-align:center;padding:32px 20px}
+.intro-icon{font-size:2.8rem;margin-bottom:12px}
+.intro-title{font-size:1.5rem;font-weight:800;margin-bottom:8px}
+.intro-sub{font-size:.88rem;color:var(--muted);margin-bottom:24px;line-height:1.5}
+.intro-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.72rem;color:var(--muted);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;margin-bottom:28px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── TELA FINAL ── */
+#screen-done{text-align:center;padding:40px 20px;display:none}
+.done-icon{font-size:3rem;margin-bottom:14px}
+.done-title{font-size:1.4rem;font-weight:800;margin-bottom:8px}
+.done-sub{font-size:.88rem;color:var(--muted);line-height:1.5}
+.done-accp{
+  margin-top:22px;padding:14px 18px;
+  background:var(--bg-raise);border:1px solid var(--border);border-radius:var(--radius);
+  font-size:.8rem;color:var(--muted);
+}
+.done-accp strong{color:var(--green)}
+
+/* ── ESTADO SURVEY ── */
+#screen-survey{display:none}
+.step-card{display:none}
+.step-card.active{display:block}
+
+/* ── LOADING ── */
+.loading-overlay{
+  display:none;position:fixed;inset:0;background:rgba(9,9,15,.85);
+  align-items:center;justify-content:center;z-index:100;flex-direction:column;gap:12px;
+}
+.loading-overlay.visible{display:flex}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--purple-hi);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay p{font-size:.82rem;color:var(--muted)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg-raise);border:1px solid var(--border);border-radius:10px;
+  padding:10px 18px;font-size:.82rem;color:var(--white);
+  transition:transform .3s;z-index:200;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{border-color:#e05;color:#ff6b8a}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">AG Converge</div>
+  <h1>RH em Xeque — Pesquisa de Satisfação</h1>
+  <p>14 de maio de 2026 · Campina Grande</p>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <p>Salvando sua resposta...</p>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- TELA INICIAL -->
+<div id="screen-intro" class="card" style="margin-top:32px;text-align:center;padding:32px 22px">
+  <div class="intro-icon">✦</div>
+  <div class="intro-title">Sua opinião importa</div>
+  <div class="intro-sub">
+    Leva menos de 2 minutos.<br>
+    As respostas são anônimas e nos ajudam a melhorar os próximos eventos.
+  </div>
+  <div class="intro-badge">
+    <span class="dot"></span> Pesquisa ativa
+  </div>
+  <br>
+  <button class="btn-submit" onclick="startSurvey()">Iniciar pesquisa →</button>
+</div>
+
+<!-- TELA SURVEY -->
+<div id="screen-survey" style="width:100%;max-width:520px;padding:0 16px">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <!-- As perguntas serão inseridas aqui pelo JS -->
+  <div id="steps-container"></div>
+
+  <div class="actions" id="nav-actions">
+    <button class="btn btn-ghost" id="btn-back" onclick="prevStep()" style="display:none">← Voltar</button>
+    <button class="btn btn-primary" id="btn-next" onclick="nextStep()">Próxima →</button>
+  </div>
+</div>
+
+<!-- TELA FINAL -->
+<div id="screen-done" class="card" style="margin-top:32px;text-align:center;padding:40px 22px">
+  <div class="done-icon">🎉</div>
+  <div class="done-title">Obrigado pelo feedback!</div>
+  <div class="done-sub">
+    Sua resposta foi registrada com sucesso.<br>
+    Ela vai direto para nossa equipe e nos ajuda a evoluir cada edição.
+  </div>
+  <div class="done-accp" style="margin-top:22px">
+    <strong>Parte da renda desta edição</strong> vai para a ACCP —<br>
+    Associação de Combate ao Câncer na Paraíba.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────
+const SB = supabase.createClient(
+  'https://hqcbpqkohgmlultnmbyy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxY2JwcWtvaGdtbHVsdG5tYnl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTIyMTAsImV4cCI6MjA5Mzg2ODIxMH0.NCAvbQYVmLmcZuofj0B9Tkr7sv-tvz4QcTZLtjdWD-M'
+);
+const EVENTO = 'rh-em-xeque-2026-05-14';
+
+// ── PERGUNTAS ────────────────────────────────────────────────────────
+// 🔧 Substitua pelo conteúdo real quando enviar as perguntas
+const PERGUNTAS = [
+  {
+    id: 'avaliacao_geral',
+    tipo: 'escala',     // escala | escolha | texto
+    pergunta: 'Como você avalia o evento de forma geral?',
+    dica: null,
+    min: 1, max: 5,
+    label_min: 'Ruim', label_max: 'Excelente',
+    obrigatorio: true
+  },
+  {
+    id: 'conteudo',
+    tipo: 'escala',
+    pergunta: 'Como foi a qualidade do conteúdo apresentado?',
+    dica: 'Palestras, dinâmicas e discussões',
+    min: 1, max: 5,
+    label_min: 'Fraco', label_max: 'Excelente',
+    obrigatorio: true
+  },
+  {
+    id: 'palestrantes',
+    tipo: 'escala',
+    pergunta: 'Como você avalia os palestrantes?',
+    dica: null,
+    min: 1, max: 5,
+    label_min: 'Fraco', label_max: 'Excelente',
+    obrigatorio: true
+  },
+  {
+    id: 'estrutura',
+    tipo: 'escala',
+    pergunta: 'Como foi a estrutura e organização do evento?',
+    dica: 'Espaço, recepção, pontualidade',
+    min: 1, max: 5,
+    label_min: 'Ruim', label_max: 'Ótima',
+    obrigatorio: true
+  },
+  {
+    id: 'recomendacao',
+    tipo: 'escolha',
+    pergunta: 'Você recomendaria o RH em Xeque para um colega?',
+    dica: null,
+    opcoes: ['Com certeza!', 'Provavelmente sim', 'Não tenho certeza', 'Provavelmente não'],
+    obrigatorio: true
+  },
+  {
+    id: 'proxima_edicao',
+    tipo: 'escolha',
+    pergunta: 'Você participaria da próxima edição?',
+    dica: null,
+    opcoes: ['Sim, com certeza', 'Sim, talvez', 'Não sei ainda', 'Não'],
+    obrigatorio: true
+  },
+  {
+    id: 'sugestoes',
+    tipo: 'texto',
+    pergunta: 'Alguma sugestão ou comentário para os próximos eventos?',
+    dica: 'Opcional — fique à vontade',
+    placeholder: 'Escreva aqui...',
+    obrigatorio: false
+  }
+];
+
+// ── ESTADO ──────────────────────────────────────────────────────────
+let currentStep = 0;
+const respostas = {};
+
+// ── RENDER PERGUNTAS ────────────────────────────────────────────────
+function renderPerguntas() {
+  const container = document.getElementById('steps-container');
+  container.innerHTML = '';
+
+  PERGUNTAS.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'step-card card' + (i === 0 ? ' active' : '');
+    div.id = `step-${i}`;
+
+    let inputHtml = '';
+    if (q.tipo === 'escala') {
+      const btns = Array.from({length: q.max - q.min + 1}, (_, k) => {
+        const v = q.min + k;
+        return `<label><input type="radio" name="${q.id}" value="${v}" onchange="setResposta('${q.id}', ${v})"><span class="btn-scale">${v}</span></label>`;
+      }).join('');
+      inputHtml = `
+        <div class="scale-wrap">${btns}</div>
+        <div class="scale-labels"><span>${q.label_min}</span><span>${q.label_max}</span></div>`;
+    } else if (q.tipo === 'escolha') {
+      inputHtml = '<div class="choices">' + q.opcoes.map(op =>
+        `<label><input type="radio" name="${q.id}" value="${op}" onchange="setResposta('${q.id}', '${op}')"><span class="btn-choice">${op}</span></label>`
+      ).join('') + '</div>';
+    } else if (q.tipo === 'texto') {
+      inputHtml = `<textarea id="input-${q.id}" placeholder="${q.placeholder || 'Escreva aqui...'}" oninput="setResposta('${q.id}', this.value)"></textarea>`;
+    }
+
+    div.innerHTML = `
+      <div class="step-num">Pergunta ${i + 1} de ${PERGUNTAS.length}</div>
+      <div class="question">${q.pergunta}${q.dica ? `<small>${q.dica}</small>` : ''}</div>
+      ${inputHtml}`;
+    container.appendChild(div);
+  });
+}
+
+function setResposta(id, val) {
+  respostas[id] = val;
+  updateUI();
+}
+
+// ── NAVEGAÇÃO ────────────────────────────────────────────────────────
+function startSurvey() {
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-survey').style.display = 'block';
+  renderPerguntas();
+  updateUI();
+}
+
+function updateUI() {
+  const total = PERGUNTAS.length;
+  const pct = ((currentStep) / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const q = PERGUNTAS[currentStep];
+  const respondida = respostas[q.id] !== undefined && respostas[q.id] !== '';
+  const isLast = currentStep === total - 1;
+
+  const btnNext = document.getElementById('btn-next');
+  const btnBack = document.getElementById('btn-back');
+
+  btnBack.style.display = currentStep > 0 ? 'block' : 'none';
+
+  if (isLast) {
+    btnNext.textContent = 'Enviar resposta ✓';
+    btnNext.style.background = 'linear-gradient(135deg,#08C16A,#0a9d56)';
+    btnNext.onclick = submitSurvey;
+  } else {
+    btnNext.textContent = 'Próxima →';
+    btnNext.style.background = '';
+    btnNext.onclick = nextStep;
+  }
+
+  if (q.obrigatorio) {
+    btnNext.disabled = !respondida;
+  } else {
+    btnNext.disabled = false;
+  }
+}
+
+function nextStep() {
+  if (currentStep >= PERGUNTAS.length - 1) return;
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep++;
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  updateUI();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function prevStep() {
+  if (currentStep <= 0) return;
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep--;
+  document.getElementById(`step-${currentStep}`).classList.add('active');
+  updateUI();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────────
+async function submitSurvey() {
+  showLoading(true);
+  try {
+    const { error } = await SB.from('survey_responses').insert({
+      evento: EVENTO,
+      respostas,
+      device_hint: navigator.userAgent.substring(0, 120)
+    });
+    if (error) throw error;
+
+    document.getElementById('screen-survey').style.display = 'none';
+    const done = document.getElementById('screen-done');
+    done.style.display = 'block';
+    document.getElementById('progress-fill').style.width = '100%';
+  } catch (e) {
+    showToast('Erro ao salvar. Tente novamente.', true);
+    console.error(e);
+  } finally {
+    showLoading(false);
+  }
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────
+function showLoading(v) {
+  document.getElementById('loading').classList.toggle('visible', v);
+}
+
+function showToast(msg, error = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(() => el.className = 'toast', 3000);
+}
+</script>
+</body>
+</html>
