@@ -101,13 +101,13 @@ const EVENTO = 'rh-em-xeque-2026-05-14';
 
 // IDs e labels das perguntas escalares
 const ESCALA_IDS = [
-  { id: 'satisfacao_geral',    label: 'Satisfação Geral (1-6)' },
-  { id: 'conteudo_relevante',  label: 'Conteúdo' },
-  { id: 'palestra_nr1',        label: 'Palestra NR-1' },
-  { id: 'palestra_saude_mental', label: 'Saúde Mental' },
-  { id: 'palestra_felicidade', label: 'Felicidade do Colaborador' },
-  { id: 'talk_rh',             label: 'Talk RH' },
-  { id: 'recomendacao_nps',    label: 'NPS (0-10)' },
+  { id: 'satisfacao_geral',      label: 'Satisfação Geral (1-6)',  min: 1, max: 6  },
+  { id: 'conteudo_relevante',    label: 'Conteúdo',                min: 1, max: 5  },
+  { id: 'palestra_nr1',          label: 'Palestra NR-1',           min: 1, max: 5  },
+  { id: 'palestra_saude_mental', label: 'Saúde Mental',            min: 1, max: 5  },
+  { id: 'palestra_felicidade',   label: 'Felicidade do Colaborador', min: 1, max: 5 },
+  { id: 'talk_rh',               label: 'Talk RH',                 min: 1, max: 5  },
+  { id: 'recomendacao_nps',      label: 'NPS (0-10)',              min: 0, max: 10 },
 ];
 const ESCOLHA_IDS = [];
 
@@ -147,7 +147,7 @@ function renderStats() {
   const mediaGeral = avg(allData.map(r => r.respostas?.satisfacao_geral).filter(v=>v).map(Number));
   const html = `
     <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Respostas</div></div>
-    <div class="stat"><div class="stat-value" style="color:var(--green)">${mediaGeral}</div><div class="stat-label">Média Geral (/5)</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--green)">${mediaGeral}</div><div class="stat-label">Média Geral (/6)</div></div>
     ${scores.map(s=>`<div class="stat"><div class="stat-value">${s.avg}</div><div class="stat-label">${s.label}</div></div>`).join('')}`;
   document.getElementById('stats').innerHTML = html;
 }
@@ -157,8 +157,10 @@ function renderCharts() {
   let html = '';
 
   ESCALA_IDS.forEach(e => {
-    const vals = allData.map(r => r.respostas?.[e.id]).filter(v=>v).map(Number);
-    const counts = [1,2,3,4,5].map(v => ({ v, c: vals.filter(x=>x===v).length }));
+    const vals = allData.map(r => r.respostas?.[e.id]).filter(v => v !== undefined && v !== null).map(Number);
+    const range = [];
+    for (let i = e.min; i <= e.max; i++) range.push(i);
+    const counts = range.map(v => ({ v, c: vals.filter(x => x === v).length }));
     const max = Math.max(...counts.map(x=>x.c), 1);
     html += `<div class="chart-section">
       <div class="chart-title">${e.label}</div>
